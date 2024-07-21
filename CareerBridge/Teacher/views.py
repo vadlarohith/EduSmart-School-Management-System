@@ -15,16 +15,18 @@ def TeacherLogin(request):
         try:
             user = models.Teacher.objects.filter(FullName = FullName, Password = Password).first()
             if user:
-                Image = models.Posters.objects.all()
-                Class = models.TimeTable.objects.all()
+                Image = models.Posters.objects.all().values()
+                TimeTable = models.TimeTable.objects.all()
+                Student = models.Student.objects.filter(Class = user.ClassTeacher)
                 context = {
                     'Teacher' : FullName,
-                    'image': Image,
+                    'images': Image,
                     'data' : {
                         'MobileNo': user.MobileNo,
                         'FullName': user.FullName
                     },
-                    'Class' : Class
+                    'TimeTable' : TimeTable,
+                    'Student' : Student
                 }
                 return HttpResponse(TeacherPage.render(context, request))
             else:

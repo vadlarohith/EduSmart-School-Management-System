@@ -71,6 +71,11 @@ def StudentRegistration(request):
                 'error' : "Enter Valid Details"
             }
             return HttpResponse(AdminPage.render(context,request))
+        if models.Student.objects.filter(RollNo = RollNo):
+            context = {
+                'error' : "RollNo Already Exist"
+            }
+            return HttpResponse(AdminPage.render(context, request))
 
         try:
             data = models.Student(FullName = FullName, RollNo = RollNo, Password = RollNo, Class = Class)
@@ -89,9 +94,17 @@ def TeacherRegistration(request):
     if request.method == 'POST':
         FullName = request.POST.get('TFullName')
         MobileNo = request.POST.get('TMobileNo')
+        TeacherID = request.POST.get('TeacherID')
+        ClassTeacher = request.POST.get('ClassTeacher')
+
+        if models.Teacher.objects.filter(TeacherID = TeacherID):
+            context = {
+                'error' : "TeacherID Already Exists"
+            }
+            return HttpResponse(AdminPage.render(context, request))
 
         try:
-            data = models.Teacher(FullName = FullName, MobileNo = MobileNo, Password = MobileNo)
+            data = models.Teacher(FullName = FullName, MobileNo = MobileNo, Password = TeacherID, TeacherID = TeacherID, ClassTeacher = ClassTeacher)
             data.save()
             context['success'] = "Teacher Registered Successfully"
         except Exception as e:

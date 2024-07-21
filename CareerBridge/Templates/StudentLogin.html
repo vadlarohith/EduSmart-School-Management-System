@@ -10,17 +10,17 @@
             <h2>Notifications</h2>
             <ul>
                 {% for image in image %}
-                    <a href="{{image.Image.url}}"><li>{{ image.Title }}: {{image.Description}}</li></a>
+                    <a href="media/{{ image.Image }}"><li>{{ image.Title }}: {{image.Description}} {{image.Image}}</li></a>
                 {% endfor %}
             </ul>
         </div>
-        <div>
+        <!-- <div>
             <p>{{data.FullName}}</p>
             <p>{{data.RollNo}}</p>
             <p>{{data.Password}}</p>
             <p>{{data.MobileNo}}</p>
             <p>{{data.Class}}</p>
-        </div>
+        </div> -->
         <div>
             <form action="{%url 'UpdateStudentDetails'%}" method="POST"> 
                 {% csrf_token %}

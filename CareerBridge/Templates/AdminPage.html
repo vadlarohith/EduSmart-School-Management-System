@@ -29,8 +29,17 @@
         <form action="{% url 'TeacherRegistration' %}" method="POST">
             {% csrf_token %}
             <h2>Teacher Registration</h2>
-            FullName: <input type="text" name="TFullName"> <br>
-            MobileNo: <input type="text" name="TMobileNo"> <br>
+            TeacherID : <input type="text" name="TeacherID" id="" required><br>
+            FullName: <input type="text" name="TFullName" required> <br>
+            MobileNo: <input type="text" name="TMobileNo" required> <br>
+            Class Teacher: <select name="ClassTeacher" id="">
+                <option value="">--Select--</option>
+                <option value="Class1">Class1</option>
+                <option value="Class2">Class2</option>
+                <option value="Class3">Class3</option>
+                <option value="Class4">Class4</option>
+                <option value="Class5">Class5</option>
+            </select> <br>
             <button type="submit">Submit</button>
         </form>
     </div>
@@ -39,7 +48,7 @@
         <form action="{%url 'UploadImage'%}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <label for="Title">Title:</label>
-            <input type="text" id="name" name="Title"><br><br>
+            <input type="text" id="name" name="Title" required><br><br>
             <label for="Description">Description:</label>
             <input type="text" id="name" name="Description"><br><br>
             <label for="image">Image:</label>

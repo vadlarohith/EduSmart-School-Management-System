@@ -15,7 +15,7 @@ def StudentLogin(request):
         try:
             user = models.Student.objects.filter(FullName = FullName, Password = Password).first()
             if user:
-                image = models.Posters.objects.all()
+                image = models.Posters.objects.all().values()
                 data = models.Student.objects.all()
                 Class = user.Class
                 TimeTable = models.TimeTable.objects.filter(Class = Class).first()
@@ -39,7 +39,7 @@ def StudentLogin(request):
                 return HttpResponse(HomePage.render(context, request))
             
         except Exception as e:
-            context['error'] = f"Error: {str(e)}"
+            context['error'] = f"Error11: {str(e)}"
             return HttpResponse(HomePage.render(context, request))
         
 def UpdateDetails(request):

@@ -37,9 +37,11 @@ class Student(models.Model):
 
 
 class Teacher(models.Model):
+    TeacherID = models.CharField(max_length=10)
     FullName = models.CharField(max_length=100)
     MobileNo = models.CharField(max_length=10)
     Password = models.CharField(max_length=20)
+    ClassTeacher = models.CharField(max_length=10)
 
     def __str__(self):
         return self.FullName
@@ -58,4 +60,12 @@ class TimeTable(models.Model):
 
     def __str__(self):
         return self.Class
+
     
+class Attendence(models.Model):
+    RegNo = models.CharField(max_length=10)
+    Month = models.CharField(max_length=10)
+    Attendence = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.RegNo

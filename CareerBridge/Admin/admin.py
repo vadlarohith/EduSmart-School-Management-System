@@ -8,8 +8,16 @@ class StudentPreview(admin.ModelAdmin):
 
 admin.site.register(models.Student, StudentPreview)
 
-admin.site.register(models.Teacher)
+class TeacherPreview(admin.ModelAdmin):
+    list_display = ('FullName','TeacherID','ClassTeacher')
+
+admin.site.register(models.Teacher, TeacherPreview)
 
 admin.site.register(models.Posters)
 
 admin.site.register(models.TimeTable)
+
+class AttendencePreview(admin.ModelAdmin):
+    list_display = ('RegNo','Month','Attendence')
+
+admin.site.register(models.Attendence, AttendencePreview)
