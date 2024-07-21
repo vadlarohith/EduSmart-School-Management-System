@@ -11,7 +11,7 @@ def StudentLogin(request):
     if request.method == 'POST':
         FullName = request.POST.get('StudentUserName')
         Password = request.POST.get('StudentPassword')
-
+ 
         try:
             user = models.Student.objects.filter(FullName = FullName, Password = Password).first()
             if user:
