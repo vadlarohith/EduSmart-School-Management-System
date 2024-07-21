@@ -33,12 +33,13 @@ class Student(models.Model):
     
     def __str__(self):
         return self.FullName
+    
 
 
 class Teacher(models.Model):
     FullName = models.CharField(max_length=100)
     MobileNo = models.CharField(max_length=10)
-    Password = models.CharField(max_length=15)
+    Password = models.CharField(max_length=20)
 
     def __str__(self):
         return self.FullName
@@ -53,7 +54,8 @@ class Posters(models.Model):
     
 class TimeTable(models.Model):
     Class = models.CharField(max_length=10)
-    Image = models.ImageField(upload_to='TimeTable/', blank=True, null=True)
+    Image = models.ImageField(upload_to='image/')
 
     def __str__(self):
         return self.Class
+    

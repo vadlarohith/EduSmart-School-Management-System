@@ -3,7 +3,10 @@ from . import models
 
 admin.site.register(models.Admin)
 
-admin.site.register(models.Student)
+class StudentPreview(admin.ModelAdmin):
+    list_display = ('FullName','Class','RollNo','MobileNo')
+
+admin.site.register(models.Student, StudentPreview)
 
 admin.site.register(models.Teacher)
 

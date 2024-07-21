@@ -1,4 +1,4 @@
-<!-- <html>
+<html>
     <head>
         <title>Student</title>
     </head>
@@ -15,69 +15,38 @@
             </ul>
         </div>
         <div>
+            <p>{{data.FullName}}</p>
+            <p>{{data.RollNo}}</p>
+            <p>{{data.Password}}</p>
+            <p>{{data.MobileNo}}</p>
+            <p>{{data.Class}}</p>
+        </div>
+        <div>
             <form action="{%url 'UpdateStudentDetails'%}" method="POST"> 
                 {% csrf_token %}
                 <h1>EDIT DETAILS</h1>
                 <h4>{{success}}</h4>
                 <input type="hidden" name="StudentName" value="{{data.FullName}}">
                 <input type="hidden" name="StudentRollNo" value="{{data.RollNo}}">
-                MobileNo: <input type="number" name="UpdateMobileNo">
-                Password: <input type="text" name="UpdatePassword">
+                MobileNo: <input type="number" name="UpdateMobileNo" value="{{data.MobileNo}}">
+                Password: <input type="password" name="UpdatePassword" value="{{data.Password}}">
                 <button type="submit">Update</button>
             </form>
             
         </div>
         <div>
             <h2>TimeTable</h2>
-        <div>
-            <form action="">
-                <a href="{%url 'test'%}"><strong>LogOut</strong></a>
-
-            </form>
-        </div>
-    </body>
-</html> -->
-
-<html>
-    <head>
-        <title>Student</title>
-    </head>
-    <body>
-        {% csrf_token %}
-        <h2>{{ error }}</h2>
-        <h1>Welcome {{ Student }}</h1>
-        <div>
-            <h2>Notifications</h2>
-            <ul>
-                {% for image in image %}
-                    <a href="{{ image.Image.url }}"><li>{{ image.Title }}: {{ image.Description }}</li></a>
-                {% endfor %}
-            </ul>
-        </div>
-        <div>
-            <form action="{% url 'UpdateStudentDetails' %}" method="POST"> 
-                {% csrf_token %}
-                <h1>EDIT DETAILS</h1>
-                <h4>{{ success }}</h4>
-                <input type="hidden" name="StudentName" value="{{ data.FullName }}">
-                <input type="hidden" name="StudentRollNo" value="{{ data.RollNo }}">
-                MobileNo: <input type="number" name="UpdateMobileNo">
-                Password: <input type="text" name="UpdatePassword">
-                <button type="submit">Update</button>
-            </form>
-        </div>
-        <div>
-            <h2>TimeTable</h2>
             <p>{{ TimeTable }}</p>
-            {% if TimeTable and TimeTable.Image %}
-                <img src="{{ TimeTable.Image.url }}" alt="">
+            {% if TimeTable %}
+                <img src="{{ TimeTable.url  }}" alt="">
             {% else %}
                 <p>No timetable available.</p>
             {% endif %}
         </div>
         <div>
             <form action="">
-                <a href="{% url 'test' %}"><strong>LogOut</strong></a>
+                <a href="{%url 'test'%}"><strong>LogOut</strong></a>
+
             </form>
         </div>
     </body>

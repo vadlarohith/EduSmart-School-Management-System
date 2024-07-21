@@ -64,13 +64,20 @@ def StudentRegistration(request):
     if request.method == 'POST':
         FullName = request.POST.get('SFullName')
         RollNo = request.POST.get('SRollNo')
+        Class = request.POST.get('Class')
+
+        if FullName == '' or RollNo == '' or Class == '':
+            context = {
+                'error' : "Enter Valid Details"
+            }
+            return HttpResponse(AdminPage.render(context,request))
 
         try:
-            data = models.Student(FullName = FullName, RollNo = RollNo, Password = RollNo)
+            data = models.Student(FullName = FullName, RollNo = RollNo, Password = RollNo, Class = Class)
             data.save()
             context['success'] = "Student Registered Successfully"
         except Exception as e:
-            context['error'] = f"Error2: {str(e)}"
+            context['error'] = f"Error: {str(e)}"
             return HttpResponse(AdminPage.render(context, request))
 
     return HttpResponse(AdminPage.render(context, request))
@@ -88,7 +95,7 @@ def TeacherRegistration(request):
             data.save()
             context['success'] = "Teacher Registered Successfully"
         except Exception as e:
-            context['error'] = f"Error1: {str(e)}"
+            context['error'] = f"Error: {str(e)}"
             return HttpResponse(AdminPage.render(context, request))
 
     return HttpResponse(AdminPage.render(context, request))
@@ -116,6 +123,7 @@ def UploadImage(request):
 def ImageList(request):
     image = models.Posters.objects.all()
     return render(request, 'StudentLogin.html', {'image': image})
+
 
 def TimeTable(request):
     AdminPage = loader.get_template('AdminPage.html')

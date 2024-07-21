@@ -5,7 +5,6 @@
     <body>
         <h1>Teacher Page</h1>
         <h2>Welcome {{Teacher}}</h2>
-        <h2>{{error}}</h2>
         <div>
             <h2>Notifications</h2>
             <ul>
@@ -21,8 +20,8 @@
                 <h4>{{success}}</h4>
                 <input type="hidden" name="TeacherName" value="{{data.FullName}}">
                 <input type="hidden" name="TeacherMobileNo" value="{{data.MobileNo}}">
-                MobileNo: <input type="number" name="UpdateMobileNo">
-                Password: <input type="text" name="UpdatePassword">
+                MobileNo: <input type="number" name="UpdateMobileNo" value="{{data.MobileNo}}">
+                Password: <input type="password" name="UpdatePassword" value="{{data.Password}}">
                 <button type="submit">Update</button>
             </form>
             

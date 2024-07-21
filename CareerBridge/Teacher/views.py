@@ -15,14 +15,13 @@ def TeacherLogin(request):
         try:
             user = models.Teacher.objects.filter(FullName = FullName, Password = Password).first()
             if user:
-                Image = models.Posters.objects.all().values()
+                Image = models.Posters.objects.all()
                 context = {
                     'Teacher' : FullName,
                     'image': Image,
-                    'data': {
-                        'FullName':user.FullName,
+                    'data' : {
                         'MobileNo': user.MobileNo,
-                        'Password': user.Password
+                        'FullName': user.FullName
                     }
                 }
                 return HttpResponse(TeacherPage.render(context, request))
@@ -44,17 +43,23 @@ def UpdateDetails(request):
         UpdatePassword = request.POST.get('UpdatePassword')
         
         try:
-            user = models.Teacher.objects.filter(FullName = FullName, Password = MobileNo).first()
+            user = models.Teacher.objects.filter(FullName = FullName, MobileNo = MobileNo).first()
+            Image = models.Posters.objects.all().values()
             user.MobileNo = UpdateMobileNo
             user.Password = UpdatePassword
             user.save()
             context = {
-                'success' : 'Successfully Updated'
+                'success' : 'Successfully Updated',
+                'Teacher' : FullName,
+                    'image': Image,
+                    'data' : {
+                        'MobileNo': user.MobileNo,
+                        'FullName': user.FullName,
+                        'Password': user.Password
+                    }
             }
             return HttpResponse(TeacherPage.render(context, request))
         
         except Exception as e:
-            context = {
-                'error':"Error"
-            }
+            context['Success'] = f"Error: {str(e)}"
             return HttpResponse(TeacherPage.render(context,request))

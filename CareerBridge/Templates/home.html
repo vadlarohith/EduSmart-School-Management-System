@@ -26,8 +26,7 @@
             <h2>Admin Login</h2>
             <form action="{% url 'admin_login' %}" method="POST">
                 {% csrf_token %}
-                <h3 class="error">{{error}}</h3>
-                <h3 class="error">{{Error}}</h3>
+                <h3 class="error">{{ error }}</h3>
                 Username: <input type="text" name="AdminUserName"><br>
                 Password: <input type="password" name="AdminPassword"><br>
                 <button type="submit">Submit</button>
