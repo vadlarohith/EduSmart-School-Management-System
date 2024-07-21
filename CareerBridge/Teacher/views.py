@@ -16,13 +16,15 @@ def TeacherLogin(request):
             user = models.Teacher.objects.filter(FullName = FullName, Password = Password).first()
             if user:
                 Image = models.Posters.objects.all()
+                Class = models.TimeTable.objects.all()
                 context = {
                     'Teacher' : FullName,
                     'image': Image,
                     'data' : {
                         'MobileNo': user.MobileNo,
                         'FullName': user.FullName
-                    }
+                    },
+                    'Class' : Class
                 }
                 return HttpResponse(TeacherPage.render(context, request))
             else:
@@ -44,7 +46,8 @@ def UpdateDetails(request):
         
         try:
             user = models.Teacher.objects.filter(FullName = FullName, MobileNo = MobileNo).first()
-            Image = models.Posters.objects.all().values()
+            Image = models.Posters.objects.all()
+            Class = models.TimeTable.objects.all()
             user.MobileNo = UpdateMobileNo
             user.Password = UpdatePassword
             user.save()
@@ -56,7 +59,8 @@ def UpdateDetails(request):
                         'MobileNo': user.MobileNo,
                         'FullName': user.FullName,
                         'Password': user.Password
-                    }
+                    },
+                    'Class' : Class
             }
             return HttpResponse(TeacherPage.render(context, request))
         
