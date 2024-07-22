@@ -56,16 +56,69 @@ def UpdateDetails(request):
             context = {
                 'success' : 'Successfully Updated',
                 'Teacher' : FullName,
-                    'image': Image,
+                    'images': Image,
                     'data' : {
                         'MobileNo': user.MobileNo,
                         'FullName': user.FullName,
                         'Password': user.Password
                     },
-                    'Class' : Class
+                    'Class' : Class,
             }
             return HttpResponse(TeacherPage.render(context, request))
         
         except Exception as e:
             context['Success'] = f"Error: {str(e)}"
             return HttpResponse(TeacherPage.render(context,request))
+        
+def Attendence(request):
+    TeacherPage = loader.get_template('TeacherLogin.html')
+    if request.method == 'POST':
+        FullName = request.POST.get('TeacherName')
+        MobileNo = request.POST.get('TeacherMobileNo')
+        user = models.Teacher.objects.filter(FullName = FullName, MobileNo = MobileNo).first()
+        Image = models.Posters.objects.all()
+        Class = models.TimeTable.objects.all()
+        TimeTable = models.TimeTable.objects.all()
+        Student = models.Student.objects.filter(Class = user.ClassTeacher)
+    context = {
+        'Teacher' : FullName,
+        'images' : Image,
+        'data' : {
+                'MobileNo': user.MobileNo,
+                'FullName': user.FullName,
+                'Password': user.Password
+            },
+        'Class' : Class,
+        'TimeTable' : TimeTable,
+        'Student' : Student
+    }
+    if request.method == 'POST':
+        num_student = len(request.POST) // 3
+
+        for i in range(1,num_student):
+            SRegNo = request.POST.get(f'SRegNo_{i}')
+            Month = request.POST.get(f'Month_{i}')
+            Attendence = request.POST.get(f'Attendence_{i}')
+
+            if Month == "" or Attendence == "":
+                continue
+
+            try:
+                user = models.Attendence.objects.filter(RegNo = SRegNo, Month = Month).first()
+                if user:
+                    user.RegNo = SRegNo
+                    user.Month = Month
+                    user.Attendence = Attendence
+                    user.save()
+                else:
+                    data = models.Attendence(RegNo = SRegNo, Month = Month, Attendence = Attendence)
+                    data.save()
+
+            except Exception as e:
+                context['error'] = f"Error saving data for student {SRegNo}: {str(e)}"
+                return HttpResponse(TeacherPage.render(context, request))
+            
+        context['success'] = "Attendance Successfully Updated11111"
+        return HttpResponse(TeacherPage.render(context, request))
+    context['error'] = "Invalid Request Method"
+    return HttpResponse(TeacherPage.render(context, request))

@@ -15,6 +15,8 @@
         </style>
     </head>
     <body>
+        <h4>{{success}}</h4>
+        <h4>{{error}}</h4>
         <h1>Teacher Page</h1>
         <h2>Welcome {{Teacher}}</h2>
         <div>
@@ -30,7 +32,6 @@
             <form action="{%url 'UpdateTeacherDetails'%}" method="POST"> 
                 {% csrf_token %}
                 <h1>EDIT DETAILS</h1>
-                <h4>{{success}}</h4>
                 <input type="hidden" name="TeacherName" value="{{data.FullName}}">
                 <input type="hidden" name="TeacherMobileNo" value="{{data.MobileNo}}">
                 MobileNo: <input type="number" name="UpdateMobileNo" value="{{data.MobileNo}}">
@@ -70,38 +71,49 @@
             <input type="number" name="Attendence" id="" placeholder="Attendence">
         </div> -->
         <div>
-            <table>
-                <tr>
-                    <th>Student Registration No</th>
-                    <th>Student FullName</th>
-                    <th>Month</th>
-                    <th>Attendence</th>
-                </tr>
-                {%for i in Student%}
-                <tr>
-                    <td>{{i.RollNo}}</td>
-                    <td>{{i.FullName}}</td>
-                    <td>
-                        <select name="Month" id="" aria-placeholder="Month">
-                            <option value="">--Select--</option>
-                            <option value="January">January</option>
-                            <option value="February">February</option>
-                            <option value="March">March</option>
-                            <option value="April">April</option>
-                            <option value="May">May</option>
-                            <option value="June">June</option>
-                            <option value="July">July</option>
-                            <option value="Agust">Agust</option>
-                            <option value="September">September</option>
-                            <option value="November">November</option>
-                            <option value="December">December</option>
-                        </select>
-                    </td>
-                    <td><input type="number"></td>
+            <form action="{%url 'Attendence'%}" method="POST">
+                {% csrf_token %}
+                <table>
+                    <tr>
+                        <th>Student Registration No</th>
+                        <th>Student FullName</th>
+                        <th>Month</th>
+                        <th>Attendence</th>
+                    </tr>
+                    {%for i in Student%}
+                    <tr>
+                        <td>{{i.RollNo}}</td>
+                        <td>{{i.FullName}}</td>
+                        <td>
+                            <select name="Month_{{ forloop.counter }}" id="" aria-placeholder="Month">
+                                <option value="">--Select--</option>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="Agust">Agust</option>
+                                <option value="September">September</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="Attendence_{{ forloop.counter }}">
+                            <input type="hidden" name="SRegNo_{{ forloop.counter }}" value="{{i.RollNo}}" id="">
+                            <input type="hidden" name="TeacherName" value="{{data.FullName}}">
+                            <input type="hidden" name="TeacherMobileNo" value="{{data.MobileNo}}">
+                        </td>
+
+                        
+                    </tr>
+                    {%endfor%} 
                     
-                </tr>
-                {%endfor%}
-            </table>
+                </table>
+                <button type="submit">Update Attendence</button>
+            </form>
         </div>
         <div>
             <form action="">

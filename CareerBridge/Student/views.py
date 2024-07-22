@@ -11,6 +11,7 @@ def StudentLogin(request):
     if request.method == 'POST':
         FullName = request.POST.get('StudentUserName')
         Password = request.POST.get('StudentPassword')
+        SRegNo = request.POST.get('StudentRollNo')
  
         try:
             user = models.Student.objects.filter(FullName = FullName, Password = Password).first()
@@ -19,6 +20,7 @@ def StudentLogin(request):
                 data = models.Student.objects.all()
                 Class = user.Class
                 TimeTable = models.TimeTable.objects.filter(Class = Class).first()
+                Attendence = models.Attendence.objects.filter(RegNo = user.RollNo)
                 context = {
                     'Student': FullName,
                     'image' : image,
@@ -29,7 +31,8 @@ def StudentLogin(request):
                         'Password': user.Password,
                         'Class': user.Class
                     },
-                    'TimeTable' : TimeTable.Image
+                    'TimeTable' : TimeTable.Image,
+                    'Attendence' : Attendence
                 }
                 return HttpResponse(StudentPage.render(context, request))
             else:

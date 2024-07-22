@@ -44,6 +44,22 @@
             {% endif %}
         </div>
         <div>
+            <table>
+                <tr>
+                    <th>Month</th>
+                    <th>Attendence</th>
+                </tr>
+                {% for i in Attendence %}
+                <tr>
+                    <td>{{i.Month}}</td>
+                    <td>{{i.Attendence}}</td>
+                </tr>
+                {% endfor %}
+
+            </table>
+            <p>{{Attendence.Month}}</p>
+        </div>
+        <div>
             <form action="">
                 <a href="{%url 'test'%}"><strong>LogOut</strong></a>
 
