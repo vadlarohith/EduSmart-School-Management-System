@@ -58,6 +58,7 @@ def UpdateDetails(request):
             user = models.Student.objects.filter(FullName = FullName, RollNo = RollNo).first()
             Class = user.Class
             TimeTable = models.TimeTable.objects.filter(Class = Class).first()
+            Attendence = models.Attendence.objects.filter(RegNo = user.RollNo)
             user.MobileNo = UpdateMobileNo
             user.Password = UpdatePassword
             user.save()
@@ -72,7 +73,8 @@ def UpdateDetails(request):
                         'Password': user.Password,
                         'Class': user.Class
                     },
-                    'TimeTable' : TimeTable.Image
+                    'TimeTable' : TimeTable.Image,
+                    'Attendence' : Attendence
             }
             return HttpResponse(StudentPage.render(context, request))
         

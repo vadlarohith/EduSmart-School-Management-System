@@ -35,9 +35,11 @@ def AdminLogin(request):
 
         try:
             user = models.Admin.objects.filter(username=username, password = password).exists()
+            TimeTable = models.TimeTable.objects.all()
             if user:
                 context = {
-                    'error': "ADMIN"
+                    'error': "ADMIN",
+                    'TimeTable' : TimeTable
                 }
                 AdminPage = loader.get_template("AdminPage.html")
                 return HttpResponse(AdminPage.render(context, request))
@@ -138,7 +140,7 @@ def ImageList(request):
     return render(request, 'StudentLogin.html', {'image': image})
 
 
-def TimeTable(request):
+"""def TimeTable(request):
     AdminPage = loader.get_template('AdminPage.html')
     Data = models.TimeTable.objects.all().values()
     if request.method == 'POST':
@@ -148,9 +150,11 @@ def TimeTable(request):
         ClassExist = models.TimeTable.objects.filter(Class = Class)
         if not ClassExist:
             data = models.TimeTable.objects.create(Class = Class, Image = TimeTable)
+            TimeTable = models.TimeTable.objects.all()
             data.save()
             context = {
-                'success' : 'Successfully Uploaded Timetables'
+                'success' : 'Successfully Uploaded Timetables',
+                'TimeTable' : TimeTable,
             }
             return HttpResponse(AdminPage.render(context, request))
         else:
@@ -164,4 +168,55 @@ def TimeTable(request):
     context = {
         'error':'Error'
     }
+    return HttpResponse(AdminPage.render(context, request))"""
+
+def TimeTable(request):
+    AdminPage = loader.get_template('AdminPage.html')
+    Data = models.TimeTable.objects.all().values()
+    
+    if request.method == 'POST':
+        Class = request.POST.get('Class')
+        TimeTable = request.FILES.get('TimeTable')
+
+        ClassExist = models.TimeTable.objects.filter(Class=Class)
+        if not ClassExist.exists():
+            data = models.TimeTable.objects.create(Class=Class, Image=TimeTable)
+            data.save()
+        else:
+            data = models.TimeTable.objects.get(Class=Class)
+            data.Image = TimeTable
+            data.save()
+            
+        context = {
+            'success': 'Successfully Uploaded Timetables',
+            'TimeTable': models.TimeTable.objects.all()
+        }
+        
+        return HttpResponse(AdminPage.render(context, request))
+    
+    context = {
+        'TimeTable': models.TimeTable.objects.all().values()
+    }
+    
     return HttpResponse(AdminPage.render(context, request))
+
+"""def update_timetable(request):
+    AdminPage = loader.get_template('AdminPage.html')
+    if request.method == 'POST':
+        Class = request.POST.get('Class')
+        TimeTable = request.FILES.get('TimeTable')
+
+        data, created = models.TimeTable.objects.update_or_create(Class=Class, defaults={'Image': TimeTable})
+
+        context = {
+            'success': 'Successfully Updated Timetables',
+            'TimeTable': models.TimeTable.objects.all()
+        }
+        return HttpResponse(AdminPage.render(context, request))
+
+    context = {
+        'TimeTable': models.TimeTable.objects.all().values()
+    }
+    return HttpResponse(AdminPage.render(context, request))"""
+
+

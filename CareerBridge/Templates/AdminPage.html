@@ -1,6 +1,18 @@
 <html>
 <head>
     <title>AdminPage</title>
+    <style>
+        #imageContainer {
+        width: 500px;
+        height: 500px;
+        border: 1px solid #000;
+    }
+    img {
+        width: 100%;
+        height: 100%;
+        display: none;
+    }
+    </style>
 </head>
 <body>
     <h1>AdminPage</h1>
@@ -56,21 +68,26 @@
             <button type="submit">Upload</button>
         </form>
     </div>
+    
     <div>
-        <form action="{%url 'TimeTable'%}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <h2>TimeTable</h2>
-            <select name="Class" id="">
-                <option value="Class1">Class1</option>
-                <option value="Class2">Class2</option>
-                <option value="Class3">Class3</option>
-                <option value="Class4">Class4</option>
-                <option value="Class5">Class5</option>
-            </select> <br>
-            <input type="file" name="TimeTable">
-            <button type="submit">Upload</button>
-        </form>
+        <h1>TimeTables</h1>
+        <div id="imageContainer">
+            {% for timetable in TimeTable %}
+                <img id="{{ timetable.Class }}" src="{{ timetable.Image.url }}" alt="{{ timetable.Class }}" style="display: none;">
+            {% endfor %}
+        </div>
+        {% for timetable in TimeTable %}
+            <button onclick="showImage('{{ timetable.Class }}')">{{ timetable.Class }}</button>
+            <a href="#" onclick="showChangeOption('{{ timetable.Class }}')">Change</a>
+            <form id="form_{{ timetable.Class }}" action="{% url 'TimeTable' %}" method="POST" enctype="multipart/form-data" style="display: none;">
+                {% csrf_token %}
+                <input type="hidden" name="Class" value="{{ timetable.Class }}">
+                <input type="file" name="TimeTable" accept="image/*">
+                <button type="submit">Submit</button>
+            </form>
+        {% endfor %}
     </div>
+    
     <div>
         <form action="">
             <a href="{%url 'test'%}"><strong>LogOut</strong></a>
@@ -85,6 +102,19 @@
                 return false; // Prevent form submission
             }
             return true; // Allow form submission
+        }
+
+        function showImage(imageId) {
+            const images = document.querySelectorAll('#imageContainer img');
+            images.forEach(img => img.style.display = 'none');
+            
+            const selectedImage = document.getElementById(imageId);
+            selectedImage.style.display = 'block';
+        }
+
+        function showChangeOption(classId) {
+            const form = document.getElementById(`form_${classId}`);
+            form.style.display = 'block';
         }
     </script>
 </body>
