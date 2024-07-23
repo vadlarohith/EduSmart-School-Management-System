@@ -9,4 +9,6 @@ urlpatterns = [
     path('UploadImage', views.UploadImage, name='UploadImage'),
     path('ImageList', views.ImageList, name='ImageList'),
     path('TimeTable', views.TimeTable, name='TimeTable'),
+    path('add_subject/', views.add_subject, name='add_subject'),
+    path('delete_subject/', views.delete_subject, name='delete_subject'),
 ]

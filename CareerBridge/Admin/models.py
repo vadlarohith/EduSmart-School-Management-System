@@ -69,3 +69,17 @@ class Attendence(models.Model):
 
     def __str__(self):
         return self.RegNo
+    
+class Class(models.Model):
+    Class = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.Class
+    
+class Subject(models.Model):
+    Class = models.CharField(max_length=10)
+    Subject = models.CharField(max_length=30)
+    SubCode = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.Subject

@@ -21,3 +21,7 @@ class AttendencePreview(admin.ModelAdmin):
     list_display = ('RegNo','Month','Attendence')
 
 admin.site.register(models.Attendence, AttendencePreview)
+
+admin.site.register(models.Class)
+
+admin.site.register(models.Subject)

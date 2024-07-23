@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth.hashers import check_password
 from . import models
+from django.contrib import messages
 
 def test(request):
     HomePage = loader.get_template("home.html")
@@ -36,10 +37,14 @@ def AdminLogin(request):
         try:
             user = models.Admin.objects.filter(username=username, password = password).exists()
             TimeTable = models.TimeTable.objects.all()
+            Subject = models.Subject.objects.all()
+            Class = models.Class.objects.all()
             if user:
                 context = {
                     'error': "ADMIN",
-                    'TimeTable' : TimeTable
+                    'TimeTable' : TimeTable,
+                    'Class' : Class,
+                    'Subject' : Subject
                 }
                 AdminPage = loader.get_template("AdminPage.html")
                 return HttpResponse(AdminPage.render(context, request))
@@ -219,4 +224,48 @@ def TimeTable(request):
     }
     return HttpResponse(AdminPage.render(context, request))"""
 
+def add_subject(request):
+    AdminPage = loader.get_template('AdminPage.html')
+    if request.method == 'POST':
+        class_name = request.POST['Class']
+        sub_code = request.POST['SubCode']
+        subject_name = request.POST['Subject']
+
+        # Create and save the new subject
+        new_subject = models.Subject(Class=class_name, SubCode=sub_code, Subject=subject_name)
+        new_subject.save()
+        TimeTable = models.TimeTable.objects.all()
+        Subject = models.Subject.objects.all()
+        Class = models.Class.objects.all()
+
+        messages.success(request, 'Subject added successfully')
+        context = {
+            'success' : "Subject added successfully",
+            'error': "ADMIN",
+            'TimeTable' : TimeTable,
+            'Class' : Class,
+            'Subject' : Subject
+
+        }
+        return HttpResponse(AdminPage.render(context,request))
+
+def delete_subject(request):
+    AdminPage = loader.get_template('AdminPage.html')
+    if request.method == 'POST':
+        subject_id = request.POST['subject_id']
+
+        # Delete the subject
+        models.Subject.objects.filter(id=subject_id).delete()
+        TimeTable = models.TimeTable.objects.all()
+        Subject = models.Subject.objects.all()
+        Class = models.Class.objects.all()
+
+        context = {
+            'success' : "Subject deleted successfully",
+            'error': "ADMIN",
+            'TimeTable' : TimeTable,
+            'Class' : Class,
+            'Subject' : Subject
+        }
+        return HttpResponse(AdminPage.render(context,request))
 
