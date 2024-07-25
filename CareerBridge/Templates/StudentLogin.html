@@ -61,6 +61,21 @@
             <p>{{Attendence.Month}}</p>
         </div>
         <div>
+            <h2>Subjects</h2>
+            <table>
+                <tr>
+                    <th>Subject Code</th>
+                    <th>Subject Name</th>
+                </tr>
+                {% for i in Subjects %}
+                    <tr>
+                        <td>{{i.SubCode}}</td>
+                        <td>{{i.Subject}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div>
             <form action="">
                 <a href="{%url 'test'%}"><strong>LogOut</strong></a>
 

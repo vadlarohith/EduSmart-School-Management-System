@@ -9,25 +9,7 @@ def test(request):
     HomePage = loader.get_template("home.html")
     return render(request,"home.html")
 
-"""def AdminLogin(request):
-    admin = models.admin.objects.all().values()
-    AdminPage = loader.get_template("AdminPage.html")
-    HomePage = loader.get_template("home.html")
-    if request.method == 'POST':
-        username = request.POST['AdminUserName']
-        password = request.POST['AdminPassword']
 
-        user = models.admin.objects.filter(Username=username,Password=password).first()
-        if user:
-            context = {
-                'error' : "ADMIN"
-            }
-            return HttpResponse(AdminPage.render(context,request))
-        context = {
-            'error' : "Username or Password Wrong"
-        }
-        return HttpResponse(HomePage.render(context,request))
-    return render(request, "home.html")"""
 
 def AdminLogin(request):
     if request.method == 'POST':
@@ -145,35 +127,6 @@ def ImageList(request):
     return render(request, 'StudentLogin.html', {'image': image})
 
 
-"""def TimeTable(request):
-    AdminPage = loader.get_template('AdminPage.html')
-    Data = models.TimeTable.objects.all().values()
-    if request.method == 'POST':
-        Class = request.POST.get('Class')
-        TimeTable = request.FILES.get('TimeTable')
-
-        ClassExist = models.TimeTable.objects.filter(Class = Class)
-        if not ClassExist:
-            data = models.TimeTable.objects.create(Class = Class, Image = TimeTable)
-            TimeTable = models.TimeTable.objects.all()
-            data.save()
-            context = {
-                'success' : 'Successfully Uploaded Timetables',
-                'TimeTable' : TimeTable,
-            }
-            return HttpResponse(AdminPage.render(context, request))
-        else:
-            data = models.TimeTable.objects.filter(Class = Class).first()
-            data.Image = TimeTable
-            data.save()
-            context = {
-                'success' : 'Successfully Uploaded Timetables'
-            }
-            return HttpResponse(AdminPage.render(context, request))
-    context = {
-        'error':'Error'
-    }
-    return HttpResponse(AdminPage.render(context, request))"""
 
 def TimeTable(request):
     AdminPage = loader.get_template('AdminPage.html')
@@ -205,38 +158,33 @@ def TimeTable(request):
     
     return HttpResponse(AdminPage.render(context, request))
 
-"""def update_timetable(request):
-    AdminPage = loader.get_template('AdminPage.html')
-    if request.method == 'POST':
-        Class = request.POST.get('Class')
-        TimeTable = request.FILES.get('TimeTable')
 
-        data, created = models.TimeTable.objects.update_or_create(Class=Class, defaults={'Image': TimeTable})
-
-        context = {
-            'success': 'Successfully Updated Timetables',
-            'TimeTable': models.TimeTable.objects.all()
-        }
-        return HttpResponse(AdminPage.render(context, request))
-
-    context = {
-        'TimeTable': models.TimeTable.objects.all().values()
-    }
-    return HttpResponse(AdminPage.render(context, request))"""
 
 def add_subject(request):
     AdminPage = loader.get_template('AdminPage.html')
+    TimeTable = models.TimeTable.objects.all()
+    Subject = models.Subject.objects.all()
+    Class = models.Class.objects.all()
     if request.method == 'POST':
         class_name = request.POST['Class']
         sub_code = request.POST['SubCode']
         subject_name = request.POST['Subject']
 
+        if models.Subject.objects.filter(Class = class_name, SubCode = sub_code).first() or models.Subject.objects.filter(Class = class_name, Subject = subject_name):
+            context = {
+                'error' : "Subject already exists",
+                'Admin': "ADMIN",
+                'TimeTable' : TimeTable,
+                'Class' : Class,
+                'Subject' : Subject
+            }
+            return HttpResponse(AdminPage.render(context, request))
+
+
         # Create and save the new subject
         new_subject = models.Subject(Class=class_name, SubCode=sub_code, Subject=subject_name)
         new_subject.save()
-        TimeTable = models.TimeTable.objects.all()
-        Subject = models.Subject.objects.all()
-        Class = models.Class.objects.all()
+        
 
         messages.success(request, 'Subject added successfully')
         context = {

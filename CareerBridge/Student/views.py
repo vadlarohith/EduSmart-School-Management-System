@@ -21,6 +21,7 @@ def StudentLogin(request):
                 Class = user.Class
                 TimeTable = models.TimeTable.objects.filter(Class = Class).first()
                 Attendence = models.Attendence.objects.filter(RegNo = user.RollNo)
+                Subjects = models.Subject.objects.filter(Class = user.Class)
                 context = {
                     'Student': FullName,
                     'image' : image,
@@ -32,7 +33,8 @@ def StudentLogin(request):
                         'Class': user.Class
                     },
                     'TimeTable' : TimeTable.Image,
-                    'Attendence' : Attendence
+                    'Attendence' : Attendence,
+                    'Subjects' : Subjects
                 }
                 return HttpResponse(StudentPage.render(context, request))
             else:
