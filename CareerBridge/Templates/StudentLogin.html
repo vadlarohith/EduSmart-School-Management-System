@@ -76,6 +76,29 @@
             </table>
         </div>
         <div>
+            <h2>Fee Details</h2>
+            <table>
+                <tr>
+                    <th>StudentRollNo</th>
+                    <th>StudentName</th>
+                    <th>Class</th>
+                    <th>TotalFee</th>
+                    <th>TotalPaidFee</th>
+                    <th>Due</th>
+                    <th>LatestPaidFee</th>
+                </tr>
+                <tr>
+                    <td>{{FeeDetails.StudentRollNo}}</td>
+                    <td>{{FeeDetails.StudentName}}</td>
+                    <td>{{FeeDetails.Class}}</td>
+                    <td>{{FeeDetails.TotalFee}}</td>
+                    <td>{{FeeDetails.TotalPaidFee}}</td>
+                    <td>{{FeeDetails.Due}}</td>
+                    <td>{{FeeDetails.LatestPaidFee}}</td>
+                </tr>
+            </table>
+        </div>
+        <div>
             <form action="">
                 <a href="{%url 'test'%}"><strong>LogOut</strong></a>
 

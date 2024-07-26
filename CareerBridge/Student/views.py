@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth.hashers import check_password
 from Admin import models
+from . import models as Smodels
 
 def StudentLogin(request):
     StudentPage = loader.get_template("StudentLogin.html")
@@ -22,6 +23,7 @@ def StudentLogin(request):
                 TimeTable = models.TimeTable.objects.filter(Class = Class).first()
                 Attendence = models.Attendence.objects.filter(RegNo = user.RollNo)
                 Subjects = models.Subject.objects.filter(Class = user.Class)
+                FeeDetails = Smodels.FeeDetails.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName).first()
                 context = {
                     'Student': FullName,
                     'image' : image,
@@ -34,7 +36,8 @@ def StudentLogin(request):
                     },
                     'TimeTable' : TimeTable.Image,
                     'Attendence' : Attendence,
-                    'Subjects' : Subjects
+                    'Subjects' : Subjects,
+                    'FeeDetails' : FeeDetails
                 }
                 return HttpResponse(StudentPage.render(context, request))
             else:

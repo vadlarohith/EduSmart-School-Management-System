@@ -1,3 +1,7 @@
 from django.contrib import admin
+from . import models
 
-# Register your models here.
+class FeeDetailsPreview(admin.ModelAdmin):
+    list_display = ('StudentRollNo', 'StudentName', 'TotalFee', 'Due')
+
+admin.site.register(models.FeeDetails, FeeDetailsPreview)

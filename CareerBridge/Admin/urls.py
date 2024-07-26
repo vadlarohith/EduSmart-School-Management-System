@@ -11,4 +11,5 @@ urlpatterns = [
     path('TimeTable', views.TimeTable, name='TimeTable'),
     path('add_subject/', views.add_subject, name='add_subject'),
     path('delete_subject/', views.delete_subject, name='delete_subject'),
+    path('UpdateFeeDetails', views.UpdateFeeDetails, name='UpdateFeeDetails'),
 ]

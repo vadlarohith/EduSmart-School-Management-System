@@ -4,6 +4,7 @@ from django.template import loader
 from django.contrib.auth.hashers import check_password
 from . import models
 from django.contrib import messages
+from Student import models as Smodels
 
 def test(request):
     HomePage = loader.get_template("home.html")
@@ -21,12 +22,16 @@ def AdminLogin(request):
             TimeTable = models.TimeTable.objects.all()
             Subject = models.Subject.objects.all()
             Class = models.Class.objects.all()
+            Students = models.Student.objects.all()
+            FeeDetails = Smodels.FeeDetails.objects.all()
             if user:
                 context = {
                     'error': "ADMIN",
                     'TimeTable' : TimeTable,
                     'Class' : Class,
-                    'Subject' : Subject
+                    'Subject' : Subject,
+                    'FeeDetails': FeeDetails,
+                    'Students' : Students
                 }
                 AdminPage = loader.get_template("AdminPage.html")
                 return HttpResponse(AdminPage.render(context, request))
@@ -68,7 +73,9 @@ def StudentRegistration(request):
 
         try:
             data = models.Student(FullName = FullName, RollNo = RollNo, Password = RollNo, Class = Class)
+            FeeDetails = Smodels.FeeDetails(StudentRollNo = RollNo, StudentName = FullName, Class = Class, TotalFee = 0, TotalPaidFee = 0, Due = 0, LatestPaidFee  = 0)
             data.save()
+            FeeDetails.save()
             context['success'] = "Student Registered Successfully"
         except Exception as e:
             context['error'] = f"Error: {str(e)}"
@@ -216,4 +223,60 @@ def delete_subject(request):
             'Subject' : Subject
         }
         return HttpResponse(AdminPage.render(context,request))
+    
+def UpdateFeeDetails(request):
+    AdminPage = loader.get_template("AdminPage.html")
+    context = {}
+
+    if request.method == 'POST':
+        StudentRollNo = request.POST.get('StudentRollNo')
+        StudentName = request.POST.get('StudentName')
+        Class = request.POST.get('Class')
+        TotalFee = request.POST.get('TotalFee')
+        LatestPaidFee = request.POST.get('LatestPaidFee')
+        TotalPaidFee = request.POST.get('TotalPaidFee')
+
+        StudentExist = Smodels.FeeDetails.objects.filter(StudentRollNo = StudentRollNo, StudentName = StudentName, Class = Class).first()
+        TimeTable = models.TimeTable.objects.all()
+        Subject = models.Subject.objects.all()
+        Class = models.Class.objects.all()
+        Students = models.Student.objects.all()
+        FeeDetails = Smodels.FeeDetails.objects.all()
+
+        try:
+            if StudentExist:
+                StudentExist.TotalFee = TotalFee
+                StudentExist.LatestPaidFee = LatestPaidFee
+                StudentExist.TotalPaidFee = float(StudentExist.TotalPaidFee) + float(LatestPaidFee)
+                StudentExist.Due = float(StudentExist.TotalFee) - float(StudentExist.TotalPaidFee)
+
+                StudentExist.save()
+
+                context = {
+                    'success' : "Fee updated successfully",
+                    'TimeTable' : TimeTable,
+                    'Class' : Class,
+                    'Subject' : Subject,
+                    'FeeDetails': FeeDetails,
+                    'Students' : Students
+
+                }
+                return HttpResponse(AdminPage.render(context, request))
+            else:
+                context = {
+                    'error' : "Fee updation failed",
+                    'TimeTable' : TimeTable,
+                    'Class' : Class,
+                    'Subject' : Subject,
+                    'FeeDetails': FeeDetails,
+                    'Students' : Students
+                } 
+                return HttpResponse(AdminPage.render(context, request))
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+            return HttpResponse(AdminPage.render(context, request))
+    context = {
+        'error' : "Error"
+    }
+    return HttpResponse(AdminPage.render(context,request))
 
