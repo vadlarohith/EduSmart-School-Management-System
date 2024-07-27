@@ -262,6 +262,7 @@ def UpdateFeeDetails(request):
 
                 }
                 return HttpResponse(AdminPage.render(context, request))
+                return redirect('admin_login')
             else:
                 context = {
                     'error' : "Fee updation failed",

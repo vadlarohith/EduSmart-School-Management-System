@@ -28,11 +28,9 @@
             RollNo: <input type="text" name="SRollNo" required> <br>
             Class: <select name="Class" id="">
                 <option value="">--Select--</option>
-                <option value="Class1">Class1</option>
-                <option value="Class2">Class2</option>
-                <option value="Class3">Class3</option>
-                <option value="Class4">Class4</option>
-                <option value="Class5">Class5</option>
+                {%for i in Class%}
+                <option value="{{i}}">{{i}}</option>
+                {%endfor%}
             </select> <br>
             
             <button type="submit">Submit</button>
@@ -47,11 +45,9 @@
             MobileNo: <input type="text" name="TMobileNo" required> <br>
             Class Teacher: <select name="ClassTeacher" id="">
                 <option value="">--Select--</option>
-                <option value="Class1">Class1</option>
-                <option value="Class2">Class2</option>
-                <option value="Class3">Class3</option>
-                <option value="Class4">Class4</option>
-                <option value="Class5">Class5</option>
+                {%for i in Class%}
+                <option value="{{i}}">{{i}}</option>
+                {%endfor%}
             </select> <br>
             <button type="submit">Submit</button>
         </form>
@@ -90,6 +86,12 @@
     </div>
     <div>
         <h2>Subjects</h2>
+        <select name="" id="" onchange="showSubjects(this.value)">
+            <option value="">--Select--</option>
+            {%for i in Class%}
+            <option value="{{i}}">{{i}}</option>
+            {%endfor%}
+        </select>
         <div id="subjectContainer">
             <table>
                 <tr>
@@ -114,9 +116,9 @@
                 {% endfor %}
             </table>
         </div>
-        {% for i in Class %}
+        <!-- {% for i in Class %}
             <button onclick="showSubjects('{{ i }}')">{{ i }}</button>
-        {% endfor %}
+        {% endfor %} -->
     
         <div id="addSubjectForm" style="display:none;">
             <h3>Add New Subject</h3>
@@ -182,16 +184,6 @@
             <button onclick="showFeeDetails('{{ i }}')">{{ i }}</button>
         {% endfor %}
     
-        <div id="addSubjectForm" style="display:none;">
-            <h3>Add New Subject</h3>
-            <form action="{% url 'add_subject' %}" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="Class" id="classInput">
-                Subject Code: <input type="text" name="SubCode" required><br>
-                Subject Name: <input type="text" name="Subject" required><br>
-                <button type="submit">Add Subject</button>
-            </form>
-        </div>
     </div>
         <form action="">
             <a href="{%url 'test'%}"><strong>LogOut</strong></a>
