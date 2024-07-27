@@ -8,9 +8,14 @@ class FeeDetails(models.Model):
     StudentName = models.CharField(max_length=30)
     Class = models.CharField(max_length=10)
     TotalFee = models.DecimalField(max_digits=10, decimal_places=2)
+    #Discount = models.DecimalField(max_digits=10, decimal_places=2)
     TotalPaidFee = models.DecimalField(max_digits=10, decimal_places=2)
     Due = models.DecimalField(max_digits=10, decimal_places=2)
     LatestPaidFee = models.DecimalField(max_digits=10, decimal_places=2)
+    #TransactionNo = models.CharField(max_length=20)
+    #Date = models.DateField()
 
     def __str__(self):
         return self.StudentRollNo
+    
+

@@ -23,17 +23,8 @@
             display: block;
             padding: 10px 0;
         }
-        .sidebar a:hover, .sidebar select:hover {
+        .sidebar a:hover {
             background-color: #575757;
-            color: white;
-        }
-        .sidebar select {
-            width: 100%;
-            padding: 10px 0;
-            border: none;
-            background-color: #333;
-            color: white;
-            cursor: pointer;
         }
         .content {
             margin-left: 270px;
@@ -70,14 +61,7 @@
         <a href="#" onclick="showSection('teacher-registration')">Teacher Registration</a>
         <a href="#" onclick="showSection('upload-image')">Upload Image</a>
         <a href="#" onclick="showSection('timetables')">TimeTables</a>
-        <!-- <a href="#" onclick="showSection('subjects')">Subjects</a> -->
-        <a href="#" onclick="showSection('subjects')"><select onchange="showSubjects(this.value)" class="Select1">
-            <option value="">Subject</option>
-            {% for i in Class %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endfor %}
-        </select>
-        </a>
+        <a href="#" onclick="showSection('subjects')">Subjects</a>
         <a href="#" onclick="showSection('fee-details')">Fee Details</a>
         <a href="{% url 'test' %}">LogOut</a>
     </div>
@@ -167,7 +151,12 @@
         <!-- Subjects Section -->
         <div id="subjects" class="hidden" data-section="subjects">
             <h2>Subjects</h2>
-            
+            <select onchange="showSubjects(this.value)">
+                <option value="">--Select--</option>
+                {% for i in Class %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
             <div id="subjectContainer">
                 <table>
                     <tr>
