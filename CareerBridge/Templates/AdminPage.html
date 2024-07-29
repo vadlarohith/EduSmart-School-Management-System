@@ -79,6 +79,7 @@
         </select>
         </a>
         <a href="#" onclick="showSection('fee-details')">Fee Details</a>
+        <a href="#" onclick="showSection('UpdateFees')">UpdateFeeses</a>
         <a href="{% url 'test' %}">LogOut</a>
     </div>
 
@@ -214,9 +215,12 @@
                         <th>StudentName</th>
                         <th>Class</th>
                         <th>TotalFee</th>
+                        <th>Discount</th>
                         <th>TotalPaidFee</th>
                         <th>Due</th>
                         <th>LatestPaidFee</th>
+                        <th>Transaction No</th>
+                        <th>Date</th>
                         <th>Action</th>
                     </tr>
                     {% for j in FeeDetails %}
@@ -226,10 +230,13 @@
                             <td>{{ j.StudentRollNo }}<input type="hidden" name="StudentRollNo" value="{{ j.StudentRollNo }}"></td>
                             <td>{{ j.StudentName }}<input type="hidden" name="StudentName" value="{{ j.StudentName }}"></td>
                             <td>{{ j.Class }}<input type="hidden" name="Class" value="{{ j.Class }}"></td>
-                            <td><input type="number" name="TotalFee" value="{{ j.TotalFee }}"></td>
+                            <td>{{j.TotalFee }}<input type="hidden" name="TotalFee" value="{{ j.TotalFee }}"></td>
+                            <td><input type="number" name="Discount" id="" value="{{j.Discount1}}"></td>
                             <td>{{ j.TotalPaidFee }}<input type="hidden" name="TotalPaidFee" value="{{ j.TotalPaidFee }}"></td>
                             <td>{{ j.Due }}</td>
                             <td><input type="number" name="LatestPaidFee" placeholder="{{ j.LatestPaidFee }}"></td>
+                            <td><input type="text" name="TransactionNo" placeholder=""></td>
+                            <td><input type="datetime-local" name="Date" id=""></td>
                             <td><button type="submit">Update</button></td>
                         </form>
                     </tr>
@@ -239,6 +246,31 @@
             <!-- {% for i in Class %}
             <button onclick="showFeeDetails('{{ i }}')">{{ i }}</button>
             {% endfor %} -->
+        </div>
+        <div id="UpdateFees" class="hidden" data-section="UpdateFees">
+            <h2>UpdateFees</h2>
+            <div id="UpdateFeesContainer">
+                <table>
+                    <tr>
+                        <th>Classes</th>
+                        <th>Feeses</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for i in UpdateFeeses %}
+                    <form action="{% url 'UpdateFee' %}" method="POST">
+                        {% csrf_token %}
+                        <tr>
+                            <td>
+                                {{i.Class}}
+                                <input type="hidden" name="Class" id="" value="{{i.Class}}">
+                            </td>
+                            <td><input type="number" name="Fee" id="" value="{{i.Fee}}"></td>
+                            <td><button type="submit">Update</button></td>
+                        </tr>
+                    </form>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
     </div>
 

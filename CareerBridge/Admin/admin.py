@@ -25,3 +25,8 @@ admin.site.register(models.Attendence, AttendencePreview)
 admin.site.register(models.Class)
 
 admin.site.register(models.Subject)
+
+class UpdateFeePreview(admin.ModelAdmin):
+    list_display = ('Class','Fee')
+
+admin.site.register(models.UpdateFee, UpdateFeePreview)

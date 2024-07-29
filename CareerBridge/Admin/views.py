@@ -24,6 +24,7 @@ def AdminLogin(request):
             Class = models.Class.objects.all()
             Students = models.Student.objects.all()
             FeeDetails = Smodels.FeeDetails.objects.all()
+            UpdateFeeses = models.UpdateFee.objects.all()
             if user:
                 context = {
                     'error': "ADMIN",
@@ -31,7 +32,8 @@ def AdminLogin(request):
                     'Class' : Class,
                     'Subject' : Subject,
                     'FeeDetails': FeeDetails,
-                    'Students' : Students
+                    'Students' : Students,
+                    'UpdateFeeses' : UpdateFeeses
                 }
                 AdminPage = loader.get_template("AdminPage.html")
                 return HttpResponse(AdminPage.render(context, request))
@@ -53,7 +55,20 @@ def AdminLogin(request):
     
 def StudentRegistration(request):
     AdminPage = loader.get_template("AdminPage.html")
-    context = {}
+    TimeTable = models.TimeTable.objects.all()
+    Subject = models.Subject.objects.all()
+    Class = models.Class.objects.all()
+    Students = models.Student.objects.all()
+    FeeDetails = Smodels.FeeDetails.objects.all()
+    UpdateFeeses = models.UpdateFee.objects.all()
+    context = {
+        'TimeTable' : TimeTable,
+        'Class' : Class,
+        'Subject' : Subject,
+        'FeeDetails': FeeDetails,
+        'Students' : Students,
+        'UpdateFeeses' : UpdateFeeses
+    }
 
     if request.method == 'POST':
         FullName = request.POST.get('SFullName')
@@ -62,18 +77,31 @@ def StudentRegistration(request):
 
         if FullName == '' or RollNo == '' or Class == '':
             context = {
-                'error' : "Enter Valid Details"
+                'error' : "Enter Valid Details",
+                'TimeTable' : TimeTable,
+                'Class' : Class,
+                'Subject' : Subject,
+                'FeeDetails': FeeDetails,
+                'Students' : Students,
+                'UpdateFeeses' : UpdateFeeses
             }
             return HttpResponse(AdminPage.render(context,request))
         if models.Student.objects.filter(RollNo = RollNo):
             context = {
-                'error' : "RollNo Already Exist"
+                'error' : "RollNo Already Exist",
+                'TimeTable' : TimeTable,
+                'Class' : Class,
+                'Subject' : Subject,
+                'FeeDetails': FeeDetails,
+                'Students' : Students,
+                'UpdateFeeses' : UpdateFeeses
             }
             return HttpResponse(AdminPage.render(context, request))
+        Fee = models.UpdateFee.objects.filter(Class = Class).first()
 
         try:
             data = models.Student(FullName = FullName, RollNo = RollNo, Password = RollNo, Class = Class)
-            FeeDetails = Smodels.FeeDetails(StudentRollNo = RollNo, StudentName = FullName, Class = Class, TotalFee = 0, TotalPaidFee = 0, Due = 0, LatestPaidFee  = 0)
+            FeeDetails = Smodels.FeeDetails(StudentRollNo = RollNo, StudentName = FullName, Class = Class, TotalFee = Fee.Fee,Discount1 = 0, TotalPaidFee = 0, Due = 0, LatestPaidFee  = 0, TransactionNo = 0)
             data.save()
             FeeDetails.save()
             context['success'] = "Student Registered Successfully"
@@ -85,7 +113,20 @@ def StudentRegistration(request):
 
 def TeacherRegistration(request):
     AdminPage = loader.get_template("AdminPage.html")
-    context = {}
+    TimeTable = models.TimeTable.objects.all()
+    Subject = models.Subject.objects.all()
+    Class = models.Class.objects.all()
+    Students = models.Student.objects.all()
+    FeeDetails = Smodels.FeeDetails.objects.all()
+    UpdateFeeses = models.UpdateFee.objects.all()
+    context = {
+        'TimeTable' : TimeTable,
+        'Class' : Class,
+        'Subject' : Subject,
+        'FeeDetails': FeeDetails,
+        'Students' : Students,
+        'UpdateFeeses' : UpdateFeeses
+    }
 
     if request.method == 'POST':
         FullName = request.POST.get('TFullName')
@@ -117,6 +158,12 @@ def TeacherRegistration(request):
 
 def UploadImage(request):
     AdminPage = loader.get_template('AdminPage.html')
+    TimeTable = models.TimeTable.objects.all()
+    Subject = models.Subject.objects.all()
+    Class = models.Class.objects.all()
+    Students = models.Student.objects.all()
+    FeeDetails = Smodels.FeeDetails.objects.all()
+    UpdateFeeses = models.UpdateFee.objects.all()
     if request.method == 'POST':
         Title = request.POST.get('Title')
         Description = request.POST.get('Description')
@@ -124,7 +171,13 @@ def UploadImage(request):
         data = models.Posters.objects.create(Title = Title, Description = Description, Image=Image)
         data.save()
         context = {
-            'success':"Successfully Uploaded Updates"
+            'success':"Successfully Uploaded Updates",
+            'TimeTable' : TimeTable,
+            'Class' : Class,
+            'Subject' : Subject,
+            'FeeDetails': FeeDetails,
+            'Students' : Students,
+            'UpdateFeeses' : UpdateFeeses
         }
         return HttpResponse(AdminPage.render(context, request))
     return render(request, 'AdminPage.html')
@@ -138,6 +191,12 @@ def ImageList(request):
 def TimeTable(request):
     AdminPage = loader.get_template('AdminPage.html')
     Data = models.TimeTable.objects.all().values()
+    TimeTable = models.TimeTable.objects.all()
+    Subject = models.Subject.objects.all()
+    Class = models.Class.objects.all()
+    Students = models.Student.objects.all()
+    FeeDetails = Smodels.FeeDetails.objects.all()
+    UpdateFeeses = models.UpdateFee.objects.all()
     
     if request.method == 'POST':
         Class = request.POST.get('Class')
@@ -154,13 +213,25 @@ def TimeTable(request):
             
         context = {
             'success': 'Successfully Uploaded Timetables',
-            'TimeTable': models.TimeTable.objects.all()
+            'TimeTable': models.TimeTable.objects.all(),
+            'TimeTable' : TimeTable,
+            'Class' : Class,
+            'Subject' : Subject,
+            'FeeDetails': FeeDetails,
+            'Students' : Students,
+            'UpdateFeeses' : UpdateFeeses
         }
         
         return HttpResponse(AdminPage.render(context, request))
     
     context = {
-        'TimeTable': models.TimeTable.objects.all().values()
+        'TimeTable': models.TimeTable.objects.all().values(),
+        'TimeTable' : TimeTable,
+        'Class' : Class,
+        'Subject' : Subject,
+        'FeeDetails': FeeDetails,
+        'Students' : Students,
+        'UpdateFeeses' : UpdateFeeses
     }
     
     return HttpResponse(AdminPage.render(context, request))
@@ -172,6 +243,9 @@ def add_subject(request):
     TimeTable = models.TimeTable.objects.all()
     Subject = models.Subject.objects.all()
     Class = models.Class.objects.all()
+    Students = models.Student.objects.all()
+    FeeDetails = Smodels.FeeDetails.objects.all()
+    UpdateFeeses = models.UpdateFee.objects.all()
     if request.method == 'POST':
         class_name = request.POST['Class']
         sub_code = request.POST['SubCode']
@@ -183,7 +257,10 @@ def add_subject(request):
                 'Admin': "ADMIN",
                 'TimeTable' : TimeTable,
                 'Class' : Class,
-                'Subject' : Subject
+                'Subject' : Subject,
+                'FeeDetails': FeeDetails,
+                'Students' : Students,
+                'UpdateFeeses' : UpdateFeeses
             }
             return HttpResponse(AdminPage.render(context, request))
 
@@ -199,7 +276,10 @@ def add_subject(request):
             'error': "ADMIN",
             'TimeTable' : TimeTable,
             'Class' : Class,
-            'Subject' : Subject
+            'Subject' : Subject,
+            'FeeDetails': FeeDetails,
+            'Students' : Students,
+            'UpdateFeeses' : UpdateFeeses
 
         }
         return HttpResponse(AdminPage.render(context,request))
@@ -214,13 +294,19 @@ def delete_subject(request):
         TimeTable = models.TimeTable.objects.all()
         Subject = models.Subject.objects.all()
         Class = models.Class.objects.all()
+        Students = models.Student.objects.all()
+        FeeDetails = Smodels.FeeDetails.objects.all()
+        UpdateFeeses = models.UpdateFee.objects.all()
 
         context = {
             'success' : "Subject deleted successfully",
             'error': "ADMIN",
             'TimeTable' : TimeTable,
             'Class' : Class,
-            'Subject' : Subject
+            'Subject' : Subject,
+            'FeeDetails': FeeDetails,
+            'Students' : Students,
+            'UpdateFeeses' : UpdateFeeses
         }
         return HttpResponse(AdminPage.render(context,request))
     
@@ -235,6 +321,7 @@ def UpdateFeeDetails(request):
         TotalFee = request.POST.get('TotalFee')
         LatestPaidFee = request.POST.get('LatestPaidFee')
         TotalPaidFee = request.POST.get('TotalPaidFee')
+        Discount = request.POST.get('Discount')
 
         StudentExist = Smodels.FeeDetails.objects.filter(StudentRollNo = StudentRollNo, StudentName = StudentName, Class = Class).first()
         TimeTable = models.TimeTable.objects.all()
@@ -242,13 +329,15 @@ def UpdateFeeDetails(request):
         Class = models.Class.objects.all()
         Students = models.Student.objects.all()
         FeeDetails = Smodels.FeeDetails.objects.all()
+        UpdateFeeses = models.UpdateFee.objects.all()
 
         try:
             if StudentExist:
                 StudentExist.TotalFee = TotalFee
+                StudentExist.Discount1 = Discount
                 StudentExist.LatestPaidFee = LatestPaidFee
                 StudentExist.TotalPaidFee = float(StudentExist.TotalPaidFee) + float(LatestPaidFee)
-                StudentExist.Due = float(StudentExist.TotalFee) - float(StudentExist.TotalPaidFee)
+                StudentExist.Due = float(StudentExist.TotalFee) - float(StudentExist.TotalPaidFee) - float(StudentExist.Discount1)
 
                 StudentExist.save()
 
@@ -258,7 +347,8 @@ def UpdateFeeDetails(request):
                     'Class' : Class,
                     'Subject' : Subject,
                     'FeeDetails': FeeDetails,
-                    'Students' : Students
+                    'Students' : Students,
+                    'UpdateFeeses' : UpdateFeeses
 
                 }
                 return HttpResponse(AdminPage.render(context, request))
@@ -270,7 +360,8 @@ def UpdateFeeDetails(request):
                     'Class' : Class,
                     'Subject' : Subject,
                     'FeeDetails': FeeDetails,
-                    'Students' : Students
+                    'Students' : Students,
+                    'UpdateFeeses' : UpdateFeeses
                 } 
                 return HttpResponse(AdminPage.render(context, request))
         except Exception as e:
@@ -280,4 +371,45 @@ def UpdateFeeDetails(request):
         'error' : "Error"
     }
     return HttpResponse(AdminPage.render(context,request))
+
+def UpdateFees(request):
+    AdminPage = loader.get_template('AdminPage.html')
+    TimeTable = models.TimeTable.objects.all()
+    Subject = models.Subject.objects.all()
+    Class = models.Class.objects.all()
+    Students = models.Student.objects.all()
+    FeeDetails = Smodels.FeeDetails.objects.all()
+    UpdateFeeses = models.UpdateFee.objects.all()
+    context = {
+        'TimeTable' : TimeTable,
+        'Class' : Class,
+        'Subject' : Subject,
+        'FeeDetails': FeeDetails,
+        'Students' : Students,
+        'UpdateFeeses' : UpdateFeeses
+    }
+    if request.method == 'POST':
+        Class = request.POST.get('Class')
+        Fee = request.POST.get('Fee')
+
+        UpdateFee = models.UpdateFee.objects.filter(Class = Class).first()
+        
+        try:
+            UpdateFee.Class = Class
+            UpdateFee.Fee = Fee
+            UpdateFee.save()
+            context = {
+                'success' : "Updated successfully",
+                'TimeTable' : TimeTable,
+                'Class' : Class,
+                'Subject' : Subject,
+                'FeeDetails': FeeDetails,
+                'Students' : Students,
+                'UpdateFeeses' : UpdateFeeses
+            }
+            return HttpResponse(AdminPage.render(context,request))
+        except Exception as e:
+            context['error'] = f"Error: {str(e)}"
+            return HttpResponse(AdminPage.render(context, request))
+
 
