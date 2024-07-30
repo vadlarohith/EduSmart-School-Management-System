@@ -1,108 +1,226 @@
-<html>
-    <head>
-        <title>Student</title>
-    </head>
-    <body>
-        {% csrf_token %}
-        <h2>{{error}}</h2>
-        <h1>Welcome {{Student}}</h1>
-        <div>
-            <h2>Notifications</h2>
-            <ul>
-                {% for image in image %}
-                    <a href="media/{{ image.Image }}"><li>{{ image.Title }}: {{image.Description}} {{image.Image}}</li></a>
-                {% endfor %}
-            </ul>
-        </div>
-        <!-- <div>
-            <p>{{data.FullName}}</p>
-            <p>{{data.RollNo}}</p>
-            <p>{{data.Password}}</p>
-            <p>{{data.MobileNo}}</p>
-            <p>{{data.Class}}</p>
-        </div> -->
-        <div>
-            <form action="{%url 'UpdateStudentDetails'%}" method="POST"> 
-                {% csrf_token %}
-                <h1>EDIT DETAILS</h1>
-                <h4>{{success}}</h4>
-                <input type="hidden" name="StudentName" value="{{data.FullName}}">
-                <input type="hidden" name="StudentRollNo" value="{{data.RollNo}}">
-                MobileNo: <input type="number" name="UpdateMobileNo" value="{{data.MobileNo}}">
-                Password: <input type="password" name="UpdatePassword" value="{{data.Password}}">
-                <button type="submit">Update</button>
-            </form>
-            
-        </div>
-        <div>
-            <h2>TimeTable</h2>
-            <p>{{ TimeTable }}</p>
-            {% if TimeTable %}
-                <img src="{{ TimeTable.url  }}" alt="">
-            {% else %}
-                <p>No timetable available.</p>
-            {% endif %}
-        </div>
-        <div>
-            <h2>Attendence</h2>
-            <table>
-                <tr>
-                    <th>Month</th>
-                    <th>Attendence</th>
-                </tr>
-                {% for i in Attendence %}
-                <tr>
-                    <td>{{i.Month}}</td>
-                    <td>{{i.Attendence}}%</td>
-                </tr>
-                {% endfor %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Page</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+}
 
-            </table>
-            <p>{{Attendence.Month}}</p>
-        </div>
-        <div>
-            <h2>Subjects</h2>
-            <table>
-                <tr>
-                    <th>Subject Code</th>
-                    <th>Subject Name</th>
-                </tr>
-                {% for i in Subjects %}
-                    <tr>
-                        <td>{{i.SubCode}}</td>
-                        <td>{{i.Subject}}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-        <div>
-            <h2>Fee Details</h2>
-            <table>
-                <tr>
-                    <th>StudentRollNo</th>
-                    <th>StudentName</th>
-                    <th>Class</th>
-                    <th>TotalFee</th>
-                    <th>TotalPaidFee</th>
-                    <th>Due</th>
-                    <th>LatestPaidFee</th>
-                </tr>
-                <tr>
-                    <td>{{FeeDetails.StudentRollNo}}</td>
-                    <td>{{FeeDetails.StudentName}}</td>
-                    <td>{{FeeDetails.Class}}</td>
-                    <td>{{FeeDetails.TotalFee}}</td>
-                    <td>{{FeeDetails.TotalPaidFee}}</td>
-                    <td>{{FeeDetails.Due}}</td>
-                    <td>{{FeeDetails.LatestPaidFee}}</td>
-                </tr>
-            </table>
-        </div>
-        <div>
-            <form action="">
-                <a href="{%url 'test'%}"><strong>LogOut</strong></a>
+.container {
+    display: flex;
+    width: 100%;
+}
 
-            </form>
-        </div>
-    </body>
+.sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+}
+
+.sidebar h1 {
+    margin-top: 0;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin: 15px 0;
+}
+
+.sidebar nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+    </style>
+</head>
+<body>
+    {% csrf_token %}
+    <div class="container">
+        <aside class="sidebar">
+            <h1>Welcome {{Student}}</h1>
+            <nav>
+                <ul>
+                    <li><a href="#notifications" onclick="showSection('notifications')">Notifications</a></li>
+                    <li><a href="#edit-details" onclick="showSection('edit-details')">Edit Details</a></li>
+                    <li><a href="#timetable" onclick="showSection('timetable')">TimeTable</a></li>
+                    <li><a href="#attendance" onclick="showSection('attendance')">Attendance</a></li>
+                    <li><a href="#subjects" onclick="showSection('subjects')">Subjects</a></li>
+                    <li><a href="#fee-details" onclick="showSection('fee-details')">Fee Details</a></li>
+                    <li><a href="{%url 'test'%}">Log Out</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="content">
+            <section id="notifications" class="section">
+                <h2>Notifications</h2>
+                <ul>
+                    {% for image in image %}
+                    {% if image.Image%}
+                        <li><a href="media/{{ image.Image }}">{{ image.Title }}: {{image.Description}}</a></li>
+                    {%else%}
+                        <li>{{ image.Title }}: {{image.Description}}</li>
+                    {%endif%}
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <section id="edit-details" class="section">
+                <h2>Edit Details</h2>
+                <form action="{%url 'UpdateStudentDetails'%}" method="POST"> 
+                    {% csrf_token %}
+                    <h4>{{success}}</h4>
+                    <input type="hidden" name="StudentName" value="{{data.FullName}}">
+                    <input type="hidden" name="StudentRollNo" value="{{data.RollNo}}">
+                    <label for="UpdateMobileNo">Mobile No:</label>
+                    <input type="number" id="UpdateMobileNo" name="UpdateMobileNo" value="{{data.MobileNo}}">
+                    <label for="UpdatePassword">Password:</label>
+                    <input type="password" id="UpdatePassword" name="UpdatePassword" value="{{data.Password}}">
+                    <button type="submit">Update</button>
+                </form>
+            </section>
+
+            <section id="timetable" class="section">
+                <h2>TimeTable</h2>
+                <p>{{ TimeTable }}</p>
+                {% if TimeTable %}
+                    <img src="{{ TimeTable.url  }}" alt="TimeTable">
+                {% else %}
+                    <p>No timetable available.</p>
+                {% endif %}
+            </section>
+
+            <section id="attendance" class="section">
+                <h2>Attendance</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Attendance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in Attendence %}
+                        <tr>
+                            <td>{{i.Month}}</td>
+                            <td>{{i.Attendence}}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="subjects" class="section">
+                <h2>Subjects</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Subject Code</th>
+                            <th>Subject Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in Subjects %}
+                        <tr>
+                            <td>{{i.SubCode}}</td>
+                            <td>{{i.Subject}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="fee-details" class="section">
+                <h2>Fee Details</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student Roll No</th>
+                            <th>Student Name</th>
+                            <th>Class</th>
+                            <th>Total Fee</th>
+                            <th>Total Paid Fee</th>
+                            <th>Due</th>
+                            <th>Latest Paid Fee</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{FeeDetails.StudentRollNo}}</td>
+                            <td>{{FeeDetails.StudentName}}</td>
+                            <td>{{FeeDetails.Class}}</td>
+                            <td>{{FeeDetails.TotalFee}}</td>
+                            <td>{{FeeDetails.TotalPaidFee}}</td>
+                            <td>{{FeeDetails.Due}}</td>
+                            <td>{{FeeDetails.LatestPaidFee}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <script>
+        function showSection(sectionId) {
+    var sections = document.querySelectorAll('.section');
+    sections.forEach(function(section) {
+        section.classList.remove('active');
+    });
+
+    var activeSection = document.getElementById(sectionId);
+    if (activeSection) {
+        activeSection.classList.add('active');
+    }
+}
+
+// Display the first section by default
+document.addEventListener("DOMContentLoaded", function() {
+    showSection('notifications');
+});
+
+    </script>
+</body>
 </html>

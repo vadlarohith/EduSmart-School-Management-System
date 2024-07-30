@@ -220,7 +220,6 @@
                         <th>Due</th>
                         <th>LatestPaidFee</th>
                         <th>Transaction No</th>
-                        <th>Date</th>
                         <th>Action</th>
                     </tr>
                     {% for j in FeeDetails %}
@@ -235,8 +234,7 @@
                             <td>{{ j.TotalPaidFee }}<input type="hidden" name="TotalPaidFee" value="{{ j.TotalPaidFee }}"></td>
                             <td>{{ j.Due }}</td>
                             <td><input type="number" name="LatestPaidFee" placeholder="{{ j.LatestPaidFee }}"></td>
-                            <td><input type="text" name="TransactionNo" placeholder=""></td>
-                            <td><input type="datetime-local" name="Date" id=""></td>
+                            <td><input type="text" name="TransactionNo" placeholder="Transaction No"></td>
                             <td><button type="submit">Update</button></td>
                         </form>
                     </tr>

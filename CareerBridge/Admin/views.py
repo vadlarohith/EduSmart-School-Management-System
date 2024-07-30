@@ -199,17 +199,17 @@ def TimeTable(request):
     UpdateFeeses = models.UpdateFee.objects.all()
     
     if request.method == 'POST':
-        Class = request.POST.get('Class')
-        TimeTable = request.FILES.get('TimeTable')
+        Class1 = request.POST.get('Class')
+        TimeTable1 = request.FILES.get('TimeTable')
 
-        ClassExist = models.TimeTable.objects.filter(Class=Class)
-        if not ClassExist.exists():
-            data = models.TimeTable.objects.create(Class=Class, Image=TimeTable)
-            data.save()
+        ClassExist = models.TimeTable.objects.filter(Class=Class1).first()
+        if ClassExist:
+            ClassExist.Class = Class1
+            ClassExist.Image = TimeTable1
+            ClassExist.save()
         else:
-            data = models.TimeTable.objects.get(Class=Class)
-            data.Image = TimeTable
-            data.save()
+            Details = models.TimeTable(Class = Class1, Image = TimeTable1)
+            Details.save()
             
         context = {
             'success': 'Successfully Uploaded Timetables',
