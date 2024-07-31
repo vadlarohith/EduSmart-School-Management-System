@@ -80,6 +80,7 @@
         </a>
         <a href="#" onclick="showSection('fee-details')">Fee Details</a>
         <a href="#" onclick="showSection('UpdateFees')">UpdateFeeses</a>
+        <a href="#" onclick="showSection('TransactionHstory')">TransactionHstory</a>
         <a href="{% url 'test' %}">LogOut</a>
     </div>
 
@@ -232,7 +233,7 @@
                             <td>{{j.TotalFee }}<input type="hidden" name="TotalFee" value="{{ j.TotalFee }}"></td>
                             <td><input type="number" name="Discount" id="" value="{{j.Discount1}}"></td>
                             <td>{{ j.TotalPaidFee }}<input type="hidden" name="TotalPaidFee" value="{{ j.TotalPaidFee }}"></td>
-                            <td>{{ j.Due }}</td>
+                            <td>{{ j.Due }} <input type="hidden" name="Due" id="" value="{{j.Due}}"></td>
                             <td><input type="number" name="LatestPaidFee" placeholder="{{ j.LatestPaidFee }}"></td>
                             <td><input type="text" name="TransactionNo" placeholder="Transaction No"></td>
                             <td><button type="submit">Update</button></td>
@@ -266,6 +267,40 @@
                             <td><button type="submit">Update</button></td>
                         </tr>
                     </form>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div id="TransactionHstory" class="hidden" data-section="TransactionHistory">
+            <h2>TransactionHistory</h2>
+            <div id="TransactionHistory">
+                <table>
+                    <tr>
+                        <th>StudentRegistrationNo</th>
+                        <th>StudentName</th>
+                        <th>Class</th>
+                        <th>TotalFee</th>
+                        <th>Discount</th>
+                        <th>TotalPaidFee</th>
+                        <th>Due</th>
+                        <th>LatestPaidFee</th>
+                        <th>Transaction No</th>
+                    </tr>
+                    {% for j in TransactionHistory %}
+                    <tr id="class1_{{ j.Class }}">
+                        <form action="{% url 'UpdateFeeDetails' %}" method="POST">
+                            {% csrf_token %}
+                            <td>{{ j.StudentRollNo }}</td>
+                            <td>{{ j.StudentName }}</td>
+                            <td>{{ j.Class }}</td>
+                            <td>{{j.TotalFee }}</td>
+                            <td>{{j.Discount1}}</td>
+                            <td>{{ j.TotalPaidFee }}</td>
+                            <td>{{ j.Due }}</td>
+                            <td>{{j.LatestPaidFee}}</td>
+                            <td>{{j.TransactionNo}}</td>
+                        </form>
+                    </tr>
                     {% endfor %}
                 </table>
             </div>

@@ -33,7 +33,8 @@ def AdminLogin(request):
                     'Subject' : Subject,
                     'FeeDetails': FeeDetails,
                     'Students' : Students,
-                    'UpdateFeeses' : UpdateFeeses
+                    'UpdateFeeses' : UpdateFeeses,
+                    'TransactionHistory' : Smodels.TransactionHistory.objects.all()
                 }
                 AdminPage = loader.get_template("AdminPage.html")
                 return HttpResponse(AdminPage.render(context, request))
@@ -67,7 +68,8 @@ def StudentRegistration(request):
         'Subject' : Subject,
         'FeeDetails': FeeDetails,
         'Students' : Students,
-        'UpdateFeeses' : UpdateFeeses
+        'UpdateFeeses' : UpdateFeeses,
+        'TransactionHistory' : Smodels.TransactionHistory.objects.all()
     }
 
     if request.method == 'POST':
@@ -83,7 +85,8 @@ def StudentRegistration(request):
                 'Subject' : Subject,
                 'FeeDetails': FeeDetails,
                 'Students' : Students,
-                'UpdateFeeses' : UpdateFeeses
+                'UpdateFeeses' : UpdateFeeses,
+                'TransactionHistory' : Smodels.TransactionHistory.objects.all()
             }
             return HttpResponse(AdminPage.render(context,request))
         if models.Student.objects.filter(RollNo = RollNo):
@@ -94,7 +97,8 @@ def StudentRegistration(request):
                 'Subject' : Subject,
                 'FeeDetails': FeeDetails,
                 'Students' : Students,
-                'UpdateFeeses' : UpdateFeeses
+                'UpdateFeeses' : UpdateFeeses,
+                'TransactionHistory' : Smodels.TransactionHistory.objects.all()
             }
             return HttpResponse(AdminPage.render(context, request))
         Fee = models.UpdateFee.objects.filter(Class = Class).first()
@@ -125,7 +129,8 @@ def TeacherRegistration(request):
         'Subject' : Subject,
         'FeeDetails': FeeDetails,
         'Students' : Students,
-        'UpdateFeeses' : UpdateFeeses
+        'UpdateFeeses' : UpdateFeeses,
+        'TransactionHistory' : Smodels.TransactionHistory.objects.all()
     }
 
     if request.method == 'POST':
@@ -177,7 +182,8 @@ def UploadImage(request):
             'Subject' : Subject,
             'FeeDetails': FeeDetails,
             'Students' : Students,
-            'UpdateFeeses' : UpdateFeeses
+            'UpdateFeeses' : UpdateFeeses,
+            'TransactionHistory' : Smodels.TransactionHistory.objects.all()
         }
         return HttpResponse(AdminPage.render(context, request))
     return render(request, 'AdminPage.html')
@@ -219,7 +225,8 @@ def TimeTable(request):
             'Subject' : Subject,
             'FeeDetails': FeeDetails,
             'Students' : Students,
-            'UpdateFeeses' : UpdateFeeses
+            'UpdateFeeses' : UpdateFeeses,
+            'TransactionHistory' : Smodels.TransactionHistory.objects.all()
         }
         
         return HttpResponse(AdminPage.render(context, request))
@@ -231,7 +238,8 @@ def TimeTable(request):
         'Subject' : Subject,
         'FeeDetails': FeeDetails,
         'Students' : Students,
-        'UpdateFeeses' : UpdateFeeses
+        'UpdateFeeses' : UpdateFeeses,
+        'TransactionHistory' : Smodels.TransactionHistory.objects.all()
     }
     
     return HttpResponse(AdminPage.render(context, request))
@@ -260,7 +268,8 @@ def add_subject(request):
                 'Subject' : Subject,
                 'FeeDetails': FeeDetails,
                 'Students' : Students,
-                'UpdateFeeses' : UpdateFeeses
+                'UpdateFeeses' : UpdateFeeses,
+                'TransactionHistory' : Smodels.TransactionHistory.objects.all()
             }
             return HttpResponse(AdminPage.render(context, request))
 
@@ -279,7 +288,8 @@ def add_subject(request):
             'Subject' : Subject,
             'FeeDetails': FeeDetails,
             'Students' : Students,
-            'UpdateFeeses' : UpdateFeeses
+            'UpdateFeeses' : UpdateFeeses,
+            'TransactionHistory' : Smodels.TransactionHistory.objects.all()
 
         }
         return HttpResponse(AdminPage.render(context,request))
@@ -306,13 +316,29 @@ def delete_subject(request):
             'Subject' : Subject,
             'FeeDetails': FeeDetails,
             'Students' : Students,
-            'UpdateFeeses' : UpdateFeeses
+            'UpdateFeeses' : UpdateFeeses,
+            'TransactionHistory' : Smodels.TransactionHistory.objects.all()
         }
         return HttpResponse(AdminPage.render(context,request))
     
 def UpdateFeeDetails(request):
     AdminPage = loader.get_template("AdminPage.html")
-    context = {}
+    TimeTable = models.TimeTable.objects.all()
+    Subject = models.Subject.objects.all()
+    Class = models.Class.objects.all()
+    Students = models.Student.objects.all()
+    FeeDetails = Smodels.FeeDetails.objects.all()
+    UpdateFeeses = models.UpdateFee.objects.all()
+    context = {
+        'TimeTable' : TimeTable,
+        'Class' : Class,
+        'Subject' : Subject,
+        'FeeDetails': FeeDetails,
+        'Students' : Students,
+        'UpdateFeeses' : UpdateFeeses,
+        'TransactionHistory' : Smodels.TransactionHistory.objects.all()
+    }
+
 
     if request.method == 'POST':
         StudentRollNo = request.POST.get('StudentRollNo')
@@ -322,14 +348,16 @@ def UpdateFeeDetails(request):
         LatestPaidFee = request.POST.get('LatestPaidFee')
         TotalPaidFee = request.POST.get('TotalPaidFee')
         Discount = request.POST.get('Discount')
+        Due = request.POST.get('Due')
+        TransactionNo = request.POST.get('TransactionNo')
 
         StudentExist = Smodels.FeeDetails.objects.filter(StudentRollNo = StudentRollNo, StudentName = StudentName, Class = Class).first()
-        TimeTable = models.TimeTable.objects.all()
-        Subject = models.Subject.objects.all()
-        Class = models.Class.objects.all()
-        Students = models.Student.objects.all()
-        FeeDetails = Smodels.FeeDetails.objects.all()
-        UpdateFeeses = models.UpdateFee.objects.all()
+        TransactionHistoryExist = Smodels.TransactionHistory.objects.filter(TransactionNo=TransactionNo).first()
+        TransactionHistory = Smodels.TransactionHistory(StudentRollNo = StudentRollNo, StudentName=StudentName,Class=Class,TotalFee=TotalFee,Discount1=Discount,TotalPaidFee=TotalPaidFee,Due=Due,LatestPaidFee=LatestPaidFee,TransactionNo=TransactionNo)
+        
+        if TransactionHistoryExist:
+            context['error'] = 'Transaction No already entered'
+            return HttpResponse(AdminPage.render(context,request))
 
         try:
             if StudentExist:
@@ -338,8 +366,9 @@ def UpdateFeeDetails(request):
                 StudentExist.LatestPaidFee = LatestPaidFee
                 StudentExist.TotalPaidFee = float(StudentExist.TotalPaidFee) + float(LatestPaidFee)
                 StudentExist.Due = float(StudentExist.TotalFee) - float(StudentExist.TotalPaidFee) - float(StudentExist.Discount1)
-
-                StudentExist.save()
+                
+                TransactionHistory.save() and StudentExist.save()
+                
 
                 context = {
                     'success' : "Fee updated successfully",
@@ -348,7 +377,8 @@ def UpdateFeeDetails(request):
                     'Subject' : Subject,
                     'FeeDetails': FeeDetails,
                     'Students' : Students,
-                    'UpdateFeeses' : UpdateFeeses
+                    'UpdateFeeses' : UpdateFeeses,
+                    'TransactionHistory' : Smodels.TransactionHistory.objects.all()
 
                 }
                 return HttpResponse(AdminPage.render(context, request))
@@ -361,7 +391,8 @@ def UpdateFeeDetails(request):
                     'Subject' : Subject,
                     'FeeDetails': FeeDetails,
                     'Students' : Students,
-                    'UpdateFeeses' : UpdateFeeses
+                    'UpdateFeeses' : UpdateFeeses,
+                    'TransactionHistory' : Smodels.TransactionHistory.objects.all()
                 } 
                 return HttpResponse(AdminPage.render(context, request))
         except Exception as e:
@@ -386,7 +417,8 @@ def UpdateFees(request):
         'Subject' : Subject,
         'FeeDetails': FeeDetails,
         'Students' : Students,
-        'UpdateFeeses' : UpdateFeeses
+        'UpdateFeeses' : UpdateFeeses,
+        'TransactionHistory' : Smodels.TransactionHistory.objects.all()
     }
     if request.method == 'POST':
         Class = request.POST.get('Class')
@@ -405,7 +437,8 @@ def UpdateFees(request):
                 'Subject' : Subject,
                 'FeeDetails': FeeDetails,
                 'Students' : Students,
-                'UpdateFeeses' : UpdateFeeses
+                'UpdateFeeses' : UpdateFeeses,
+                'TransactionHistory' : Smodels.TransactionHistory.objects.all()
             }
             return HttpResponse(AdminPage.render(context,request))
         except Exception as e:
