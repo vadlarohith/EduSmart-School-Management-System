@@ -15,6 +15,7 @@ class admin(models.Model):
 
 from django.db import models
 from django.contrib.auth.hashers import make_password
+from datetime import date 
 
 class Admin(models.Model):
     username = models.CharField(max_length=150, unique=True)
@@ -90,3 +91,11 @@ class UpdateFee(models.Model):
 
     def __str__(self):
         return self.Class
+    
+class AttendenceDetails(models.Model):
+    RegNo = models.CharField(max_length=10)
+    Attendence = models.CharField(max_length=5)
+    AttendenceDate = models.DateField(default=date.today)
+
+    def __str__(self):
+        return self.RegNo

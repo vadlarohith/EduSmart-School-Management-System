@@ -74,7 +74,7 @@ def UpdateDetails(request):
             context['Success'] = f"Error: {str(e)}"
             return HttpResponse(TeacherPage.render(context,request))
         
-def Attendence(request):
+def Attendence1(request):
     TeacherPage = loader.get_template('TeacherLogin.html')
     if request.method == 'POST':
         FullName = request.POST.get('TeacherName')
@@ -99,16 +99,17 @@ def Attendence(request):
     if request.method == 'POST':
         num_student = len(request.POST) // 3
 
-        for i in range(1,num_student):
+        for i in range(1,num_student+1):
             SRegNo = request.POST.get(f'SRegNo_{i}')
             Month = request.POST.get(f'Month_{i}')
             Attendence = request.POST.get(f'Attendence_{i}')
+            AttendenceDate = request.POST.get('AttendenceDate')
 
-            if Month == "" or Attendence == "":
+            if Attendence == "":
                 continue
 
             try:
-                user = models.Attendence.objects.filter(RegNo = SRegNo, Month = Month).first()
+                """user = models.Attendence.objects.filter(RegNo = SRegNo, Month = Month).first()
                 if user:
                     user.RegNo = SRegNo
                     user.Month = Month
@@ -116,13 +117,22 @@ def Attendence(request):
                     user.save()
                 else:
                     data = models.Attendence(RegNo = SRegNo, Month = Month, Attendence = Attendence)
-                    data.save()
+                    data.save()"""
+                AttendenceDetailsExists = models.AttendenceDetails.objects.filter(RegNo = SRegNo, AttendenceDate = AttendenceDate).first()
+                if AttendenceDetailsExists:
+                    AttendenceDetailsExists.RegNo = SRegNo
+                    AttendenceDetailsExists.Attendence = Attendence
+                    AttendenceDetailsExists.AttendenceDate = AttendenceDate
+                    AttendenceDetailsExists.save()
+                else:
+                    data1 = models.AttendenceDetails(RegNo = SRegNo, Attendence = Attendence, AttendenceDate = AttendenceDate)
+                    data1.save()
 
             except Exception as e:
                 context['error'] = f"Error saving data for student {SRegNo}: {str(e)}"
                 return HttpResponse(TeacherPage.render(context, request))
             
-        context['success'] = "Attendance Successfully Updated11111"
+        context['success'] = "Attendance Successfully Updated"
         return HttpResponse(TeacherPage.render(context, request))
     context['error'] = "Invalid Request Method"
     return HttpResponse(TeacherPage.render(context, request))

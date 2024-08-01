@@ -30,3 +30,8 @@ class UpdateFeePreview(admin.ModelAdmin):
     list_display = ('Class','Fee')
 
 admin.site.register(models.UpdateFee, UpdateFeePreview)
+
+class AttendenceDetailsPreview(admin.ModelAdmin):
+    list_display = ('RegNo','AttendenceDate','Attendence')
+
+admin.site.register(models.AttendenceDetails, AttendenceDetailsPreview)

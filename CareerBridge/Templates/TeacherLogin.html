@@ -156,15 +156,15 @@ th, td {
 
             <section id="attendance" class="section">
                 <h2>Update Attendance</h2>
-                <input type="date" name="date" id="date">
-                <form action="{% url 'Attendence' %}" method="POST">
+                <h3>{{success}}</h3>
+                <form action="{% url 'Attendence1' %}" method="POST">
                     {% csrf_token %}
+                    <input type="date" name="AttendenceDate" id="date">
                     <table>
                         <thead>
                             <tr>
                                 <th>Student Registration No</th>
                                 <th>Student Full Name</th>
-                                <th>Month</th>
                                 <th>Attendance</th>
                             </tr>
                         </thead>
@@ -174,24 +174,7 @@ th, td {
                                 <td>{{i.RollNo}}</td>
                                 <td>{{i.FullName}}</td>
                                 <td>
-                                    <select name="Month_{{ forloop.counter }}" aria-placeholder="Month">
-                                        <option value="">--Select--</option>
-                                        <option value="January">January</option>
-                                        <option value="February">February</option>
-                                        <option value="March">March</option>
-                                        <option value="April">April</option>
-                                        <option value="May">May</option>
-                                        <option value="June">June</option>
-                                        <option value="July">July</option>
-                                        <option value="August">August</option>
-                                        <option value="September">September</option>
-                                        <option value="October">October</option>
-                                        <option value="November">November</option>
-                                        <option value="December">December</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="number" name="Attendence_{{ forloop.counter }}" placeholder="Attendance">
+                                    <input type="text" name="Attendence_{{ forloop.counter }}" placeholder="Attendance">
                                     <input type="hidden" name="SRegNo_{{ forloop.counter }}" value="{{i.RollNo}}">
                                     <input type="hidden" name="TeacherName" value="{{data.FullName}}">
                                     <input type="hidden" name="TeacherMobileNo" value="{{data.MobileNo}}">

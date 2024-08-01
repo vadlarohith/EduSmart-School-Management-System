@@ -82,7 +82,7 @@ th, td {
     {% csrf_token %}
     <div class="container">
         <aside class="sidebar">
-            <h1>Welcome {{Student}}</h1>
+            <h1>Welcome {{data.FullName}}</h1>
             <nav>
                 <ul>
                     <li><a href="#notifications" onclick="showSection('notifications')">Notifications</a></li>
@@ -96,7 +96,7 @@ th, td {
             </nav>
         </aside>
         <main class="content">
-            <section id="notifications" class="section">
+            <section id="notifications" class="section" data-section="notifications">
                 <h2>Notifications</h2>
                 <ul>
                     {% for image in image %}
@@ -109,7 +109,7 @@ th, td {
                 </ul>
             </section>
 
-            <section id="edit-details" class="section">
+            <section id="edit-details" class="section" data-section="edit-details">
                 <h2>Edit Details</h2>
                 <form action="{%url 'UpdateStudentDetails'%}" method="POST"> 
                     {% csrf_token %}
@@ -124,7 +124,7 @@ th, td {
                 </form>
             </section>
 
-            <section id="timetable" class="section">
+            <section id="timetable" class="section" data-section="timetable">
                 <h2>TimeTable</h2>
                 <p>{{ TimeTable }}</p>
                 {% if TimeTable %}
@@ -134,7 +134,7 @@ th, td {
                 {% endif %}
             </section>
 
-            <section id="attendance" class="section">
+            <!-- <section id="attendance" class="section">
                 <h2>Attendance</h2>
                 <table>
                     <thead>
@@ -152,9 +152,53 @@ th, td {
                         {% endfor %}
                     </tbody>
                 </table>
+            </section> -->
+            <section id="attendance" class="section" data-section="attendance">
+                <h2>Attendance</h2>
+                <form action="{% url 'Attendence' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="StudentRollNo" id="" value="{{data.RollNo}}">
+                    <input type="hidden" name="StudentName" id="" value="{{data.FullName}}">
+                    <input type="month" name="month" id="" value="{{Date}}">
+                    <button type="submit">Get Details</button>
+                </form>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Working Days</th>
+                            <th>Present Days</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {% if Month %}
+                                    {{ Month }}
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if WorkingDays is not None %}
+                                    {{ WorkingDays }}
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if Present %}
+                                    {{ Present }}
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </section>
 
-            <section id="subjects" class="section">
+            <section id="subjects" class="section" data-section="subjects">
                 <h2>Subjects</h2>
                 <table>
                     <thead>
@@ -174,7 +218,7 @@ th, td {
                 </table>
             </section>
 
-            <section id="fee-details" class="section">
+            <section id="fee-details" class="section" data-section="fee-details">
                 <h2>Fee Details</h2>
                 <table>
                     <thead>
@@ -204,22 +248,54 @@ th, td {
         </main>
     </div>
     <script>
-        function showSection(sectionId) {
-    var sections = document.querySelectorAll('.section');
-    sections.forEach(function(section) {
-        section.classList.remove('active');
-    });
+//         function showSection(sectionId) {
+//         var sections = document.querySelectorAll('.section');
+//         sections.forEach(function(section) {
+//         section.classList.remove('active');
+//         // Save the current section to localStorage
+//         localStorage.setItem('currentSection', sectionId);
+//     });
 
-    var activeSection = document.getElementById(sectionId);
-    if (activeSection) {
-        activeSection.classList.add('active');
-    }
-}
+//     var activeSection = document.getElementById(sectionId);
+//     if (activeSection) {
+//         activeSection.classList.add('active');
+//     }
+// }
 
-// Display the first section by default
-document.addEventListener("DOMContentLoaded", function() {
-    showSection('notifications');
-});
+// // Display the first section by default
+// document.addEventListener("DOMContentLoaded", function() {
+//     showSection('notifications');
+// });
+function showSection(sectionId) {
+            // Hide all sections
+            var sections = document.querySelectorAll('.section');
+            sections.forEach(function(section) {
+                section.classList.remove('active');
+            });
+
+            // Show the selected section
+            var activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+                activeSection.classList.add('active');
+                // Save the current section to localStorage
+                console.log("Saving section:", sectionId); // Debug log
+                localStorage.setItem('currentSection', sectionId);
+            }
+        }
+
+        function loadSection() {
+            const savedSection = localStorage.getItem('currentSection');
+            console.log("Loaded section from storage:", savedSection); // Debug log
+            if (savedSection) {
+                showSection(savedSection);
+            } else {
+                // Default section to show if no section is saved
+                showSection('notifications');
+            }
+        }
+
+        // Ensure the loadSection function runs when the page is loaded
+        document.addEventListener("DOMContentLoaded", loadSection);
 
     </script>
 </body>

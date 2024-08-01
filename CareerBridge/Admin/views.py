@@ -356,7 +356,7 @@ def UpdateFeeDetails(request):
         TransactionHistory = Smodels.TransactionHistory(StudentRollNo = StudentRollNo, StudentName=StudentName,Class=Class,TotalFee=TotalFee,Discount1=Discount,TotalPaidFee=TotalPaidFee,Due=Due,LatestPaidFee=LatestPaidFee,TransactionNo=TransactionNo)
         
         if TransactionHistoryExist:
-            context['error'] = 'Transaction No already entered'
+            context['error'] = 'Transaction No already entered' 
             return HttpResponse(AdminPage.render(context,request))
 
         try:

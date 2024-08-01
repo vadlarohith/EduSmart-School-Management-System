@@ -21,7 +21,7 @@ def StudentLogin(request):
                 data = models.Student.objects.all()
                 Class = user.Class
                 TimeTable = models.TimeTable.objects.filter(Class = Class).first()
-                Attendence = models.Attendence.objects.filter(RegNo = user.RollNo)
+                
                 Subjects = models.Subject.objects.filter(Class = user.Class)
                 FeeDetails = Smodels.FeeDetails.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName).first()
                 context = {
@@ -35,7 +35,7 @@ def StudentLogin(request):
                         'Class': user.Class
                     },
                     'TimeTable' : TimeTable.Image,
-                    'Attendence' : Attendence,
+                    
                     'Subjects' : Subjects,
                     'FeeDetails' : FeeDetails
                 }
@@ -63,7 +63,7 @@ def UpdateDetails(request):
             user = models.Student.objects.filter(FullName = FullName, RollNo = RollNo).first()
             Class = user.Class
             TimeTable = models.TimeTable.objects.filter(Class = Class).first()
-            Attendence = models.Attendence.objects.filter(RegNo = user.RollNo)
+            #Attendence = models.Attendence.objects.filter(RegNo = user.RollNo)
             user.MobileNo = UpdateMobileNo
             user.Password = UpdatePassword
             user.save()
@@ -79,10 +79,48 @@ def UpdateDetails(request):
                         'Class': user.Class
                     },
                     'TimeTable' : TimeTable.Image,
-                    'Attendence' : Attendence
+                    #'Attendence' : Attendence
             }
             return HttpResponse(StudentPage.render(context, request))
         
         except Exception as e:
             context['Success'] = f"Error: {str(e)}"
             return HttpResponse(StudentPage.render(context,request))
+        
+def Attendence(request):
+    StudentPage = loader.get_template('StudentLogin.html')
+    image = models.Posters.objects.all().values()
+    context = {}
+    if request.method == 'POST':
+        StudentRollNo = request.POST.get('StudentRollNo')
+        StudentName = request.POST.get('StudentName')
+        month1 = request.POST.get('month')
+        year,month = map(int,month1.split('-'))
+        user = models.Student.objects.filter(FullName = StudentName, RollNo = StudentRollNo).first()
+        TimeTable = models.TimeTable.objects.filter(Class = user.Class).first()
+        Subjects = models.Subject.objects.filter(Class = user.Class)
+        FeeDetails = Smodels.FeeDetails.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName).first()
+        Data = models.AttendenceDetails.objects.filter(RegNo = StudentRollNo, AttendenceDate__year = year, AttendenceDate__month = month).values()
+        PresentDays1 = models.AttendenceDetails.objects.filter(RegNo = StudentRollNo, AttendenceDate__year = year, AttendenceDate__month = month, Attendence = 'P').values()
+        TotalWorkingDays = Data.count()
+        PresentDays = PresentDays1.count()
+        context = {
+            'Date' : month1,
+            'Month' : month,
+            'WorkingDays' : TotalWorkingDays,
+            'Present' : PresentDays,
+            'image' : image,
+            'data' : {
+                'FullName': user.FullName,
+                'RollNo' : user.RollNo,
+                'MobileNo': user.MobileNo,
+                'Password': user.Password,
+                'Class': user.Class
+            },
+            'TimeTable' : TimeTable.Image,
+            
+            'Subjects' : Subjects,
+            'FeeDetails' : FeeDetails
+
+        }
+        return HttpResponse(StudentPage.render(context, request))
