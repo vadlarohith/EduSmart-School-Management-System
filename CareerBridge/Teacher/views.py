@@ -102,7 +102,7 @@ def Attendence1(request):
         for i in range(1,num_student+1):
             SRegNo = request.POST.get(f'SRegNo_{i}')
             Month = request.POST.get(f'Month_{i}')
-            Attendence = request.POST.get(f'Attendence_{i}')
+            Attendence = 'P' if request.POST.get(f'Attendence_{i}') == 'on' else 'A'
             AttendenceDate = request.POST.get('AttendenceDate')
 
             if Attendence == "":

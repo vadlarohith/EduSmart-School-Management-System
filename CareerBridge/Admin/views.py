@@ -445,4 +445,12 @@ def UpdateFees(request):
             context['error'] = f"Error: {str(e)}"
             return HttpResponse(AdminPage.render(context, request))
 
+def TransactionHistory(request):
+    AdminPage = loader.get_template('AdminPage.html')
+    transactions = Smodels.TransactionHistory.objects.filter(StudentRollNo='101')
+    print(student_roll_no)
+    context = {
+        'transactions': transactions
+    }
+    return HttpResponse(AdminPage.render(context, request))
 

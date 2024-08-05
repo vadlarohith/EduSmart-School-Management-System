@@ -32,7 +32,8 @@ def StudentLogin(request):
                         'RollNo' : user.RollNo,
                         'MobileNo': user.MobileNo,
                         'Password': user.Password,
-                        'Class': user.Class
+                        'Class': user.Class,
+                        'Profile' : user.Profile
                     },
                     'TimeTable' : TimeTable.Image,
                     
@@ -76,7 +77,8 @@ def UpdateDetails(request):
                         'RollNo' : user.RollNo,
                         'MobileNo': user.MobileNo,
                         'Password': user.Password,
-                        'Class': user.Class
+                        'Class': user.Class,
+                        'Profile' : user.Profile
                     },
                     'TimeTable' : TimeTable.Image,
                     #'Attendence' : Attendence
@@ -115,7 +117,8 @@ def Attendence(request):
                 'RollNo' : user.RollNo,
                 'MobileNo': user.MobileNo,
                 'Password': user.Password,
-                'Class': user.Class
+                'Class': user.Class,
+                'Profile' : user.Profile
             },
             'TimeTable' : TimeTable.Image,
             

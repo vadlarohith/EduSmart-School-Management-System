@@ -209,6 +209,7 @@
         <!-- Fee Details Section -->
         <div id="fee-details" class="hidden" data-section="fee-details">
             <h2>Fee Details</h2>
+            <input type="text" id="searchRollNo" placeholder="Search by Roll No" onkeyup="filterFeeDetails()">
             <div id="FeeDetailsContainer">
                 <table>
                     <tr>
@@ -227,7 +228,7 @@
                     <tr id="class1_{{ j.Class }}">
                         <form action="{% url 'UpdateFeeDetails' %}" method="POST">
                             {% csrf_token %}
-                            <td>{{ j.StudentRollNo }}<input type="hidden" name="StudentRollNo" value="{{ j.StudentRollNo }}"></td>
+                            <td><a href="#">{{ j.StudentRollNo }}</a><input type="hidden" name="StudentRollNo" value="{{ j.StudentRollNo }}"></td>
                             <td>{{ j.StudentName }}<input type="hidden" name="StudentName" value="{{ j.StudentName }}"></td>
                             <td>{{ j.Class }}<input type="hidden" name="Class" value="{{ j.Class }}"></td>
                             <td>{{j.TotalFee }}<input type="hidden" name="TotalFee" value="{{ j.TotalFee }}"></td>
@@ -242,6 +243,7 @@
                     {% endfor %}
                 </table>
             </div>
+            
             <!-- {% for i in Class %}
             <button onclick="showFeeDetails('{{ i }}')">{{ i }}</button>
             {% endfor %} -->
@@ -273,6 +275,7 @@
         </div>
         <div id="TransactionHstory" class="hidden" data-section="TransactionHistory">
             <h2>TransactionHistory</h2>
+            <input type="text" id="searchRollNo1" placeholder="Search by Roll No" onkeyup="filterFeeDetails1()">
             <div id="TransactionHistory">
                 <table>
                     <tr>
@@ -348,6 +351,46 @@
             selectedRows.forEach(row => row.style.display = 'table-row');
             document.getElementById('classInput').value = classId;
             document.getElementById('addSubjectForm').style.display = 'block';
+        }
+        function filterFeeDetails() {
+            // Get the search input value
+            var input = document.getElementById("searchRollNo");
+            var filter = input.value.toUpperCase();
+            var table = document.querySelector("#FeeDetailsContainer table");
+            var tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (var i = 1; i < tr.length; i++) { // start from 1 to skip header row
+                var td = tr[i].getElementsByTagName("td")[0]; // search in the first column (Roll No)
+                if (td) {
+                    var txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        function filterFeeDetails1() {
+            // Get the search input value
+            var input = document.getElementById("searchRollNo1");
+            var filter = input.value.toUpperCase();
+            var table = document.querySelector("#TransactionHistory table");
+            var tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (var i = 1; i < tr.length; i++) { // start from 1 to skip header row
+                var td = tr[i].getElementsByTagName("td")[0]; // search in the first column (Roll No)
+                if (td) {
+                    var txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
         }
     </script>
 </body>
