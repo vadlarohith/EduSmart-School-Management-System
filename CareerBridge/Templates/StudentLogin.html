@@ -103,9 +103,11 @@ th, td {
             height: 100px;
             border: solid black 1px;
             background-color: orange;
+            border-radius: 50%;
         }
         .left-side img, .right-side img{
             display: flex;
+            border-radius: 50%;
             height: 100%;
             width: 100%;
             text-align: center;
@@ -141,6 +143,90 @@ th, td {
         }
         .logout a:hover {
             text-decoration: underline;
+        }
+    </style>
+    <style>
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px 30px;
+            width: 400px;
+            max-width: 100%;
+            box-sizing: border-box;
+            margin-left: 350px;
+        }
+
+        .form-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333333;
+            text-align: center;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333333;
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .radio-group input {
+            margin-right: 5px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+
+        .conditional-fields {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .field-group {
+            margin-bottom: 20px;
+            width: 200px;
+        }
+
+        .field-input {
+            width: calc(100% - 20px);
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .submit-button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+        .DateFields {
+            display: flex;
+        }
+        .AttendenceTable{
+            width: 400px;
+            margin-left: 32%;
         }
     </style>
 </head>
@@ -243,48 +329,110 @@ th, td {
                 </table>
             </section> -->
             <section id="attendance" class="section" data-section="attendance">
-                <h2>Attendance</h2>
-                <form action="{% url 'Attendence' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="StudentRollNo" id="" value="{{data.RollNo}}">
-                    <input type="hidden" name="StudentName" id="" value="{{data.FullName}}">
-                    <input type="month" name="month" id="" value="{{Date}}">
-                    <button type="submit">Get Details</button>
-                </form>
-                <table>
+                <h2 class="form-title">Student Attendance</h2>
+                <div class="form-container">
+                    <form action="{% url 'Attendence' %}" method="POST" id="attendanceForm">
+                        {% csrf_token %}
+                        <input type="hidden" name="StudentRollNo" id="" value="{{data.RollNo}}">
+                        <input type="hidden" name="StudentName" id="" value="{{data.FullName}}">
+                        <div class="DateFields">
+                            <div class="field-group">
+                                <label for="fromDate" class="form-label">From Date:</label>
+                                <input type="date" id="fromDate" name="fromDate" class="field-input" value="{{fromDate}}" required>
+                            </div>
+                            <div class="field-group">
+                                <label for="toDate" class="form-label">To Date:</label>
+                                <input type="date" id="toDate" name="toDate" value="{{toDate}}" class="field-input"required>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-button">Get Details</button>
+                        
+                    </form>
+                </div>
+                <!-- <h1 class="form-title">Attendance Details</h1>
+                <div class="form-container">
+                    <form id="attendanceForm">
+                        {% csrf_token %}
+                        
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="month" name="attendance_type" value="month" onchange="showFields()">
+                                <input type="hidden" name="StudentRollNo" id="" value="{{data.RollNo}}">
+                                <input type="hidden" name="StudentName" id="" value="{{data.FullName}}">
+                                <label for="month" class="form-label">Month Attendance</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="period" name="attendance_type" value="period" onchange="showFields()">
+                                <input type="hidden" name="StudentRollNo" id="" value="{{data.RollNo}}">
+                                <input type="hidden" name="StudentName" id="" value="{{data.FullName}}">
+                                <label for="period" class="form-label">Period Time</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="till_now" name="attendance_type" value="till_now" onchange="showFields()">
+                                <input type="hidden" name="StudentRollNo" id="" value="{{data.RollNo}}">
+                                <input type="hidden" name="StudentName" id="" value="{{data.FullName}}">
+                                <label for="till_now" class="form-label">Till Now</label>
+                            </div>
+                        </div>
+            
+                        <div id="monthFields" class="conditional-fields">
+                            <div class="field-group">
+                                <label for="monthField" class="form-label">Select Month:</label>
+                                <input type="month" id="monthField" name="monthField" class="field-input" required>
+                            </div>
+                        </div>
+            
+                        <div id="periodFields" class="conditional-fields">
+                            <div class="field-group">
+                                <label for="fromDate" class="form-label">From Date:</label>
+                                <input type="date" id="fromDate" name="fromDate" class="field-input" required>
+                            </div>
+                            <div class="field-group">
+                                <label for="toDate" class="form-label">To Date:</label>
+                                <input type="date" id="toDate" name="toDate" class="field-input"required>
+                            </div>
+                        </div>
+            
+                        <div id="tillNowFields" class="conditional-fields"></div>
+                        
+                        <button type="submit" class="submit-button">Get Details</button>
+                    </form>
+                </div> -->
+                {% if WorkingDays %}
+                <div style="text-align: center;">
+                    <h4>ATTENDANCE REPORT FOR THE PERIOD OF <i>{{fromDate}} - {{toDate}}</i></h4>
+                    <table style=" border-collapse: collapse; border: none;margin-left: -150px;">
+                        <tr>
+                            <td style="text-align: right; padding-left: -30px; border: none;"><strong>RollNo :</strong></td>
+                            <td style="text-align: left;border: none;">{{data.RollNo}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; padding-left: -30px; border: none;"><strong>StudentName :</strong></td>
+                            <td style="text-align: left;border: none;">{{data.FullName}}</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; padding-left: -30px; border: none;"><strong>Class :</strong></td>
+                            <td style="text-align: left;border: none;">{{data.Class}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <table class="AttendenceTable">
                     <thead>
                         <tr>
-                            <th>Month</th>
                             <th>Working Days</th>
                             <th>Present Days</th>
+                            <th>Percentage</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>
-                                {% if Month %}
-                                    {{ Month }}
-                                {% else %}
-                                    Not available
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if WorkingDays is not None %}
-                                    {{ WorkingDays }}
-                                {% else %}
-                                    Not available
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if Present %}
-                                    {{ Present }}
-                                {% else %}
-                                    Not available
-                                {% endif %}
-                            </td>
+                            <td>{{ WorkingDays }}</td>
+                            <td>{{ Present }}</td>
+                            <td>{{ Percentage }}</td>
                         </tr>
                     </tbody>
                 </table>
+                {% endif %}
             </section>
 
             <section id="subjects" class="section" data-section="subjects">
@@ -389,7 +537,39 @@ function showSection(sectionId) {
         function clearLocalStorage() {
         localStorage.removeItem('currentSection');
     }
+    function showFields() {
+            // Hide all conditional fields
+            document.getElementById('monthFields').style.display = 'none';
+            document.getElementById('periodFields').style.display = 'none';
+            document.getElementById('tillNowFields').style.display = 'none';
 
+            // Show the selected field
+            if (document.getElementById('month').checked) {
+                document.getElementById('monthFields').style.display = 'block';
+            } else if (document.getElementById('period').checked) {
+                document.getElementById('periodFields').style.display = 'block';
+            } else if (document.getElementById('till_now').checked) {
+                document.getElementById('tillNowFields').style.display = 'block';
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+        var today = new Date().toISOString().split('T')[0];
+        var fromDateInput = document.getElementById("fromDate");
+        var toDateInput = document.getElementById("toDate");
+
+        fromDateInput.setAttribute("max", today);
+        toDateInput.setAttribute("max", today);
+
+        document.getElementById("attendanceForm").addEventListener("submit", function(event) {
+            var fromDate = fromDateInput.value;
+            var toDate = toDateInput.value;
+
+            if (fromDate > today || toDate > today) {
+                alert("Please enter a date that is not later than today.");
+                event.preventDefault(); // Prevent the form from submitting
+            }
+        });
+    });
     </script>
 </body>
 </html>

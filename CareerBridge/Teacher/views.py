@@ -99,12 +99,13 @@ def Attendence1(request):
     if request.method == 'POST':
         num_student = len(request.POST) // 3
 
-        for i in range(1,num_student+1):
+        for i in range(1,num_student+2):
             SRegNo = request.POST.get(f'SRegNo_{i}')
             Month = request.POST.get(f'Month_{i}')
             Attendence = 'P' if request.POST.get(f'Attendence_{i}') == 'on' else 'A'
             AttendenceDate = request.POST.get('AttendenceDate')
 
+            context['Attendence'] = Attendence
             if Attendence == "":
                 continue
 

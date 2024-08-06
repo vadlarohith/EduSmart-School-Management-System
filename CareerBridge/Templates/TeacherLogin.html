@@ -174,7 +174,7 @@ th, td {
                                 <td>{{i.RollNo}}</td>
                                 <td>{{i.FullName}}</td>
                                 <td>
-                                    <input type="checkbox" name="Attendence_{{ forloop.counter }}" placeholder="Attendance">
+                                    <input type="checkbox" name="Attendence_{{ forloop.counter }}">
                                     <input type="hidden" name="SRegNo_{{ forloop.counter }}" value="{{i.RollNo}}">
                                     <input type="hidden" name="TeacherName" value="{{data.FullName}}">
                                     <input type="hidden" name="TeacherMobileNo" value="{{data.MobileNo}}">

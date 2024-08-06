@@ -96,19 +96,24 @@ def Attendence(request):
     if request.method == 'POST':
         StudentRollNo = request.POST.get('StudentRollNo')
         StudentName = request.POST.get('StudentName')
-        month1 = request.POST.get('month')
-        year,month = map(int,month1.split('-'))
+        FromDate = request.POST.get('fromDate')
+        ToDate = request.POST.get('toDate')
+        FYear, FMonth, FDate = FromDate.split('-')
+        TYear, TMonth, TDate = ToDate.split('-')
+        print(FDate)
         user = models.Student.objects.filter(FullName = StudentName, RollNo = StudentRollNo).first()
         TimeTable = models.TimeTable.objects.filter(Class = user.Class).first()
         Subjects = models.Subject.objects.filter(Class = user.Class)
         FeeDetails = Smodels.FeeDetails.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName).first()
-        Data = models.AttendenceDetails.objects.filter(RegNo = StudentRollNo, AttendenceDate__year = year, AttendenceDate__month = month).values()
-        PresentDays1 = models.AttendenceDetails.objects.filter(RegNo = StudentRollNo, AttendenceDate__year = year, AttendenceDate__month = month, Attendence = 'P').values()
+        Data = models.AttendenceDetails.objects.filter(RegNo = StudentRollNo, AttendenceDate__gte= FromDate , AttendenceDate__lte= ToDate).values()
+        PresentDays1 = models.AttendenceDetails.objects.filter(RegNo = StudentRollNo, AttendenceDate__gte= FromDate, AttendenceDate__lte= ToDate, Attendence = 'P').values()
         TotalWorkingDays = Data.count()
         PresentDays = PresentDays1.count()
         context = {
-            'Date' : month1,
-            'Month' : month,
+            #'Date' : month1,
+            #'Month' : month,
+            'fromDate' : FromDate,
+            'toDate' : ToDate,
             'WorkingDays' : TotalWorkingDays,
             'Present' : PresentDays,
             'image' : image,
@@ -123,7 +128,8 @@ def Attendence(request):
             'TimeTable' : TimeTable.Image,
             
             'Subjects' : Subjects,
-            'FeeDetails' : FeeDetails
+            'FeeDetails' : FeeDetails,
+            'Percentage' : f"{(PresentDays/TotalWorkingDays)*100:.2f}"
 
         }
         return HttpResponse(StudentPage.render(context, request))
