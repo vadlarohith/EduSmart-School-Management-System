@@ -6,4 +6,7 @@ class FeeDetailsPreview(admin.ModelAdmin):
 
 admin.site.register(models.FeeDetails, FeeDetailsPreview)
 
-admin.site.register(models.TransactionHistory, FeeDetailsPreview)
+class FeeHistoryPreview(admin.ModelAdmin):
+    list_display = ('StudentRollNo', 'StudentName', 'TotalFee', 'Due','LatestPaidFee','TransactionNo','Date')
+
+admin.site.register(models.TransactionHistory, FeeHistoryPreview)

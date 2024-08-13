@@ -1,5 +1,6 @@
 from django.db import models
 from Admin import models as Amodels
+from datetime import date 
 
 
 
@@ -12,7 +13,6 @@ class FeeDetails(models.Model):
     TotalPaidFee = models.DecimalField(max_digits=10, decimal_places=2)
     Due = models.DecimalField(max_digits=10, decimal_places=2)
     LatestPaidFee = models.DecimalField(max_digits=10, decimal_places=2)
-    TransactionNo = models.CharField(max_length=30)
 
     def __str__(self):
         return self.StudentRollNo
@@ -27,6 +27,7 @@ class TransactionHistory(models.Model):
     Due = models.DecimalField(max_digits=10, decimal_places=2)
     LatestPaidFee = models.DecimalField(max_digits=10, decimal_places=2)
     TransactionNo = models.CharField(max_length=30)
+    Date = models.DateField()
 
     def __str__(self):
         return self.StudentRollNo

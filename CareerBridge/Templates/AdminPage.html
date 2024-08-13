@@ -222,6 +222,7 @@
                         <th>Due</th>
                         <th>LatestPaidFee</th>
                         <th>Transaction No</th>
+                        <th>Date</th>
                         <th>Action</th>
                     </tr>
                     {% for j in FeeDetails %}
@@ -237,6 +238,7 @@
                             <td>{{ j.Due }} <input type="hidden" name="Due" id="" value="{{j.Due}}"></td>
                             <td><input type="number" name="LatestPaidFee" placeholder="{{ j.LatestPaidFee }}"></td>
                             <td><input type="text" name="TransactionNo" placeholder="Transaction No"></td>
+                            <td><input type="date" name="date" id="date"></td>
                             <td><button type="submit">Update</button></td>
                         </form>
                     </tr>
@@ -288,6 +290,7 @@
                         <th>Due</th>
                         <th>LatestPaidFee</th>
                         <th>Transaction No</th>
+                        <th>Date</th>
                     </tr>
                     {% for j in TransactionHistory %}
                     <tr id="class1_{{ j.Class }}">
@@ -302,6 +305,7 @@
                             <td>{{ j.Due }}</td>
                             <td>{{j.LatestPaidFee}}</td>
                             <td>{{j.TransactionNo}}</td>
+                            <td>{{j.Date}}</td>
                         </form>
                     </tr>
                     {% endfor %}

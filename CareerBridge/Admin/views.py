@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import check_password
 from . import models
 from django.contrib import messages
 from Student import models as Smodels
+from django.db import transaction
 
 def test(request):
     HomePage = loader.get_template("home.html")
@@ -104,11 +105,12 @@ def StudentRegistration(request):
         Fee = models.UpdateFee.objects.filter(Class = Class).first()
 
         try:
-            data = models.Student(FullName = FullName, RollNo = RollNo, Password = RollNo, Class = Class)
-            FeeDetails = Smodels.FeeDetails(StudentRollNo = RollNo, StudentName = FullName, Class = Class, TotalFee = Fee.Fee,Discount1 = 0, TotalPaidFee = 0, Due = 0, LatestPaidFee  = 0, TransactionNo = 0)
-            data.save()
-            FeeDetails.save()
-            context['success'] = "Student Registered Successfully"
+            with transaction.atomic():
+                data = models.Student(FullName = FullName, RollNo = RollNo, Password = RollNo, Class = Class)
+                FeeDetails = Smodels.FeeDetails(StudentRollNo = RollNo, StudentName = FullName, Class = Class, TotalFee = Fee.Fee,Discount1 = 0, TotalPaidFee = 0, Due = 0, LatestPaidFee  = 0)
+                data.save()
+                FeeDetails.save()
+                context['success'] = "Student Registered Successfully"
         except Exception as e:
             context['error'] = f"Error: {str(e)}"
             return HttpResponse(AdminPage.render(context, request))
@@ -325,13 +327,13 @@ def UpdateFeeDetails(request):
     AdminPage = loader.get_template("AdminPage.html")
     TimeTable = models.TimeTable.objects.all()
     Subject = models.Subject.objects.all()
-    Class = models.Class.objects.all()
+    Class1 = models.Class.objects.all()
     Students = models.Student.objects.all()
     FeeDetails = Smodels.FeeDetails.objects.all()
     UpdateFeeses = models.UpdateFee.objects.all()
     context = {
         'TimeTable' : TimeTable,
-        'Class' : Class,
+        'Class' : Class1,
         'Subject' : Subject,
         'FeeDetails': FeeDetails,
         'Students' : Students,
@@ -350,51 +352,55 @@ def UpdateFeeDetails(request):
         Discount = request.POST.get('Discount')
         Due = request.POST.get('Due')
         TransactionNo = request.POST.get('TransactionNo')
+        Date = request.POST.get('date')
 
         StudentExist = Smodels.FeeDetails.objects.filter(StudentRollNo = StudentRollNo, StudentName = StudentName, Class = Class).first()
         TransactionHistoryExist = Smodels.TransactionHistory.objects.filter(TransactionNo=TransactionNo).first()
-        TransactionHistory = Smodels.TransactionHistory(StudentRollNo = StudentRollNo, StudentName=StudentName,Class=Class,TotalFee=TotalFee,Discount1=Discount,TotalPaidFee=TotalPaidFee,Due=Due,LatestPaidFee=LatestPaidFee,TransactionNo=TransactionNo)
+        TransactionHistory = Smodels.TransactionHistory(StudentRollNo = StudentRollNo, StudentName=StudentName,Class=Class,TotalFee=TotalFee,Discount1=Discount,TotalPaidFee=TotalPaidFee,Due=Due,LatestPaidFee=LatestPaidFee,TransactionNo=TransactionNo,Date = Date)
         
         if TransactionHistoryExist:
             context['error'] = 'Transaction No already entered' 
             return HttpResponse(AdminPage.render(context,request))
+        print(StudentExist)
 
         try:
-            if StudentExist:
-                StudentExist.TotalFee = TotalFee
-                StudentExist.Discount1 = Discount
-                StudentExist.LatestPaidFee = LatestPaidFee
-                StudentExist.TotalPaidFee = float(StudentExist.TotalPaidFee) + float(LatestPaidFee)
-                StudentExist.Due = float(StudentExist.TotalFee) - float(StudentExist.TotalPaidFee) - float(StudentExist.Discount1)
-                
-                TransactionHistory.save() and StudentExist.save()
-                
+            with transaction.atomic():
+                if StudentExist:
+                    StudentExist.TotalFee = TotalFee
+                    StudentExist.Discount1 = Discount
+                    StudentExist.LatestPaidFee = LatestPaidFee
+                    StudentExist.TotalPaidFee = float(StudentExist.TotalPaidFee) + float(LatestPaidFee)
+                    StudentExist.Due = float(StudentExist.TotalFee) - float(StudentExist.TotalPaidFee) - float(StudentExist.Discount1)
+                    
+                    StudentExist.save()
+                    TransactionHistory.save()
+                    
 
-                context = {
-                    'success' : "Fee updated successfully",
-                    'TimeTable' : TimeTable,
-                    'Class' : Class,
-                    'Subject' : Subject,
-                    'FeeDetails': FeeDetails,
-                    'Students' : Students,
-                    'UpdateFeeses' : UpdateFeeses,
-                    'TransactionHistory' : Smodels.TransactionHistory.objects.all()
+                    context = {
+                        'success' : "Fee updated successfully",
+                        'TimeTable' : TimeTable,
+                        'Class' : Class,
+                        'Subject' : Subject,
+                        'FeeDetails': FeeDetails,
+                        'Students' : Students,
+                        'UpdateFeeses' : UpdateFeeses,
+                        'TransactionHistory' : Smodels.TransactionHistory.objects.all()
 
-                }
-                return HttpResponse(AdminPage.render(context, request))
-                return redirect('admin_login')
-            else:
-                context = {
-                    'error' : "Fee updation failed",
-                    'TimeTable' : TimeTable,
-                    'Class' : Class,
-                    'Subject' : Subject,
-                    'FeeDetails': FeeDetails,
-                    'Students' : Students,
-                    'UpdateFeeses' : UpdateFeeses,
-                    'TransactionHistory' : Smodels.TransactionHistory.objects.all()
-                } 
-                return HttpResponse(AdminPage.render(context, request))
+                    }
+                    return HttpResponse(AdminPage.render(context, request))
+                    return redirect('admin_login')
+                else:
+                    context = {
+                        'error' : "Fee updation failed",
+                        'TimeTable' : TimeTable,
+                        'Class' : Class,
+                        'Subject' : Subject,
+                        'FeeDetails': FeeDetails,
+                        'Students' : Students,
+                        'UpdateFeeses' : UpdateFeeses,
+                        'TransactionHistory' : Smodels.TransactionHistory.objects.all()
+                    } 
+                    return HttpResponse(AdminPage.render(context, request))
         except Exception as e:
             context['error'] = f"Error: {str(e)}"
             return HttpResponse(AdminPage.render(context, request))

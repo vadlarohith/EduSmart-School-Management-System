@@ -26,7 +26,7 @@ def StudentLogin(request):
                 FeeDetails = Smodels.FeeDetails.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName).first()
                 context = {
                     'Student': FullName,
-                    'image' : image,
+                    'image' : image[::-1],
                     'data' : {
                         'FullName': user.FullName,
                         'RollNo' : user.RollNo,
@@ -38,7 +38,10 @@ def StudentLogin(request):
                     'TimeTable' : TimeTable.Image,
                     
                     'Subjects' : Subjects,
-                    'FeeDetails' : FeeDetails
+                    'FeeDetails' : FeeDetails,
+                    'TotalFee' : FeeDetails.TotalFee - FeeDetails.Discount1,
+                    'TransactionHistory' : Smodels.TransactionHistory.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName)[::-1]
+
                 }
                 return HttpResponse(StudentPage.render(context, request))
             else:
@@ -53,6 +56,7 @@ def StudentLogin(request):
         
 def UpdateDetails(request):
     StudentPage = loader.get_template('StudentLogin.html')
+    FeeDetails = Smodels.FeeDetails.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName).first()
     if request.method == 'POST': 
         FullName = request.POST.get('StudentName')
         RollNo = request.POST.get('StudentRollNo')
@@ -71,7 +75,7 @@ def UpdateDetails(request):
             context = {
                 'success' : 'Successfully Updated',
                 'Student': FullName,
-                    'image' : image,
+                    'image' : image[::-1],
                     'data' : {
                         'FullName': user.FullName,
                         'RollNo' : user.RollNo,
@@ -81,6 +85,8 @@ def UpdateDetails(request):
                         'Profile' : user.Profile
                     },
                     'TimeTable' : TimeTable.Image,
+                    'TotalFee' : FeeDetails.TotalFee - FeeDetails.Discount1,
+                    'TransactionHistory' : Smodels.TransactionHistory.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName).first()
                     #'Attendence' : Attendence
             }
             return HttpResponse(StudentPage.render(context, request))
@@ -116,7 +122,7 @@ def Attendence(request):
             'toDate' : ToDate,
             'WorkingDays' : TotalWorkingDays,
             'Present' : PresentDays,
-            'image' : image,
+            'image' : image[::-1],
             'data' : {
                 'FullName': user.FullName,
                 'RollNo' : user.RollNo,
@@ -129,7 +135,9 @@ def Attendence(request):
             
             'Subjects' : Subjects,
             'FeeDetails' : FeeDetails,
-            'Percentage' : f"{(PresentDays/TotalWorkingDays)*100:.2f}"
+            'Percentage' : f"{(PresentDays/TotalWorkingDays)*100:.2f}",
+            'TotalFee' : FeeDetails.TotalFee - FeeDetails.Discount1,
+            'TransactionHistory' : Smodels.TransactionHistory.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName).first()
 
         }
         return HttpResponse(StudentPage.render(context, request))

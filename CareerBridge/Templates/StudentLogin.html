@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Page</title>
+    <script src="https://kit.fontawesome.com/c2efbee9a2.js" crossorigin="anonymous"></script>
     <style>
         body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding-left: 50px;
-    padding-right: 50px;
     display: block;
     min-height: 100vh;
+    background-color: #dcdcdc;
+    padding-right: 5px;
 }
 
 .container {
@@ -22,8 +23,8 @@
 
 .sidebar {
     width: 250px;
-    background-color: #333;
-    color: #fff;
+    background-color: #dcdcdc;
+    color: #000000;
     padding: 20px;
 }
 
@@ -31,7 +32,7 @@
     margin-top: 0;
     font-size: 24px;
     margin-bottom: 10px;
-}
+}   
 
 .sidebar nav ul {
     list-style: none;
@@ -39,17 +40,33 @@
 }
 
 .sidebar nav ul li {
-    margin: 15px 0;
+    padding: 10px;
+    margin-left: -20px;
+    cursor:pointer;
 }
 
 .sidebar nav ul li a {
-    color: #fff;
+    color: #000000;
+    font-weight: bold;
     text-decoration: none;
+    font-size: 18px;
+    margin-left: 10px;
+}
+.sidebar nav ul li:hover {
+    background-color: #8d969e;
+    border-radius: 0 30px 30px 0;
+}
+.sidebar nav ul li.active-li {
+    background-color: #8d969e; /* Change this color as needed */
+    border-radius: 0 30px 30px 0; /* Match the hover style */
 }
 
 .content {
     flex-grow: 1;
     padding: 20px;
+    background-color: #ffffff;
+    border-radius: 30px;
+    width: 100%;
 }
 
 .section {
@@ -58,6 +75,11 @@
 
 .section.active {
     display: block;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    justify-content: center;
+
 }
 
 h2 {
@@ -88,19 +110,19 @@ th, td {
             padding-right: 40px;
             padding-top: 5px;
             padding-bottom: 5px;
-            border-bottom: 1px solid #ccc;
+            background-color: #dcdcdc;
         }
         .left-side {
             display: flex;
             align-items: center;
-            width: 100px;
-            height: 100px;
+            width: 50px;
+            height: 50px;
         }
         .right-side {
             display: flex;
             align-items: center;
-            width: 100px;
-            height: 100px;
+            width: 50px;
+            height: 50px;
             border: solid black 1px;
             background-color: orange;
             border-radius: 50%;
@@ -125,6 +147,7 @@ th, td {
             padding: 10px 20px;
             height: 20px;
             background-color: aqua;
+            display: none;
         }
         .student-info {
             margin: 0;
@@ -147,17 +170,12 @@ th, td {
     </style>
     <style>
         .form-container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 20px 30px;
-            width: 400px;
-            max-width: 100%;
-            box-sizing: border-box;
-            margin-left: 350px;
+            display: flex;
+            justify-content: center;
         }
 
         .form-title {
-            font-size: 24px;
+            font-size: 30px;
             margin-bottom: 20px;
             color: #333333;
             text-align: center;
@@ -168,6 +186,7 @@ th, td {
             font-weight: bold;
             margin-bottom: 10px;
             color: #333333;
+            text-align: center;
         }
 
         .radio-group {
@@ -225,8 +244,225 @@ th, td {
             display: flex;
         }
         .AttendenceTable{
-            width: 400px;
-            margin-left: 32%;
+            width: 40%;
+            margin: 0 auto;
+            overflow: hidden;
+            border-collapse: separate;
+            border-radius: 5px;
+        }
+        .AttendenceTable th{
+            background-color: #e4e3e3;
+        }
+
+
+        .right-side {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+        .dropdown-profile-photo-container {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-profile-photo-container button{
+            margin-top: 75px;
+            margin-right: px;
+            border-radius: 50%;
+            background-color: #ffffff;
+        }
+        .profile-photo, .dropdown-profile-photo {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            position: relative;
+        }
+        .change-photo-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .change-photo-button:hover {
+            color: #0056b3;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: 100px;
+            right: 20px;
+            background-color:#c8c8c8;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            border-radius: 15px;
+            padding: 10px;
+            width: 300px;
+            height: 250px;
+            display: none;
+            text-align: center;
+            z-index: 100;
+        }
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .profile-info p {
+            margin-top: 10px;
+        }
+        .profile-info img{
+            width: 100px;
+            height: 100px;
+            border: 2px solid black;
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        .dropdown-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -20px;
+        }
+        .dropdown-buttons button {
+            border: none;
+            background-color: #ffffff;
+            color: #000000;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .dropdown-buttons button:hover {
+            background-color: #e4e4e4;
+        }
+        .profile-and-signout{
+            display: flex;
+            width: 100%;
+        }
+        .profile-and-signout button{
+            margin-top: 25px;
+            width: 100%;
+            height: 30px;
+        }
+        .profile-and-signout button a{
+            text-decoration: none;
+            color: #000000;
+        }
+        .profile-and-name{
+            display: flex;
+        }
+        .profile-button {
+            border-radius: 30px 0 0 30px !important;
+            margin-right: 2px;
+        }
+        .signout-button {
+            border-radius: 0 30px 30px 0 !important;
+            margin-left: 2px;
+        }
+        .notification-container{
+            width: auto;
+            
+        }
+        .notification-table {
+            margin: 0 auto;
+            width: 60%;
+            overflow: hidden;
+            border-radius: 15px;
+            border-collapse:collapse;
+            }
+        .notification-table td, .container-table th {
+            padding-bottom: 2%;
+            padding-top: 2%;
+            padding-left:2%;
+        }
+        .notification-table tr:nth-child(odd) {
+            background-color: #cdcdcd;
+        }
+        .notification-table tr:nth-child(even){
+            background-color: rgb(251, 251, 251);
+        }
+        .notification-table tr td {
+            font-weight: bold;
+        }
+        .notification-table tr td a {
+            text-decoration: none;
+            color: black;
+        }
+        .notification-table tr td small {
+            font-weight: lighter;
+        }
+        .timetable-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            height: auto;
+        }
+        .timetable-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            
+        }
+        .subject-table {
+            width: 50%;
+            margin: 0 auto;
+            border-radius: 5px;
+            border-collapse: separate;
+        }
+        .subject-table th{
+            background-color: #c0bfbf;
+        }
+        .subject-table tr:nth-child(odd){
+            background-color: #ffffff;
+        }
+        .subject-table tr:nth-child(even){
+            background-color: #dcdcdc;
+        }
+        .transactionhistory-button{
+            display: block;
+            margin: 0 auto;
+            margin-top: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .table-container {
+        position: relative; /* Allows the X icon to be positioned relative to this container */
+        width: 100%;
+        margin: 0 auto;
+        }
+        .x {
+            position: absolute;
+            top: -10px; /* Adjust this value to move the icon vertically */
+            right: 300px; /* Adjust this value to move the icon horizontally */
+            font-size: 20px; /* Adjust the size of the icon if needed */
+            cursor: pointer; /* Makes the icon clickable */
+        }
+        .profile-table {
+            width: 80%;
+            margin: 0 auto;
+            border-radius: 5px;
+            border-collapse: separate;
+        }
+        .profile-table th{
+            text-align: right;
+            width: 20%;
+        }
+        .profile-table td{
+            text-align: left;
+            width:30%;
+        }
+        .profile-table tr td:nth-child(odd){
+            background-color: #e1e1e1;
+        }
+        .profile-table tr td:nth-child(odd){
         }
     </style>
 </head>
@@ -237,55 +473,103 @@ th, td {
             <div class="left-side">
                 <a href="#" onclick="showSection('notifications')"><img src="media\Logo1.png" alt="College Logo"></a>
             </div>
-            <div class="right-side">
-                {% if data.Profile %}
-                <img src="{{data.Profile.url}}" alt="Student Image">
-                {%else%}
-                <p>{{data.FullName|slice:":1"}}</p>
-                {%endif%}
+            <div class="profile-and-name">
+                <div class="right-side">
+                    {% if data.Profile %}
+                    <img src="{{data.Profile.url}}" alt="Student Image"  class="profile-photo" id="profilePhoto">
+                    {%else%}
+                    <p>{{data.FullName|slice:":1"}}</p>
+                    {%endif%}
+                </div>
             </div>
+
+            <div class="dropdown-menu" id="profileDropdown">
+                <div class="profile-info">
+                    <div class="dropdown-profile-photo-container">
+                        <img src="{{data.Profile.url}}" alt="Profile Image" class="dropdown-profile-photo" id="dropdown-profile-photo">
+                        <button class="change-photo-button" onclick="document.getElementById('profileImageInput').click()"><i class="fa-solid fa-pencil" style="color: #383838;"></i></button>
+                    </div>
+                    <p>{{data.FullName}} <br> ({{data.RollNo}})</p>
+                </div>
+                <div class="dropdown-buttons">
+                    <form action="" method="POST" enctype="multipart/form-data" id="profileImageForm">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                        <input type="file" name="profileImage" id="profileImageInput" accept="image/*" style="display: none;">
+                        <button type="submit">Update</button>
+                    </form>
+                    <div class="profile-and-signout">
+                        <button onclick="showSection('edit-details')" class="profile-button"><i class="fa-solid fa-id-card"></i> Profile</button>
+                        <button onclick="clearLocalStorage()" class="signout-button"><a href="{%url 'test'%}">Sign Out <i class="fa-solid fa-right-from-bracket"></i></a></button>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
         <div class="info-container">
             <div class="student-info">
                 
                 <p>Hi...{{data.FullName}} ({{data.RollNo}})</p>
             </div>
-            <div class="logout">
+            <!-- <div class="logout">
                 <a href="{%url 'test'%}" onclick="clearLocalStorage()">Logout</a>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="container">
         <aside class="sidebar">
-            <h1>Welcome {{data.FullName}}</h1>
             <nav>
                 <ul>
-                    <li><a href="#" onclick="showSection('notifications')">Notifications</a></li>
-                    <li><a href="#" onclick="showSection('edit-details')">Edit Details</a></li>
-                    <li><a href="#" onclick="showSection('timetable')">TimeTable</a></li>
-                    <li><a href="#" onclick="showSection('attendance')">Attendance</a></li>
-                    <li><a href="#" onclick="showSection('subjects')">Subjects</a></li>
-                    <li><a href="#" onclick="showSection('fee-details')">Fee Details</a></li>
-                    <li><a href="{%url 'test'%}" onclick="clearLocalStorage()">Log Out</a></li>
+                    <li onclick="showSection('dashboard')"><i class="fa-solid fa-chart-line" style="color: #000000;"></i><a href="#">Dashboard</a></li>
+                    <li onclick="showSection('notifications')"><i class="fa-solid fa-bell" style="color: #000000;"></i><a href="#"> Notifications</a></li>
+                    <!-- <li><a href="#" onclick="showSection('edit-details')">Edit Details</a></li> -->
+                    <li onclick="showSection('timetable')"><i class="fa-solid fa-calendar-days" style="color: #000000;"></i><a href="#"> TimeTable</a></li>
+                    <li onclick="showSection('attendance')"><i class="fa-solid fa-user" style="color: #000000;"></i><a href="#"> Attendance</a></li>
+                    <li onclick="showSection('subjects')"><i class="fa-solid fa-book" style="color: #000000;"></i><a href="#"> Subjects</a></li>
+                    <li onclick="showSection('fee-details'); showButton('transactionhistory-button')" ><i class="fa-solid fa-receipt" style="color: #000000;"></i><a href="#"> Fee Details</a></li>
+                    <!-- <li><a href="{%url 'test'%}" onclick="clearLocalStorage()">Log Out</a></li> -->
                 </ul>
             </nav>
         </aside>
         <main class="content">
+            <section id="dashboard" class="section" data-section="dashboard">
+                <h2 class="form-title">Student Dashboard</h2>
+            </section>
             <section id="notifications" class="section" data-section="notifications">
-                <h2>Notifications</h2>
-                <ul>
-                    {% for image in image %}
-                    {% if image.Image%}
-                        <li><a href="media/{{ image.Image }}">{{ image.Title }}: {{image.Description}}</a></li>
-                    {%else%}
-                        <li>{{ image.Title }}: {{image.Description}}</li>
-                    {%endif%}
-                    {% endfor %}
-                </ul>
+                <h2 class="form-title">Notifications</h2>
+                <div class="notification-container">
+                    <table class="notification-table">
+                        {% for image in image %}
+                        <tr>
+                        {% if image.Image%}
+                            <td><a href="media/{{ image.Image }}"><i class="fa-solid fa-image" style="color: #000000;"></i> {{ image.Title }} <br> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{image.Description}}</small></a></td>
+                        {%else%}
+                            <td style="cursor: context-menu;"><i class="fa-solid fa-angles-right" style="color: #000000;"></i> {{ image.Title }}<br> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{image.Description}}</small></td> 
+                        {%endif%}
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </section>
 
             <section id="edit-details" class="section" data-section="edit-details">
-                <h2>Edit Details</h2>
+                <h2 class="form-title">Student Profile</h2>
+                <div>
+                    <table class="profile-table">
+                        <tr>
+                            <th>Roll No</th>
+                            <td>{{data.RollNo}}</td>
+                            <th>Class</th>
+                            <td>{{data.Class}}</td>
+                        </tr>
+                        <tr>
+                            <th>FullName</th>
+                            <td>{{data.FullName}}</td>
+                            <th>Mobile No</th>
+                            <td>{{data.MobileNo}}</td>
+                        </tr>
+                    </table>
+                </div>
                 <form action="{%url 'UpdateStudentDetails'%}" method="POST"> 
                     {% csrf_token %}
                     <h4>{{success}}</h4>
@@ -300,13 +584,15 @@ th, td {
             </section>
 
             <section id="timetable" class="section" data-section="timetable">
-                <h2>TimeTable</h2>
-                <p>{{ TimeTable }}</p>
+                <h2 class="form-title">TimeTable</h2>
+                <h3 class="form-label">{{data.Class}}</h3>
+                <div class="timetable-container">
                 {% if TimeTable %}
                     <img src="{{ TimeTable.url  }}" alt="TimeTable">
                 {% else %}
-                    <p>No timetable available.</p>
+                    <p>Timetable not available.</p>
                 {% endif %}
+                </div>
             </section>
 
             <!-- <section id="attendance" class="section">
@@ -399,28 +685,27 @@ th, td {
                     </form>
                 </div> -->
                 {% if WorkingDays %}
-                <div style="text-align: center;">
-                    <h4>ATTENDANCE REPORT FOR THE PERIOD OF <i>{{fromDate}} - {{toDate}}</i></h4>
-                    <table style=" border-collapse: collapse; border: none;margin-left: -150px;">
-                        <tr>
-                            <td style="text-align: right; padding-left: -30px; border: none;"><strong>RollNo :</strong></td>
-                            <td style="text-align: left;border: none;">{{data.RollNo}}</td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; padding-left: -30px; border: none;"><strong>StudentName :</strong></td>
-                            <td style="text-align: left;border: none;">{{data.FullName}}</td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; padding-left: -30px; border: none;"><strong>Class :</strong></td>
-                            <td style="text-align: left;border: none;">{{data.Class}}</td>
-                        </tr>
-                    </table>
-                </div>
+                <h4 class="form-label">ATTENDANCE REPORT FROM <i>{{fromDate}}</i> TO <i>{{toDate}}</i></h4>
+                <table class="form-container" style=" border-collapse: collapse; border: none;">
+                    <tr>
+                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>RollNo :</strong></td>
+                        <td style="text-align: left;border: none;">{{data.RollNo}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>StudentName :</strong></td>
+                        <td style="text-align: left;border: none;">{{data.FullName}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>Class :</strong></td>
+                        <td style="text-align: left;border: none;">{{data.Class}}</td>
+                    </tr>
+                </table>
+            
                 <table class="AttendenceTable">
                     <thead>
                         <tr>
-                            <th>Working Days</th>
-                            <th>Present Days</th>
+                            <th>Total Working Days</th>
+                            <th>Total Present Days</th>
                             <th>Percentage</th>
                         </tr>
                     </thead>
@@ -428,7 +713,7 @@ th, td {
                         <tr>
                             <td>{{ WorkingDays }}</td>
                             <td>{{ Present }}</td>
-                            <td>{{ Percentage }}</td>
+                            <td>{{ Percentage }}%</td>
                         </tr>
                     </tbody>
                 </table>
@@ -436,8 +721,9 @@ th, td {
             </section>
 
             <section id="subjects" class="section" data-section="subjects">
-                <h2>Subjects</h2>
-                <table>
+                <h2 class="form-title">Subjects</h2>
+                <h3 class="form-label">{{data.Class}}</h3>
+                <table class="subject-table">
                     <thead>
                         <tr>
                             <th>Subject Code</th>
@@ -456,13 +742,24 @@ th, td {
             </section>
 
             <section id="fee-details" class="section" data-section="fee-details">
-                <h2>Fee Details</h2>
-                <table>
+                <h2 class="form-title">Fee Details</h2>
+                <table class="form-container" style=" border-collapse: collapse; border: none;">
+                    <tr>
+                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>RollNo :</strong></td>
+                        <td style="text-align: left;border: none;">{{data.RollNo}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>StudentName :</strong></td>
+                        <td style="text-align: left;border: none;">{{data.FullName}}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>Class :</strong></td>
+                        <td style="text-align: left;border: none;">{{data.Class}}</td>
+                    </tr>
+                </table>
+                <table class="subject-table">
                     <thead>
                         <tr>
-                            <th>Student Roll No</th>
-                            <th>Student Name</th>
-                            <th>Class</th>
                             <th>Total Fee</th>
                             <th>Total Paid Fee</th>
                             <th>Due</th>
@@ -471,17 +768,42 @@ th, td {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{FeeDetails.StudentRollNo}}</td>
-                            <td>{{FeeDetails.StudentName}}</td>
-                            <td>{{FeeDetails.Class}}</td>
-                            <td>{{FeeDetails.TotalFee}}</td>
+                            <td>{{TotalFee}}</td>
                             <td>{{FeeDetails.TotalPaidFee}}</td>
                             <td>{{FeeDetails.Due}}</td>
                             <td>{{FeeDetails.LatestPaidFee}}</td>
                         </tr>
                     </tbody>
                 </table>
+                <button id="transactionhistory-button" class="transactionhistory-button" onclick="showSection1('fee-transactions'); hideButton(this);">Get Transaction History</button>
+            
+            <section id="fee-transactions" class="section" data-section="fee-transactions">
+                <h1 class="form-label">Transaction History</h1>
+                <div class="table-container">
+                    <i class="fa-solid fa-circle-xmark x" style="color: #000000;" onclick="hideSectionAndShowButton('fee-transactions','transactionhistory-button')"></i>
+                    <table class="subject-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Transaction No</th>
+                                <th>Amount</th>
+                                <th>Remaining Due</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in TransactionHistory %}
+                            <tr>
+                                <td>{{i.Date}}</td>
+                                <td>{{i.TransactionNo}}</td>
+                                <td>{{i.LatestPaidFee}}</td>
+                                <td>{{i.Due}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </section>
+        </section>
         </main>
     </div>
     <script>
@@ -518,7 +840,40 @@ function showSection(sectionId) {
                 console.log("Saving section:", sectionId); // Debug log
                 localStorage.setItem('currentSection', sectionId);
             }
+            // Handle active state for sidebar items
+            var listItems = document.querySelectorAll('.sidebar nav ul li');
+            listItems.forEach(function(item) {
+                item.classList.remove('active-li');
+            });
+
+            // Add active class to the clicked li
+            var activeItem = document.querySelector('.sidebar nav ul li[onclick="showSection(\'' + sectionId + '\')"]');
+            var activeItem1 = document.querySelector('.sidebar nav ul li[onclick="showSection(\'' + sectionId + '\'); showButton(\'transactionhistory-button\')"]');
+            if (activeItem) {
+                activeItem.classList.add('active-li');
+            }
+            if (activeItem1) {
+                activeItem1.classList.add('active-li');
+            }
         }
+
+        function showSection1(sectionId) {
+    // Hide all sections except fee-details
+    var sections = document.querySelectorAll('.section');
+    document.getElementById('transactionhistory-button').classList.remove('active');
+    sections.forEach(function(section) {
+        if (section.id !== 'fee-details') {
+            section.classList.remove('active');
+        }
+    });
+
+    // Show the selected section
+    var activeSection = document.getElementById(sectionId);
+    if (activeSection) {
+        activeSection.classList.add('active');
+    }
+}
+
 
         function loadSection() {
             const savedSection = localStorage.getItem('currentSection');
@@ -570,6 +925,55 @@ function showSection(sectionId) {
             }
         });
     });
+
+
+    document.getElementById('profilePhoto').addEventListener('click', function(event) {
+            event.stopPropagation();
+            var dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('show');
+        });
+
+        document.getElementById('profileDropdown').addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+
+        window.onclick = function() {
+            var dropdown = document.getElementById('profileDropdown');
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        };
+
+        // Preview image before upload
+        document.getElementById('profileImageInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('dropdown-profile-photo').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        function hideButton(button) {
+        button.style.display = 'none';
+    }
+        function showButton(buttonId) {
+            var button = document.getElementById(buttonId);
+            button.style.display = 'block';
+        }
+
+    function hideSectionAndShowButton(sectionId, buttonId) {
+        // Hide the section
+        var section = document.getElementById(sectionId);
+        section.classList.remove('active');
+
+        // Show the button
+        var button = document.getElementById(buttonId);
+        button.style.display = 'block'; // or 'block' depending on your layout
+    }
+
+
     </script>
 </body>
 </html>
