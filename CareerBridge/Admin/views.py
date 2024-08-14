@@ -121,10 +121,11 @@ def TeacherRegistration(request):
     AdminPage = loader.get_template("AdminPage.html")
     TimeTable = models.TimeTable.objects.all()
     Subject = models.Subject.objects.all()
-    Class = models.Class.objects.all()
+    Class = models.Class.objects.all().order_by('-Class')
     Students = models.Student.objects.all()
     FeeDetails = Smodels.FeeDetails.objects.all()
     UpdateFeeses = models.UpdateFee.objects.all()
+    Subjects = models.Subject.objects.values().all()
     context = {
         'TimeTable' : TimeTable,
         'Class' : Class,
@@ -132,7 +133,8 @@ def TeacherRegistration(request):
         'FeeDetails': FeeDetails,
         'Students' : Students,
         'UpdateFeeses' : UpdateFeeses,
-        'TransactionHistory' : Smodels.TransactionHistory.objects.all()
+        'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
+        'Subjects' : Subjects
     }
 
     if request.method == 'POST':
@@ -140,15 +142,14 @@ def TeacherRegistration(request):
         MobileNo = request.POST.get('TMobileNo')
         TeacherID = request.POST.get('TeacherID')
         ClassTeacher = request.POST.get('ClassTeacher')
+        Subject = request.POST.get('Subject')
 
         if models.Teacher.objects.filter(TeacherID = TeacherID):
-            context = {
-                'error' : "TeacherID Already Exists"
-            }
+            context['error'] = "TeacherID already exists"
             return HttpResponse(AdminPage.render(context, request))
 
         try:
-            data = models.Teacher(FullName = FullName, MobileNo = MobileNo, Password = TeacherID, TeacherID = TeacherID, ClassTeacher = ClassTeacher)
+            data = models.Teacher(FullName = FullName, MobileNo = MobileNo, Password = TeacherID, TeacherID = TeacherID, ClassTeacher = ClassTeacher, Subject = Subject)
             data.save()
             context['success'] = "Teacher Registered Successfully"
         except Exception as e:

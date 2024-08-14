@@ -121,10 +121,20 @@
                 TeacherID: <input type="text" name="TeacherID" required><br>
                 FullName: <input type="text" name="TFullName" required> <br>
                 MobileNo: <input type="text" name="TMobileNo" required> <br>
+                Subject:<select name="Subject" id="">
+                    <option value="">--Select--</option>
+                    <option value="telugu">Telugu</option>
+                    <option value="hindi">Hindi</option>
+                    <option value="english">English</option>
+                    <option value="maths">Maths</option>
+                    <option value="physics">Physics</option>
+                    <option value="biology">Biology</option>
+                    <option value="social">Social</option>
+                </select> <br>
                 Class Teacher: <select name="ClassTeacher" id="">
                     <option value="">--Select--</option>
                     {% for i in Class %}
-                    <option value="{{ i }}">{{ i }}</option>
+                    <option value="{{i}}">{{i}}</option>
                     {% endfor %}
                 </select> <br>
                 <button type="submit">Submit</button>

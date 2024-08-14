@@ -462,9 +462,53 @@ th, td {
         .profile-table tr td:nth-child(odd){
             background-color: #e1e1e1;
         }
-        .profile-table tr td:nth-child(odd){
+        .chart-container{
+            width: auto;
+            display: flex;
+            padding: 10px;
+        }
+        .chart {
+            padding: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            background-color: #fdfdfd;
+            border-radius: 5px;
+            width: 40%;
+        }
+        .dropdown-photo-container{
+            display: flex;
+            align-items: center;
+            width: 100px;
+            height: 100px;
+            border: solid black 1px;
+            background-color: orange;
+            border-radius: 50%;
+        }
+        .dropdown-photo-container img{
+            display: flex;
+            border-radius: 50%;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+            align-items: center;
+        }
+        .dropdown-photo-container p{
+            margin: 0 auto;
+            width: fit-content;
+            color: white;
+            font-size: 100px;
+        }
+        .profile-photo2{
+            margin: 0 auto !important;
+            width: 100%;
+            height: 100%;
+            color: white;
+            font-size: 100px;
+            background-color: orange;
+            text-align: center;
+            align-items: center;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     {% csrf_token %}
@@ -478,7 +522,7 @@ th, td {
                     {% if data.Profile %}
                     <img src="{{data.Profile.url}}" alt="Student Image"  class="profile-photo" id="profilePhoto">
                     {%else%}
-                    <p>{{data.FullName|slice:":1"}}</p>
+                    <p id="profilePhoto">{{data.FullName|slice:":1"}}</p>
                     {%endif%}
                 </div>
             </div>
@@ -486,20 +530,29 @@ th, td {
             <div class="dropdown-menu" id="profileDropdown">
                 <div class="profile-info">
                     <div class="dropdown-profile-photo-container">
-                        <img src="{{data.Profile.url}}" alt="Profile Image" class="dropdown-profile-photo" id="dropdown-profile-photo">
+                        <div class="dropdown-photo-container">
+                            {% if data.Profile %}
+                            <img src="{{data.Profile.url}}" alt="Student Image"  class="profile-photo" id="profilePhoto1">
+                            {%else%}
+                            <!-- <p id="profilePhoto11">{{data.FullName|slice:":1"}}</p> -->
+                            <img src="" alt="{{data.FullName|slice:':1'}}" id="profilePhoto1" class="profile-photo2">
+                            {%endif%}
+                        </div>
                         <button class="change-photo-button" onclick="document.getElementById('profileImageInput').click()"><i class="fa-solid fa-pencil" style="color: #383838;"></i></button>
                     </div>
                     <p>{{data.FullName}} <br> ({{data.RollNo}})</p>
                 </div>
                 <div class="dropdown-buttons">
-                    <form action="" method="POST" enctype="multipart/form-data" id="profileImageForm">
+                    <form action="{% url 'ProfileUpdate' %}" method="POST" enctype="multipart/form-data" id="profileImageForm">
                         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                        <input type="hidden" name="FullName" value="{{data.FullName}}" id="">
+                        <input type="hidden" name="RollNo" value="{{data.RollNo}}" id="">
                         <input type="file" name="profileImage" id="profileImageInput" accept="image/*" style="display: none;">
                         <button type="submit">Update</button>
                     </form>
                     <div class="profile-and-signout">
                         <button onclick="showSection('edit-details')" class="profile-button"><i class="fa-solid fa-id-card"></i> Profile</button>
-                        <button onclick="clearLocalStorage()" class="signout-button"><a href="{%url 'test'%}">Sign Out <i class="fa-solid fa-right-from-bracket"></i></a></button>
+                        <button onclick="clearLocalStorage(); window.location.href='{%url 'test'%}'" class="signout-button"><a href="{%url 'test'%}">Sign Out <i class="fa-solid fa-right-from-bracket"></i></a></button>
                     </div>
                 </div>
             </div>
@@ -534,6 +587,15 @@ th, td {
         <main class="content">
             <section id="dashboard" class="section" data-section="dashboard">
                 <h2 class="form-title">Student Dashboard</h2>
+                <div class="chart-container">
+                    <div class="chart">
+                        <h2 class="form-label">Attendence Report</h2>
+                        <canvas id="attendanceChart" width="400" height="200"></canvas>
+                    </div>
+                    <div>
+
+                    </div>
+                </div>
             </section>
             <section id="notifications" class="section" data-section="notifications">
                 <h2 class="form-title">Notifications</h2>
@@ -882,7 +944,7 @@ function showSection(sectionId) {
                 showSection(savedSection);
             } else {
                 // Default section to show if no section is saved
-                showSection('notifications');
+                showSection('dashboard');
             }
         }
 
@@ -947,14 +1009,21 @@ function showSection(sectionId) {
         // Preview image before upload
         document.getElementById('profileImageInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
+            const reader = new FileReader();
+            const profilePhoto = document.getElementById('profilePhoto1');
+
+            reader.onload = function(e) {
+                profilePhoto.src = e.target.result;
+            };
+
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('dropdown-profile-photo').src = e.target.result;
-                };
                 reader.readAsDataURL(file);
+            } else {
+                // If no file selected (e.g., user cancels the selection), you may want to handle this scenario
+                profilePhoto.src = ""; // Clear the src attribute if no file selected
             }
         });
+
         function hideButton(button) {
         button.style.display = 'none';
     }
@@ -975,5 +1044,45 @@ function showSection(sectionId) {
 
 
     </script>
+
+<script>
+    var ctx = document.getElementById('attendanceChart').getContext('2d');
+
+// Assuming you have calculated the difference between total and present days in your view and passed it as `difference_counts`
+var attendanceChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{ attendance_months|safe }},
+        datasets: [
+            {
+                label: 'Present Days',
+                data: {{ present_counts|safe }},
+                backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Total',
+                data: {{ total_counts|safe }},
+                backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                borderColor: 'rgba(255, 159, 64, 1)',
+                borderWidth: 1
+            }
+        ]
+    },
+    options: {
+        scales: {
+            x: {
+                stacked: false, // Stack bars on x-axis
+            },
+            y: {
+                stacked: false, // Stack bars on y-axis
+                beginAtZero: true // Start Y-axis at 0
+            }
+        }
+    }
+});
+
+</script>
 </body>
 </html>

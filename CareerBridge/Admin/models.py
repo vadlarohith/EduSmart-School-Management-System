@@ -30,7 +30,7 @@ class Student(models.Model):
     RollNo = models.CharField(max_length=10)
     Password = models.CharField(max_length=15)
     MobileNo = models.CharField(max_length=10)
-    Class = models.CharField(max_length=6)
+    Class = models.CharField(max_length=7)
     Profile = models.ImageField(null=True, upload_to='Profile/')
     
     def __str__(self):
@@ -44,6 +44,7 @@ class Teacher(models.Model):
     MobileNo = models.CharField(max_length=10)
     Password = models.CharField(max_length=20)
     ClassTeacher = models.CharField(max_length=10)
+    Subject = models.CharField(max_length=20, null=True)
 
     def __str__(self):
         return self.FullName

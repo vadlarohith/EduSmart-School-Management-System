@@ -4,6 +4,8 @@ from django.template import loader
 from django.contrib.auth.hashers import check_password
 from Admin import models
 from . import models as Smodels
+from django.db.models import Q, Count
+from django.db.models.functions import TruncMonth
 
 def StudentLogin(request):
     StudentPage = loader.get_template("StudentLogin.html")
@@ -24,6 +26,21 @@ def StudentLogin(request):
                 
                 Subjects = models.Subject.objects.filter(Class = user.Class)
                 FeeDetails = Smodels.FeeDetails.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName).first()
+
+                 # Aggregate attendance by month for the student
+                attendance_data = models.AttendenceDetails.objects.filter(RegNo=user.RollNo)\
+                    .annotate(month=TruncMonth('AttendenceDate'))\
+                    .values('month')\
+                    .annotate(present_count=Count('Attendence', filter=Q(Attendence='P')))\
+                    .annotate(absent_count=Count('Attendence', filter=Q(Attendence='A')))\
+                    .annotate(total_count=Count('Attendence', filter=Q(Attendence__in=['P', 'A'])))\
+                    .order_by('month')
+
+                months = [entry['month'].strftime('%B') for entry in attendance_data]
+                present_counts = [entry['present_count'] for entry in attendance_data]
+                absent_counts = [entry['absent_count'] for entry in attendance_data]
+                total_counts = [entry['total_count'] for entry in attendance_data]
+
                 context = {
                     'Student': FullName,
                     'image' : image[::-1],
@@ -40,7 +57,11 @@ def StudentLogin(request):
                     'Subjects' : Subjects,
                     'FeeDetails' : FeeDetails,
                     'TotalFee' : FeeDetails.TotalFee - FeeDetails.Discount1,
-                    'TransactionHistory' : Smodels.TransactionHistory.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName)[::-1]
+                    'TransactionHistory' : Smodels.TransactionHistory.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName)[::-1],
+                    'attendance_months': months,
+                    'present_counts': present_counts,
+                    'absent_counts': absent_counts,
+                    'total_counts' : total_counts
 
                 }
                 return HttpResponse(StudentPage.render(context, request))
@@ -141,3 +162,61 @@ def Attendence(request):
 
         }
         return HttpResponse(StudentPage.render(context, request))
+    
+def ProfileUpdate(request):
+    StudentPage = loader.get_template('StudentLogin.html')
+    if request.method == 'POST':
+        FullName = request.POST.get('FullName')
+        RollNo = request.POST.get('RollNo')
+        Profile = request.FILES.get('profileImage')
+
+        user = models.Student.objects.filter(FullName = FullName, RollNo = RollNo).first()
+        image = models.Posters.objects.all().values()
+        TimeTable = models.TimeTable.objects.filter(Class = user.Class).first()
+        Subjects = models.Subject.objects.filter(Class = user.Class)
+        FeeDetails = Smodels.FeeDetails.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName).first()
+
+        attendance_data = models.AttendenceDetails.objects.filter(RegNo=user.RollNo)\
+            .annotate(month=TruncMonth('AttendenceDate'))\
+            .values('month')\
+            .annotate(present_count=Count('Attendence', filter=Q(Attendence='P')))\
+            .annotate(absent_count=Count('Attendence', filter=Q(Attendence='A')))\
+            .annotate(total_count=Count('Attendence', filter=Q(Attendence__in=['P', 'A'])))\
+            .order_by('month')
+
+        months = [entry['month'].strftime('%B') for entry in attendance_data]
+        present_counts = [entry['present_count'] for entry in attendance_data]
+        absent_counts = [entry['absent_count'] for entry in attendance_data]
+        total_counts = [entry['total_count'] for entry in attendance_data]
+
+        context = {
+            'Student': FullName,
+            'image' : image[::-1],
+            'data' : {
+                'FullName': user.FullName,
+                'RollNo' : user.RollNo,
+                'MobileNo': user.MobileNo,
+                'Password': user.Password,
+                'Class': user.Class,
+                'Profile' : user.Profile
+            },
+            'TimeTable' : TimeTable.Image,
+            
+            'Subjects' : Subjects,
+            'FeeDetails' : FeeDetails,
+            'TotalFee' : FeeDetails.TotalFee - FeeDetails.Discount1,
+            'TransactionHistory' : Smodels.TransactionHistory.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName)[::-1],
+            'attendance_months': months,
+            'present_counts': present_counts,
+            'absent_counts': absent_counts,
+            'total_counts' : total_counts
+        }
+
+        try:
+            user.Profile = Profile
+            user.save()
+        except Exception as e:
+            context['Success'] = f"Error: {str(e)}"
+
+            return HttpResponse(StudentPage.render(context,request))
+        return HttpResponse(StudentPage.render(context,request))
