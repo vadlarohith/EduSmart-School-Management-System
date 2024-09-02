@@ -81,6 +81,7 @@
         <a href="#" onclick="showSection('fee-details')">Fee Details</a>
         <a href="#" onclick="showSection('UpdateFees')">UpdateFeeses</a>
         <a href="#" onclick="showSection('TransactionHstory')">TransactionHstory</a>
+        <a href="#" onclick="showSection('CreateExams')">Create Exams</a>
         <a href="{% url 'test' %}">LogOut</a>
     </div>
 
@@ -123,13 +124,13 @@
                 MobileNo: <input type="text" name="TMobileNo" required> <br>
                 Subject:<select name="Subject" id="">
                     <option value="">--Select--</option>
-                    <option value="telugu">Telugu</option>
-                    <option value="hindi">Hindi</option>
-                    <option value="english">English</option>
-                    <option value="maths">Maths</option>
-                    <option value="physics">Physics</option>
-                    <option value="biology">Biology</option>
-                    <option value="social">Social</option>
+                    <option value="TELUGU">Telugu</option>
+                    <option value="HINDI">Hindi</option>
+                    <option value="ENGLISH">English</option>
+                    <option value="MATHEMATICS">Mathematics</option>
+                    <option value="PHYSICS">Physics</option>
+                    <option value="BIOLOGY">Biology</option>
+                    <option value="SOCIAL">Social</option>
                 </select> <br>
                 Class Teacher: <select name="ClassTeacher" id="">
                     <option value="">--Select--</option>
@@ -244,8 +245,8 @@
                             <td>{{ j.Class }}<input type="hidden" name="Class" value="{{ j.Class }}"></td>
                             <td>{{j.TotalFee }}<input type="hidden" name="TotalFee" value="{{ j.TotalFee }}"></td>
                             <td><input type="number" name="Discount" id="" value="{{j.Discount1}}"></td>
-                            <td>{{ j.TotalPaidFee }}<input type="hidden" name="TotalPaidFee" value="{{ j.TotalPaidFee }}"></td>
-                            <td>{{ j.Due }} <input type="hidden" name="Due" id="" value="{{j.Due}}"></td>
+                            <td>{{ j.TotalPaidFee }} <input type="hidden" name="TotalPaidFee111" id="" value="{{ j.TotalPaidFee }}"></td>
+                            <td>{{ j.Due }} <input type="hidden" name="Due111" id="" value="{{ j.Due }}"></td>
                             <td><input type="number" name="LatestPaidFee" placeholder="{{ j.LatestPaidFee }}"></td>
                             <td><input type="text" name="TransactionNo" placeholder="Transaction No"></td>
                             <td><input type="date" name="date" id="date"></td>
@@ -319,6 +320,62 @@
                         </form>
                     </tr>
                     {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="hidden" id="CreateExams" data-section="CreateExams">
+            <h2>Create Exams</h2>
+            <div>
+                <form action="{% url 'ExamType' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="ExamType" id="" placeholder="Exam Name" required> <br>
+                    <input type="number" name="Marks" id="" placeholder="Max Marks in Each Subject" required><br>
+                    <button type="submit">Create Exam</button>
+                </form>
+            </div>
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Exam Type</th>
+                            <th>Student Access</th>
+                            <th>Teacher Access</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in ExamType %}
+                        <form action="{% url 'ExamMarksAccess' %}" method="POST">
+                            {% csrf_token %}
+                            <tr>
+                                <td> <input type="hidden" name="ExamType1" id="" value="{{i.ExamType}}">{{i.ExamType}}</td>
+                                <td>
+                                    <select name="StudentAccess" id="">
+                                        {% if i.StudentAccess == 'Accept' %}
+                                        <option value="Accept">Accept</option>
+                                        {%else%}
+                                        <option value="Declined">Declined</option>
+                                        {%endif%}
+                                        <option value="Accept">Accept</option>
+                                        <option value="Declined">Declined</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="TeacherAccess" id="">
+                                        {% if i.TeacherAccess == 'Accept' %}
+                                        <option value="Accept">Accept</option>
+                                        {%else%}
+                                        <option value="Declined">Declined</option>
+                                        {%endif%}
+                                        <option value="Accept">Accept</option>
+                                        <option value="Declined">Declined</option>
+                                    </select>
+                                </td>
+                                <td><button type="submit">Update</button></td>
+                            </tr>
+                        </form>
+                        {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>

@@ -35,3 +35,15 @@ class AttendenceDetailsPreview(admin.ModelAdmin):
     list_display = ('RegNo','AttendenceDate','Attendence')
 
 admin.site.register(models.AttendenceDetails, AttendenceDetailsPreview)
+
+class ExamTypePreview(admin.ModelAdmin):
+    list_display = ('ExamType', 'StudentAccess','TeacherAccess')
+
+admin.site.register(models.ExamType, ExamTypePreview)
+
+class ExamMarksPreview(admin.ModelAdmin):
+    list_display = ('StudentRollNo', 'StudentName', 'Subject', 'ExamType', 'Marks')
+
+admin.site.register(models.ExamMarks, ExamMarksPreview)
+
+admin.site.register(models.TeacherTimetable)

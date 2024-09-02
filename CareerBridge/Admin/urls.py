@@ -14,4 +14,7 @@ urlpatterns = [
     path('UpdateFeeDetails', views.UpdateFeeDetails, name='UpdateFeeDetails'),
     path('UpdateFee', views.UpdateFees, name='UpdateFee'),
     path('get-transaction-history/<str:student_roll_no>', views.TransactionHistory, name='get_transaction_history'),
+    path('ExamType', views.ExamType, name='ExamType'),
+    path('ExamMarksAccess', views.ExamMarksAccess, name='ExamMarksAccess'),
+    path('DeleteTimetable', views.DeleteTimetable, name='DeleteTimetable'),
 ]

@@ -45,6 +45,7 @@ class Teacher(models.Model):
     Password = models.CharField(max_length=20)
     ClassTeacher = models.CharField(max_length=10)
     Subject = models.CharField(max_length=20, null=True)
+    Profile = models.ImageField(null=True, upload_to='Profile/')
 
     def __str__(self):
         return self.FullName
@@ -59,7 +60,7 @@ class Posters(models.Model):
     
 class TimeTable(models.Model):
     Class = models.CharField(max_length=10)
-    Image = models.ImageField(upload_to='image/')
+    Image = models.ImageField(null=True ,upload_to='image/')
 
     def __str__(self):
         return self.Class
@@ -101,3 +102,31 @@ class AttendenceDetails(models.Model):
 
     def __str__(self):
         return self.RegNo
+    
+class ExamType(models.Model):
+    ExamType = models.CharField(max_length=20)
+    MaxMarks = models.IntegerField(null=True)
+    StudentAccess = models.CharField(max_length=10)
+    TeacherAccess = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.ExamType
+
+class ExamMarks(models.Model):
+    StudentRollNo = models.CharField(max_length=15)
+    StudentName = models.CharField(max_length=30)
+    Subject = models.CharField(max_length=20)
+    Class = models.CharField(max_length=10)
+    ExamType = models.CharField(max_length=20)
+    Marks = models.IntegerField(null=True)
+
+    def __str__(self):
+        return self.ExamType
+    
+class TeacherTimetable(models.Model):
+    TeacherID = models.CharField(max_length=20)
+    Timetable = models.ImageField(null=True, upload_to='image/')
+
+    def __str__(self):
+        return self.TeacherID
+    

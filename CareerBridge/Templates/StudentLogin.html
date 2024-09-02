@@ -7,98 +7,139 @@
     <script src="https://kit.fontawesome.com/c2efbee9a2.js" crossorigin="anonymous"></script>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    display: block;
-    min-height: 100vh;
-    background-color: #dcdcdc;
-    padding-right: 5px;
-}
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: block;
+            min-height: 100vh;
+            background-color: #dcdcdc;
+            padding-right: 5px;
+        }
 
-.container {
-    display: flex;
-    width: 100%;
-    min-height: 100vh;
-}
+        .container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
 
-.sidebar {
-    width: 250px;
-    background-color: #dcdcdc;
-    color: #000000;
-    padding: 20px;
-}
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #dcdcdc;
+            color: #000000;
+            padding: 20px;
+            position: relative;
+            transition: width 0.3s;
+        }
+        /* For collapsable sidebar */
+        .sidebar.collapsed {
+            width: 50px;
+        }
+        .sidebar .toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: -25px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+        }.sidebar-list {
+            list-style: none;
+            padding: 20px 0;
+            margin: 0;
+        }.sidebar-list li {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        .sidebar.collapsed .sidebar-text {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .sidebar.collapsed .icon{
+            margin: 10px !important;
+            font-size: 20px;
 
-.sidebar h1 {
-    margin-top: 0;
-    font-size: 24px;
-    margin-bottom: 10px;
-}   
+        }
 
-.sidebar nav ul {
-    list-style: none;
-    padding: 0;
-}
+        /* collapsable over */
 
-.sidebar nav ul li {
-    padding: 10px;
-    margin-left: -20px;
-    cursor:pointer;
-}
 
-.sidebar nav ul li a {
-    color: #000000;
-    font-weight: bold;
-    text-decoration: none;
-    font-size: 18px;
-    margin-left: 10px;
-}
-.sidebar nav ul li:hover {
-    background-color: #8d969e;
-    border-radius: 0 30px 30px 0;
-}
-.sidebar nav ul li.active-li {
-    background-color: #8d969e; /* Change this color as needed */
-    border-radius: 0 30px 30px 0; /* Match the hover style */
-}
+        .sidebar h1 {
+            margin-top: 0;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }   
 
-.content {
-    flex-grow: 1;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 30px;
-    width: 100%;
-}
+        .sidebar nav ul {
+            list-style: none;
+            padding: 0;
+        }
 
-.section {
-    display: none;
-}
+        .sidebar nav ul li {
+            padding: 10px;
+            margin-left: -20px;
+            cursor:pointer;
+            height: 20px;
+        }
 
-.section.active {
-    display: block;
-    width: 100%;
-    position: relative;
-    z-index: 1;
-    justify-content: center;
+        .sidebar nav ul li a {
+            color: #000000;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 18px;
+            margin-left: 10px;
+        }
+        .sidebar nav ul li:hover {
+            background-color: #8d969e;
+            border-radius: 0 30px 30px 0;
+        }
+        .sidebar nav ul li.active-li {
+            background-color: #8d969e; /* Change this color as needed */
+            border-radius: 0 30px 30px 0; /* Match the hover style */
+        }
 
-}
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 30px;
+            width: 100%;
+        }
 
-h2 {
-    margin-top: 0;
-}
+        .section {
+            display: none;
+        }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
+        .section.active {
+            display: block;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            justify-content: center;
 
-table, th, td {
-    border: 1px solid #ddd;
-}
+        }
 
-th, td {
-    padding: 10px;
-    text-align: left;
-}
+        h2 {
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
 
     </style>
     <style>
@@ -402,7 +443,7 @@ th, td {
             height: auto;
         }
         .timetable-container img {
-            max-width: 100%;
+            width: 70%;
             height: auto;
             border-radius: 5px;
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -466,13 +507,16 @@ th, td {
             width: auto;
             display: flex;
             padding: 10px;
+            
         }
         .chart {
+            display: block;
             padding: 10px;
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
             background-color: #fdfdfd;
             border-radius: 5px;
             width: 40%;
+            margin: 30px;
         }
         .dropdown-photo-container{
             display: flex;
@@ -507,6 +551,100 @@ th, td {
             text-align: center;
             align-items: center;
         }
+        .bell-container {
+            position: relative;
+            display: block;
+            margin-right: 20px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: none; /* Hidden by default */
+        }
+        .Rank-Results {
+            display: block;
+            font-weight: bold;
+            font-size: 20px;
+            text-align: right;
+            margin: 5px;
+            margin-right: 25%;
+
+        }
+        .Rank-Results strong {
+            font-size: 35px;
+        }
+        .Rank-Results-Dashboard {
+            display: inherit;
+            font-weight: bold;
+            font-size: 50px;
+            text-align: right;
+            align-items: right;
+            justify-content: right;
+            margin-right: 5%;
+            margin-top: -5%;
+            margin-bottom: -5%;
+            z-index: inherit;
+
+        }
+        .Rank-Results-Dashboard img{
+            display: inline-block;
+            width: 100px; /* Adjust as needed to match font-size */
+            height: 100px; /* Adjust as needed to maintain aspect ratio */
+            object-fit: cover; /* Ensure image doesn't get distorted */
+            vertical-align: middle; /* Align with text */
+            margin-top: -5%;
+            margin-right: -3%;
+
+        }
+
+        .styled-select {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 2;
+            padding: 5px 10px;
+            width: 220px;
+            border-radius: 4px;
+            background-color: #c8c8c8;
+            color: #102770;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 12px 35px 0 rgba(255,235,167,.15);
+            transition: all 200ms linear;
+        }
+
+        .dark-light:checked ~ .sec-center .styled-select {
+            background-color: #102770;
+            color: #ffeba7;
+            box-shadow: 0 12px 35px 0 rgba(16,39,112,.25);
+        }
+
+        .styled-select option {
+            background-color: #111;
+            color: #fff;
+            padding: 5px 10px;
+        }
+
+        .dark-light:checked ~ .sec-center .styled-select option {
+            background-color: #fff;
+            color: #102770;
+        }
+        .Select-Container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -514,10 +652,20 @@ th, td {
     {% csrf_token %}
     <div style="">
         <div class="header">
-            <div class="left-side">
-                <a href="#" onclick="showSection('notifications')"><img src="media\Logo1.png" alt="College Logo"></a>
+            <div class="profile-and-name">
+                <div class="bell-container">
+                <i class="fa-solid fa-bars fa-xl toggle-btn" id="toggleBtn" style="color: #000000;"></i>
+                </div>
+                <div class="left-side">
+                    <a href="#" onclick="showSection('dashboard')"><img src="media\Logo1.png" alt="College Logo"></a>
+                </div>
             </div>
             <div class="profile-and-name">
+                <div class="bell-container">
+                    <i class="fa-solid fa-bell fa-xl" style="color: #000000;" onclick="showSection('notifications')"></i>
+                    <span class="notification-badge" id="notificationBadge"></span>
+                </div>
+            
                 <div class="right-side">
                     {% if data.Profile %}
                     <img src="{{data.Profile.url}}" alt="Student Image"  class="profile-photo" id="profilePhoto">
@@ -552,7 +700,7 @@ th, td {
                     </form>
                     <div class="profile-and-signout">
                         <button onclick="showSection('edit-details')" class="profile-button"><i class="fa-solid fa-id-card"></i> Profile</button>
-                        <button onclick="clearLocalStorage(); window.location.href='{%url 'test'%}'" class="signout-button"><a href="{%url 'test'%}">Sign Out <i class="fa-solid fa-right-from-bracket"></i></a></button>
+                        <button onclick="clearLocalStorage(); window.location.href='{%url 'test'%}';" class="signout-button"><a href="{%url 'test'%}">Sign Out <i class="fa-solid fa-right-from-bracket"></i></a></button>
                     </div>
                 </div>
             </div>
@@ -570,30 +718,61 @@ th, td {
         </div>
     </div>
     <div class="container">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <nav>
-                <ul>
-                    <li onclick="showSection('dashboard')"><i class="fa-solid fa-chart-line" style="color: #000000;"></i><a href="#">Dashboard</a></li>
-                    <li onclick="showSection('notifications')"><i class="fa-solid fa-bell" style="color: #000000;"></i><a href="#"> Notifications</a></li>
+                <ul class="sidebar-list">
+                    <li onclick="showSection('dashboard')"><i class="fa-solid fa-chart-line icon" style="color: #000000;"></i><a href="#" class="sidebar-text">Dashboard</a></li>
+                    <!-- <li onclick="showSection('notifications')"><i class="fa-solid fa-bell" style="color: #000000;"></i><a href="#"> Notifications</a></li> -->
                     <!-- <li><a href="#" onclick="showSection('edit-details')">Edit Details</a></li> -->
-                    <li onclick="showSection('timetable')"><i class="fa-solid fa-calendar-days" style="color: #000000;"></i><a href="#"> TimeTable</a></li>
-                    <li onclick="showSection('attendance')"><i class="fa-solid fa-user" style="color: #000000;"></i><a href="#"> Attendance</a></li>
-                    <li onclick="showSection('subjects')"><i class="fa-solid fa-book" style="color: #000000;"></i><a href="#"> Subjects</a></li>
-                    <li onclick="showSection('fee-details'); showButton('transactionhistory-button')" ><i class="fa-solid fa-receipt" style="color: #000000;"></i><a href="#"> Fee Details</a></li>
+                    <li onclick="showSection('timetable')"><i class="fa-solid fa-calendar-days icon" style="color: #000000;"></i><a href="#" class="sidebar-text"> TimeTable</a></li>
+                    <li onclick="showSection('attendance')"><i class="fa-solid fa-user-check icon" style="color: #000000;"></i></i><a href="#" class="sidebar-text"> Attendance</a></li>
+                    <li onclick="showSection('subjects')"><i class="fa-solid fa-book icon" style="color: #000000;"></i><a href="#" class="sidebar-text"> Subjects</a></li>
+                    <li onclick="showSection('fee-details'); showButton('transactionhistory-button')" ><i class="fa-solid fa-receipt icon" style="color: #000000;"></i><a href="#" class="sidebar-text"> Fee Details</a></li>
+                    <li onclick="showSection('ExamMarks')"><i class="fa-solid fa-book-bookmark icon" style="color: #000000;"></i><a href="#" class="sidebar-text">Exam Results</a></li>
                     <!-- <li><a href="{%url 'test'%}" onclick="clearLocalStorage()">Log Out</a></li> -->
                 </ul>
             </nav>
         </aside>
         <main class="content">
             <section id="dashboard" class="section" data-section="dashboard">
-                <h2 class="form-title">Student Dashboard</h2>
+                <h2 class="form-title">Welcome {{data.FullName}}({{data.RollNo}})</h2>
+                
                 <div class="chart-container">
                     <div class="chart">
                         <h2 class="form-label">Attendence Report</h2>
                         <canvas id="attendanceChart" width="400" height="200"></canvas>
                     </div>
-                    <div>
-
+                    <div class="chart">
+                        <h2 class="form-label">Exam Results</h2>
+                        <label for="Rank" class="Rank-Results-Dashboard">
+                            {%if Marks.Rank == 1%}
+                            <img src="media\Ranks\1st rank.jpg" alt="#1">
+                            {% elif Marks.Rank == 2 %}
+                            <img src="media\Ranks\2nd rank.jpg" alt="#2">
+                            {% elif Marks.Rank == 3 %}
+                            <img src="media\Ranks\3rd rank.jpg" alt="#3">
+                            {% else %}
+                            <strong><small>#</small>{{Marks.Rank}}</strong>
+                            {% endif %}
+                        </label>
+                        <form action="{% url 'ExamType' %}" id="myForm1" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="FullName" id="" value="{{data.FullName}}">
+                            <input type="hidden" name="RollNo" id="" value="{{data.RollNo}}">
+                            <div class="Select-Container">
+                                <select name="ExamType" id="ExamType" onchange="submitForm1()" class="styled-select">
+                                    {% if DefaultExamType %}
+                                    <option value="DefaultExamType">{{DefaultExamType}}</option>
+                                    {% else %}
+                                    <option value="">--select--</option>
+                                    {% endif %}
+                                    {% for i in ExamType %}
+                                        <option value="{{i}}">{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </form>
+                        <canvas id="ResultsChart" width="400" height="200"></canvas>
                     </div>
                 </div>
             </section>
@@ -649,8 +828,8 @@ th, td {
                 <h2 class="form-title">TimeTable</h2>
                 <h3 class="form-label">{{data.Class}}</h3>
                 <div class="timetable-container">
-                {% if TimeTable %}
-                    <img src="{{ TimeTable.url  }}" alt="TimeTable">
+                {% if TimeTable  %}
+                    <img src="{{ TimeTable.Image.url  }}" alt="TimeTable">
                 {% else %}
                     <p>Timetable not available.</p>
                 {% endif %}
@@ -750,11 +929,11 @@ th, td {
                 <h4 class="form-label">ATTENDANCE REPORT FROM <i>{{fromDate}}</i> TO <i>{{toDate}}</i></h4>
                 <table class="form-container" style=" border-collapse: collapse; border: none;">
                     <tr>
-                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>RollNo :</strong></td>
+                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>Roll No :</strong></td>
                         <td style="text-align: left;border: none;">{{data.RollNo}}</td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>StudentName :</strong></td>
+                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>Student Name :</strong></td>
                         <td style="text-align: left;border: none;">{{data.FullName}}</td>
                     </tr>
                     <tr>
@@ -807,11 +986,11 @@ th, td {
                 <h2 class="form-title">Fee Details</h2>
                 <table class="form-container" style=" border-collapse: collapse; border: none;">
                     <tr>
-                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>RollNo :</strong></td>
+                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>Roll No :</strong></td>
                         <td style="text-align: left;border: none;">{{data.RollNo}}</td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>StudentName :</strong></td>
+                        <td style="text-align: right; padding-left: -30px; border: none;"><strong>Student Name :</strong></td>
                         <td style="text-align: left;border: none;">{{data.FullName}}</td>
                     </tr>
                     <tr>
@@ -837,35 +1016,90 @@ th, td {
                         </tr>
                     </tbody>
                 </table>
-                <button id="transactionhistory-button" class="transactionhistory-button" onclick="showSection1('fee-transactions'); hideButton(this);">Get Transaction History</button>
+                <button id="transactionhistory-button" class="transactionhistory-button" onclick="showSection1('fee-transactions'); hideButton(this);">Transaction History</button>
             
-            <section id="fee-transactions" class="section" data-section="fee-transactions">
-                <h1 class="form-label">Transaction History</h1>
+                <section id="fee-transactions" class="section" data-section="fee-transactions">
+                    <h1 class="form-label">Transaction History</h1>
+                    <div class="table-container">
+                        <i class="fa-solid fa-circle-xmark x" style="color: #000000;" onclick="hideSectionAndShowButton('fee-transactions','transactionhistory-button')"></i>
+                        <table class="subject-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Transaction No</th>
+                                    <th>Amount</th>
+                                    <th>Remaining Due</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in TransactionHistory %}
+                                <tr>
+                                    <td>{{i.Date}}</td>
+                                    <td>{{i.TransactionNo}}</td>
+                                    <td>{{i.LatestPaidFee}}</td>
+                                    <td>{{i.Due}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+            <section id="ExamMarks" class="section" data-section="ExamMarks">
+                <h2 class="form-title">Exam Results</h2>
                 <div class="table-container">
-                    <i class="fa-solid fa-circle-xmark x" style="color: #000000;" onclick="hideSectionAndShowButton('fee-transactions','transactionhistory-button')"></i>
-                    <table class="subject-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Transaction No</th>
-                                <th>Amount</th>
-                                <th>Remaining Due</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for i in TransactionHistory %}
-                            <tr>
-                                <td>{{i.Date}}</td>
-                                <td>{{i.TransactionNo}}</td>
-                                <td>{{i.LatestPaidFee}}</td>
-                                <td>{{i.Due}}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    
+                    <form action="{% url 'ExamType' %}" id="myForm" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="FullName" id="" value="{{data.FullName}}">
+                        <input type="hidden" name="RollNo" id="" value="{{data.RollNo}}">
+                        <div class="Select-Container">
+                            <select name="ExamType" id="ExamType" onchange="submitForm()" class="styled-select">
+                                {% if DefaultExamType %}
+                                <option value="DefaultExamType">{{DefaultExamType}}</option>
+                                {% else %}
+                                <option value="">--select--</option>
+                                {% endif %}
+                                {% for i in ExamType %}
+                                    <option value="{{i}}">{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                    <div id="MarksTable">
+                        {% if ExamType %}
+                        <h2 class="form-label">{{DefaultExamType}}</h2>
+                        {% if DefaultExamType %}
+                        <label for="Rank" class="Rank-Results">Rank:#<strong>{{Marks.Rank}}</strong></label>
+                        <table class="subject-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Marks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in ExamMarks %}
+                                <tr>
+                                    <td>{{i.Subject}}</td>
+                                    <td>{{i.Marks}}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <th style="text-align: right;">Total Marks</th>
+                                    <th>{{Marks.Marks}} / {{Marks.TotalMarks}}</th>
+                                </tr>
+                                <tr>
+                                    <th style="text-align: right;">Percentage</th>
+                                    <th>{{Marks.Percentage}}</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
             </section>
-        </section>
         </main>
     </div>
     <script>
@@ -887,6 +1121,18 @@ th, td {
 // document.addEventListener("DOMContentLoaded", function() {
 //     showSection('notifications');
 // });
+document.getElementById('toggleBtn').addEventListener('click', function() {
+    var sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('collapsed');
+});
+
+function submitForm(){
+    document.getElementById('myForm').submit();
+    document.getElementById('MarksTable').style.display = 'block';
+}
+function submitForm1(){
+    document.getElementById('myForm1').submit();
+}
 function showSection(sectionId) {
             // Hide all sections
             var sections = document.querySelectorAll('.section');
@@ -1047,41 +1293,77 @@ function showSection(sectionId) {
 
 <script>
     var ctx = document.getElementById('attendanceChart').getContext('2d');
-
-// Assuming you have calculated the difference between total and present days in your view and passed it as `difference_counts`
-var attendanceChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: {{ attendance_months|safe }},
-        datasets: [
-            {
-                label: 'Present Days',
-                data: {{ present_counts|safe }},
-                backgroundColor: 'rgba(75, 192, 192, 0.8)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            },
-            {
-                label: 'Total',
-                data: {{ total_counts|safe }},
-                backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                borderColor: 'rgba(255, 159, 64, 1)',
-                borderWidth: 1
-            }
-        ]
-    },
-    options: {
-        scales: {
-            x: {
-                stacked: false, // Stack bars on x-axis
-            },
-            y: {
-                stacked: false, // Stack bars on y-axis
-                beginAtZero: true // Start Y-axis at 0
+    // Assuming you have calculated the difference between total and present days in your view and passed it as `difference_counts`
+    var attendanceChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ attendance_months|safe }},
+            datasets: [
+                {
+                    label: 'Present Days',
+                    data: {{ present_counts|safe }},
+                    backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Total Working Days',
+                    data: {{ total_counts|safe }},
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: {
+                    stacked: false, // Stack bars on x-axis
+                },
+                y: {
+                    stacked: false, // Stack bars on y-axis
+                    beginAtZero: true, // Start Y-axis at 0
+                    ticks: {
+                    stepSize: 1, // Ensure no decimal values
+                    callback: function(value) { return Number.isInteger(value) ? value : ''; } // Only show integer values
+                }
+                }
             }
         }
-    }
-});
+    });
+    </script>
+<script>
+    var ctx1 = document.getElementById('ResultsChart').getContext('2d');
+    var ResultsChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: {{ Marks.Subjects1|safe }},
+            datasets: [
+                {
+                    label: 'Marks',
+                    data: {{ Marks.Marks1|safe }},
+                    backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: {
+                    stacked: false, // Stack bars on x-axis
+                },
+                y: {
+                    stacked: false, // Stack bars on y-axis
+                    beginAtZero: true, // Start Y-axis at 0
+                    ticks: {
+                    stepSize: 1, // Ensure no decimal values
+                    callback: function(value) { return Number.isInteger(value) ? value : ''; } // Only show integer values
+                }
+                }
+            }
+        }
+    });
 
 </script>
 </body>

@@ -112,6 +112,7 @@ th, td {
                     <li><a href="#edit-details" onclick="showSection('edit-details')">Edit Details</a></li>
                     <li><a href="#timetables" onclick="showSection('timetables')">TimeTables</a></li>
                     <li><a href="#attendance" onclick="showSection('attendance')">Update Attendance</a></li>
+                    <li><a href="#ExamMarks" onclick="showSection('ExamMarks')">Exam Marks</a></li>
                     <li><a href="{% url 'test' %}">Log Out</a></li>
                 </ul>
             </nav>
@@ -148,18 +149,20 @@ th, td {
                     {% endfor %}
                 </div>
                 <div class="button-group">
+                    <select name="" id="" onchange="showImage(this.value)">
                     {% for i in TimeTable %}
-                        <button onclick="showImage('{{i.Class}}')">{{i.Class}}</button>
+                        <option value="{{i.Class}}">{{i.Class}}</option>
                     {% endfor %}
+                    </select>
                 </div>
             </section>
 
             <section id="attendance" class="section">
                 <h2>Update Attendance</h2>
-                <h3>{{success}}</h3>
-                <form action="{% url 'Attendence1' %}" method="POST">
+                <h3>{{ success }}</h3>
+                <form action="{% url 'Attendence1' %}" method="POST" id="attendanceForm">
                     {% csrf_token %}
-                    <input type="date" name="AttendenceDate" id="date">
+                    <input type="date" name="AttendenceDate" id="date" >
                     <table>
                         <thead>
                             <tr>
@@ -169,21 +172,62 @@ th, td {
                             </tr>
                         </thead>
                         <tbody>
-                            {% for i in Student %}
+                            {% for student in Student %}
                             <tr>
-                                <td>{{i.RollNo}}</td>
-                                <td>{{i.FullName}}</td>
+                                <td>{{ student.RollNo }}</td>
+                                <td>{{ student.FullName }}</td>
                                 <td>
                                     <input type="checkbox" name="Attendence_{{ forloop.counter }}">
-                                    <input type="hidden" name="SRegNo_{{ forloop.counter }}" value="{{i.RollNo}}">
-                                    <input type="hidden" name="TeacherName" value="{{data.FullName}}">
-                                    <input type="hidden" name="TeacherMobileNo" value="{{data.MobileNo}}">
+                                    <input type="hidden" name="SRegNo_{{ forloop.counter }}" value="{{ student.RollNo }}">
+                                    <input type="hidden" name="TeacherName" value="{{ data.FullName }}">
+                                    <input type="hidden" name="TeacherMobileNo" value="{{ data.MobileNo }}">
                                 </td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                     <button type="submit">Update Attendance</button>
+                </form>
+            </section>
+            <section id="ExamMarks" class="section">
+                <h2>Student Marks</h2>
+                <h3>{{error}}</h3>
+                <form action="{% url 'ExamMarks' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="TeacherName" value="{{ data.FullName }}">
+                    <input type="hidden" name="TeacherMobileNo" value="{{ data.MobileNo }}">
+                    {% for Access in Access %}
+                    {% if Access.TeacherAccess == 'Accept' %}
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student RollNo</th>
+                                <th>Student Name</th>
+                                <th>Class</th>
+                                <th>ExamType</th>
+                                <th>Subject</th>
+                                <th>Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in ExamMarks %}
+                            {% if i.ExamType == Access.ExamType %}
+                            <tr>
+                                <td> <input type="hidden" name="StudentRollNo_{{ forloop.counter }}" value="{{i.StudentRollNo}}">{{i.StudentRollNo}}</td>
+                                <td> <input type="hidden" name="StudentName_{{ forloop.counter }}" value="{{i.StudentName}}" id="">{{i.StudentName}}</td>
+                                <td> <input type="hidden" name="Class" value="{{i.Class}}" id="">{{i.Class}}</td>
+                                <td> <input type="hidden" name="ExamType" value="{{i.ExamType}}" id="">{{i.ExamType}}</td>
+                                <td> <input type="hidden" name="Subject" value="{{i.Subject}}" id="">{{i.Subject}}</td>
+                                <td><input type="number" name="Marks_{{forloop.counter}}" id="Marks" value="{{i.Marks}}"></td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table> 
+                    <button type="submit">Update Marks</button>
+                    {% endif %}
+                    {% endfor %}
                 </form>
             </section>
         </main>
