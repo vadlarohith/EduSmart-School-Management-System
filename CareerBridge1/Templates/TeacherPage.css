@@ -1,0 +1,665 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: block;
+    min-height: 100vh;
+    background-color: #dcdcdc;
+    padding-right: 5px;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #dcdcdc;
+    color: #000000;
+    padding: 20px;
+    position: relative;
+    transition: width 0.3s;
+}
+/* For collapsable sidebar */
+.sidebar.collapsed {
+    width: 50px;
+}
+.sidebar .toggle-btn {
+    position: absolute;
+    top: 10px;
+    right: -25px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+}.sidebar-list {
+    list-style: none;
+    padding: 20px 0;
+    margin: 0;
+}.sidebar-list li {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+.sidebar.collapsed .sidebar-text {
+    opacity: 0;
+    visibility: hidden;
+}
+.sidebar.collapsed .icon{
+    margin: 10px !important;
+    font-size: 20px;
+
+}
+
+/* collapsable over */
+
+
+.sidebar h1 {
+    margin-top: 0;
+    font-size: 24px;
+    margin-bottom: 10px;
+}   
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    padding: 10px;
+    margin-left: -20px;
+    cursor:pointer;
+    height: 20px;
+}
+
+.sidebar nav ul li a {
+    color: #000000;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 18px;
+    margin-left: 10px;
+}
+.sidebar nav ul li:hover {
+    background-color: #8d969e;
+    border-radius: 0 30px 30px 0;
+}
+.sidebar nav ul li.active-li {
+    background-color: #8d969e; /* Change this color as needed */
+    border-radius: 0 30px 30px 0; /* Match the hover style */
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 30px;
+    width: 100%;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    justify-content: center;
+
+}
+
+h2 {
+    margin-top: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+</style>
+<style>
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #dcdcdc;
+}
+.left-side {
+    display: flex;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+}
+.right-side {
+    display: flex;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border: solid black 1px;
+    background-color: orange;
+    border-radius: 50%;
+}
+.left-side img, .right-side img{
+    display: flex;
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+}
+.right-side p {
+    margin: 0 auto;
+    width: fit-content;
+    color: white;
+    font-size: 60px;
+}
+.info-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    height: 20px;
+    background-color: aqua;
+    display: none;
+}
+.student-info {
+    margin: 0;
+}
+.student-info p{
+    margin-top: -2px;
+}
+.logout {
+    margin: 0;
+    text-align: right;
+}
+.logout a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 16px;
+}
+.logout a:hover {
+    text-decoration: underline;
+}
+</style>
+<style>
+.form-container {
+    display: flex;
+    justify-content: center;
+
+}
+
+.form-title {
+    font-size: 30px;
+    margin-bottom: 20px;
+    color: #333333;
+    text-align: center;
+}
+
+.form-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333333;
+    text-align: center;
+}
+
+.radio-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.radio-group input {
+    margin-right: 5px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+}
+
+.conditional-fields {
+    display: none;
+    margin-bottom: 20px;
+}
+
+.field-group {
+    margin-bottom: 20px;
+    width: 200px;
+    margin: 0 auto;
+}
+
+.field-input {
+    width: calc(100% - 20px);
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.submit-button {
+    display: block;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 50%;
+    box-sizing: border-box;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+.submit-button-marks{
+    display: block;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 15%;
+    box-sizing: border-box;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+.DateFields {
+    display: flex;
+}
+.AttendenceTable{
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    border-collapse: separate;
+    border-radius: 5px;
+}
+.AttendenceTable th{
+    background-color: #e4e3e3;
+}
+.MarksTable{
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    border-collapse: separate;
+    border-radius: 5px;
+}
+.MarksTable th{
+    background-color: #e4e3e3;
+}
+
+.right-side {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-right: 20px;
+}
+.dropdown-profile-photo-container {
+    position: relative;
+    display: inline-block;
+}
+.dropdown-profile-photo-container button{
+    margin-top: 75px;
+    margin-right: px;
+    border-radius: 50%;
+    background-color: #ffffff;
+}
+.profile-photo, .dropdown-profile-photo {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    position: relative;
+}
+.change-photo-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #007bff;
+    font-size: 16px;
+}
+.change-photo-button:hover {
+    color: #0056b3;
+}
+.dropdown-menu {
+    position: absolute;
+    top: 100px;
+    right: 20px;
+    background-color:#c8c8c8;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 15px;
+    padding: 10px;
+    width: 300px;
+    height: 250px;
+    display: none;
+    text-align: center;
+    z-index: 100;
+}
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.profile-info p {
+    margin-top: 10px;
+}
+.profile-info img{
+    width: 100px;
+    height: 100px;
+    border: 2px solid black;
+}
+.dropdown-menu.show {
+    display: block;
+}
+.dropdown-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -20px;
+}
+.dropdown-buttons button {
+    border: none;
+    background-color: #ffffff;
+    color: #000000;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.dropdown-buttons button:hover {
+    background-color: #e4e4e4;
+}
+.profile-and-signout{
+    display: flex;
+    width: 100%;
+}
+.profile-and-signout button{
+    margin-top: 25px;
+    width: 100%;
+    height: 30px;
+}
+.profile-and-signout button a{
+    text-decoration: none;
+    color: #000000;
+}
+.profile-and-name{
+    display: flex;
+}
+.profile-button {
+    border-radius: 30px 0 0 30px !important;
+    margin-right: 2px;
+}
+.signout-button {
+    border-radius: 0 30px 30px 0 !important;
+    margin-left: 2px;
+}
+.notification-container{
+    width: auto;
+    
+}
+.notification-table {
+    margin: 0 auto;
+    width: 60%;
+    overflow: hidden;
+    border-radius: 15px;
+    border-collapse:collapse;
+    }
+.notification-table td, .container-table th {
+    padding-bottom: 2%;
+    padding-top: 2%;
+    padding-left:2%;
+}
+.notification-table tr:nth-child(odd) {
+    background-color: #cdcdcd;
+}
+.notification-table tr:nth-child(even){
+    background-color: rgb(251, 251, 251);
+}
+.notification-table tr td {
+    font-weight: bold;
+}
+.notification-table tr td a {
+    text-decoration: none;
+    color: black;
+}
+.notification-table tr td small {
+    font-weight: lighter;
+}
+.timetable-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    margin: 20px;
+}
+.timetable-container img {
+    width: 70%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    
+}
+.subject-table {
+    width: 50%;
+    margin: 0 auto;
+    border-radius: 5px;
+    border-collapse: separate;
+}
+.subject-table th{
+    background-color: #c0bfbf;
+}
+.subject-table tr:nth-child(odd){
+    background-color: #ffffff;
+}
+.subject-table tr:nth-child(even){
+    background-color: #dcdcdc;
+}
+.transactionhistory-button{
+    display: block;
+    margin: 0 auto;
+    margin-top: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #007bff;
+    font-size: 16px;
+}
+.table-container {
+position: relative; /* Allows the X icon to be positioned relative to this container */
+width: 100%;
+margin: 0 auto;
+}
+.x {
+    position: absolute;
+    top: -10px; /* Adjust this value to move the icon vertically */
+    right: 300px; /* Adjust this value to move the icon horizontally */
+    font-size: 20px; /* Adjust the size of the icon if needed */
+    cursor: pointer; /* Makes the icon clickable */
+}
+.profile-table {
+    width: 80%;
+    margin: 0 auto;
+    border-radius: 5px;
+    border-collapse: separate;
+}
+.profile-table th{
+    text-align: right;
+    width: 20%;
+}
+.profile-table td{
+    text-align: left;
+    width:30%;
+}
+.profile-table tr td:nth-child(odd){
+    background-color: #e1e1e1;
+}
+.chart-container{
+    width: auto;
+    display: flex;
+    padding: 10px;
+    
+}
+.chart {
+    display: block;
+    padding: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background-color: #fdfdfd;
+    border-radius: 5px;
+    width: 40%;
+    margin: 30px;
+}
+.dropdown-photo-container{
+    display: flex;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    border: solid black 1px;
+    background-color: orange;
+    border-radius: 50%;
+}
+.dropdown-photo-container img{
+    display: flex;
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+}
+.dropdown-photo-container p{
+    margin: 0 auto;
+    width: fit-content;
+    color: white;
+    font-size: 100px;
+}
+.profile-photo2{
+    margin: 0 auto !important;
+    width: 100%;
+    height: 100%;
+    color: white;
+    font-size: 100px;
+    background-color: orange;
+    text-align: center;
+    align-items: center;
+}
+.bell-container {
+    position: relative;
+    display: block;
+    margin-right: 20px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.notification-badge {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: none; /* Hidden by default */
+}
+.Rank-Results {
+    display: block;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: right;
+    margin: 5px;
+    margin-right: 25%;
+
+}
+.Rank-Results strong {
+    font-size: 35px;
+}
+.Rank-Results-Dashboard {
+    display: inherit;
+    font-weight: bold;
+    font-size: 50px;
+    text-align: right;
+    align-items: right;
+    justify-content: right;
+    margin-right: 5%;
+    margin-top: -5%;
+    margin-bottom: -5%;
+    z-index: inherit;
+
+}
+.Rank-Results-Dashboard img{
+    display: inline-block;
+    width: 100px; /* Adjust as needed to match font-size */
+    height: 100px; /* Adjust as needed to maintain aspect ratio */
+    object-fit: cover; /* Ensure image doesn't get distorted */
+    vertical-align: middle; /* Align with text */
+    margin-top: -5%;
+    margin-right: -3%;
+
+}
+
+.styled-select {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 2;
+    padding: 5px 10px;
+    width: 220px;
+    border-radius: 4px;
+    background-color: #c8c8c8;
+    color: #102770;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 12px 35px 0 rgba(255,235,167,.15);
+    transition: all 200ms linear;
+}
+
+.dark-light:checked ~ .sec-center .styled-select {
+    background-color: #102770;
+    color: #ffeba7;
+    box-shadow: 0 12px 35px 0 rgba(16,39,112,.25);
+}
+
+.styled-select option {
+    background-color: #111;
+    color: #fff;
+    padding: 5px 10px;
+}
+
+.dark-light:checked ~ .sec-center .styled-select option {
+    background-color: #fff;
+    color: #102770;
+}
+.Select-Container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
