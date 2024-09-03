@@ -782,7 +782,7 @@
                 <h2 class="form-title">Notifications</h2>
                 <div class="notification-container">
                     <table class="notification-table">
-                        {% for image in image %}
+                        {% for image in images %}
                         <tr>
                         {% if image.Image%}
                             <td><a href="media/{{ image.Image }}"><i class="fa-solid fa-image" style="color: #000000;"></i> {{ image.Title }} <br> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{image.Description}}</small></a></td>

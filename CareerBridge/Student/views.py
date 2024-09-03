@@ -144,7 +144,7 @@ def Attendence(request):
         FYear, FMonth, FDate = FromDate.split('-')
         TYear, TMonth, TDate = ToDate.split('-')
         user = models.Student.objects.filter(FullName = StudentName, RollNo = StudentRollNo).first()
-        TimeTable1 = models.TimeTable.objects.filter(Class = Class).first()
+        TimeTable1 = models.TimeTable.objects.filter(Class = user.Class).first()
         if(TimeTable1):
             TimeTable = TimeTable1
         else:
@@ -214,7 +214,7 @@ def ProfileUpdate(request):
 
         user = models.Student.objects.filter(FullName = FullName, RollNo = RollNo).first()
         image = models.Posters.objects.all().values()
-        TimeTable1 = models.TimeTable.objects.filter(Class = Class).first()
+        TimeTable1 = models.TimeTable.objects.filter(Class = user.Class).first()
         if(TimeTable1):
             TimeTable = TimeTable1
         else:
@@ -280,7 +280,7 @@ def ExamType(request):
 
         user = models.Student.objects.filter(FullName = FullName, RollNo = RollNo).first()
         image = models.Posters.objects.all().values()
-        TimeTable1 = models.TimeTable.objects.filter(Class = Class).first()
+        TimeTable1 = models.TimeTable.objects.filter(Class = user.Class).first()
         if(TimeTable1):
             TimeTable = TimeTable1
         else:

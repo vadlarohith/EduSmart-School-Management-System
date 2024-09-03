@@ -96,7 +96,7 @@ def Attendence1(request):
         Student = models.Student.objects.filter(Class = user.ClassTeacher)
     context = {
         'Teacher' : FullName,
-        'images' : Image,
+        'images' : Image[::-1],
         'data' : {
                 'MobileNo': user.MobileNo,
                 'FullName': user.FullName,
