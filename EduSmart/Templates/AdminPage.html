@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            height: 100vh;
+            position: fixed;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px 0;
+        }
+        .sidebar a:hover, .sidebar select:hover {
+            background-color: #575757;
+            color: white;
+        }
+        .sidebar select {
+            width: 100%;
+            padding: 10px 0;
+            border: none;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+        }
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        button {
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Dashboard</h2>
+        <a href="#" onclick="showSection('notifications')">Notifications</a>
+        <a href="#" onclick="showSection('student-registration')">Student Registration</a>
+        <a href="#" onclick="showSection('teacher-registration')">Teacher Registration</a>
+        <a href="#" onclick="showSection('upload-image')">Upload Image</a>
+        <a href="#" onclick="showSection('timetables')">TimeTables</a>
+        <!-- <a href="#" onclick="showSection('subjects')">Subjects</a> -->
+        <a href="#" onclick="showSection('subjects')"><select onchange="showSubjects(this.value)" class="Select1">
+            <option value="">Subject</option>
+            {% for i in Class %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+        </a>
+        <a href="#" onclick="showSection('fee-details')">Fee Details</a>
+        <a href="#" onclick="showSection('UpdateFees')">UpdateFeeses</a>
+        <a href="#" onclick="showSection('TransactionHstory')">TransactionHstory</a>
+        <a href="#" onclick="showSection('CreateExams')">Create Exams</a>
+        <a href="{% url 'test' %}">LogOut</a>
+    </div>
+
+    <div class="content">
+        <h1>AdminPage</h1>
+        <h3>{{ Admin }}</h3>
+        <h3 class="error">{{ error }}</h3>
+        <h3 class="success">{{ success }}</h3>
+        
+        <!-- Notifications Section -->
+        <div id="notifications" class="hidden" data-section="notifications">
+            <h2>Notifications</h2>
+            <p>No new notifications.</p>
+        </div>
+        
+        <!-- Student Registration Section -->
+        <div id="student-registration" class="hidden" data-section="student-registration">
+            <h2>Student Registration</h2>
+            <form action="{% url 'student_registration' %}" method="POST">
+                {% csrf_token %}
+                FullName: <input type="text" name="SFullName" required> <br>
+                RollNo: <input type="text" name="SRollNo" required> <br>
+                Class: <select name="Class" id="">
+                    <option value="">--Select--</option>
+                    {% for i in Class %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select> <br>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        
+        <!-- Teacher Registration Section -->
+        <div id="teacher-registration" class="hidden" data-section="teacher-registration">
+            <h2>Teacher Registration</h2>
+            <form action="{% url 'TeacherRegistration' %}" method="POST">
+                {% csrf_token %}
+                TeacherID: <input type="text" name="TeacherID" required><br>
+                FullName: <input type="text" name="TFullName" required> <br>
+                MobileNo: <input type="text" name="TMobileNo" required> <br>
+                Subject:<select name="Subject" id="">
+                    <option value="">--Select--</option>
+                    <option value="TELUGU">Telugu</option>
+                    <option value="HINDI">Hindi</option>
+                    <option value="ENGLISH">English</option>
+                    <option value="MATHEMATICS">Mathematics</option>
+                    <option value="PHYSICS">Physics</option>
+                    <option value="BIOLOGY">Biology</option>
+                    <option value="SOCIAL">Social</option>
+                </select> <br>
+                Class Teacher: <select name="ClassTeacher" id="">
+                    <option value="">--Select--</option>
+                    {% for i in Class %}
+                    <option value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                </select> <br>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+        <!-- Upload Image Section -->
+        <div id="upload-image" class="hidden" data-section="upload-image">
+            <h2>Upload Image</h2>
+            <form action="{% url 'UploadImage' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="Title">Title:</label>
+                <input type="text" name="Title" required><br><br>
+                <label for="Description">Description:</label>
+                <input type="text" name="Description"><br><br>
+                <label for="image">Image:</label>
+                <input type="file" name="Image"><br><br>
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+        
+        <!-- TimeTables Section -->
+        <div id="timetables" class="hidden" data-section="timetables">
+            <h2>TimeTables</h2>
+            <div id="imageContainer">
+                {% for timetable in TimeTable %}
+                    <img id="{{ timetable.Class }}" src="{{ timetable.Image.url }}" alt="{{ timetable.Class }}" style="display: none;">
+                {% endfor %}
+            </div>
+            {% for timetable in TimeTable %}
+                <button onclick="showImage('{{ timetable.Class }}')">{{ timetable.Class }}</button>
+                <a href="#" onclick="showChangeOption('{{ timetable.Class }}')">Change</a>
+                <form id="form_{{ timetable.Class }}" action="{% url 'TimeTable' %}" method="POST" enctype="multipart/form-data" style="display: none;">
+                    {% csrf_token %}
+                    <input type="hidden" name="Class" value="{{ timetable.Class }}">
+                    <input type="file" name="TimeTable" accept="image/*">
+                    <button type="submit">Submit</button>
+                </form>
+            {% endfor %}
+        </div>
+        
+        <!-- Subjects Section -->
+        <div id="subjects" class="hidden" data-section="subjects">
+            <h2>Subjects</h2>
+            
+            <div id="subjectContainer">
+                <table>
+                    <tr>
+                        <th>Class</th>
+                        <th>Subject Code</th>
+                        <th>Subject Names</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for j in Subject %}
+                    <tr id="class_{{ j.Class }}" style="display: none;">
+                        <td>{{ j.Class }}</td>
+                        <td>{{ j.SubCode }}</td>
+                        <td>{{ j.Subject }}</td>
+                        <td>
+                            <form action="{% url 'delete_subject' %}" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="subject_id" value="{{ j.id }}">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div id="addSubjectForm" style="display:none;">
+                <h3>Add New Subject</h3>
+                <form action="{% url 'add_subject' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="Class" id="classInput">
+                    Subject Code: <input type="text" name="SubCode" required><br>
+                    Subject Name: <input type="text" name="Subject" required><br>
+                    <button type="submit">Add Subject</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Fee Details Section -->
+        <div id="fee-details" class="hidden" data-section="fee-details">
+            <h2>Fee Details</h2>
+            <input type="text" id="searchRollNo" placeholder="Search by Roll No" onkeyup="filterFeeDetails()">
+            <div id="FeeDetailsContainer">
+                <table>
+                    <tr>
+                        <th>StudentRegistrationNo</th>
+                        <th>StudentName</th>
+                        <th>Class</th>
+                        <th>TotalFee</th>
+                        <th>Discount</th>
+                        <th>TotalPaidFee</th>
+                        <th>Due</th>
+                        <th>LatestPaidFee</th>
+                        <th>Transaction No</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for j in FeeDetails %}
+                    <tr id="class1_{{ j.Class }}">
+                        <form action="{% url 'UpdateFeeDetails' %}" method="POST">
+                            {% csrf_token %}
+                            <td><a href="#">{{ j.StudentRollNo }}</a><input type="hidden" name="StudentRollNo" value="{{ j.StudentRollNo }}"></td>
+                            <td>{{ j.StudentName }}<input type="hidden" name="StudentName" value="{{ j.StudentName }}"></td>
+                            <td>{{ j.Class }}<input type="hidden" name="Class" value="{{ j.Class }}"></td>
+                            <td>{{j.TotalFee }}<input type="hidden" name="TotalFee" value="{{ j.TotalFee }}"></td>
+                            <td><input type="number" name="Discount" id="" value="{{j.Discount1}}"></td>
+                            <td>{{ j.TotalPaidFee }} <input type="hidden" name="TotalPaidFee111" id="" value="{{ j.TotalPaidFee }}"></td>
+                            <td>{{ j.Due }} <input type="hidden" name="Due111" id="" value="{{ j.Due }}"></td>
+                            <td><input type="number" name="LatestPaidFee" placeholder="{{ j.LatestPaidFee }}"></td>
+                            <td><input type="text" name="TransactionNo" placeholder="Transaction No"></td>
+                            <td><input type="date" name="date" id="date"></td>
+                            <td><button type="submit">Update</button></td>
+                        </form>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            
+            <!-- {% for i in Class %}
+            <button onclick="showFeeDetails('{{ i }}')">{{ i }}</button>
+            {% endfor %} -->
+        </div>
+        <div id="UpdateFees" class="hidden" data-section="UpdateFees">
+            <h2>UpdateFees</h2>
+            <div id="UpdateFeesContainer">
+                <table>
+                    <tr>
+                        <th>Classes</th>
+                        <th>Feeses</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for i in UpdateFeeses %}
+                    <form action="{% url 'UpdateFee' %}" method="POST">
+                        {% csrf_token %}
+                        <tr>
+                            <td>
+                                {{i.Class}}
+                                <input type="hidden" name="Class" id="" value="{{i.Class}}">
+                            </td>
+                            <td><input type="number" name="Fee" id="" value="{{i.Fee}}"></td>
+                            <td><button type="submit">Update</button></td>
+                        </tr>
+                    </form>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div id="TransactionHstory" class="hidden" data-section="TransactionHistory">
+            <h2>TransactionHistory</h2>
+            <input type="text" id="searchRollNo1" placeholder="Search by Roll No" onkeyup="filterFeeDetails1()">
+            <div id="TransactionHistory">
+                <table>
+                    <tr>
+                        <th>StudentRegistrationNo</th>
+                        <th>StudentName</th>
+                        <th>Class</th>
+                        <th>TotalFee</th>
+                        <th>Discount</th>
+                        <th>TotalPaidFee</th>
+                        <th>Due</th>
+                        <th>LatestPaidFee</th>
+                        <th>Transaction No</th>
+                        <th>Date</th>
+                    </tr>
+                    {% for j in TransactionHistory %}
+                    <tr id="class1_{{ j.Class }}">
+                        <form action="{% url 'UpdateFeeDetails' %}" method="POST">
+                            {% csrf_token %}
+                            <td>{{ j.StudentRollNo }}</td>
+                            <td>{{ j.StudentName }}</td>
+                            <td>{{ j.Class }}</td>
+                            <td>{{j.TotalFee }}</td>
+                            <td>{{j.Discount1}}</td>
+                            <td>{{ j.TotalPaidFee }}</td>
+                            <td>{{ j.Due }}</td>
+                            <td>{{j.LatestPaidFee}}</td>
+                            <td>{{j.TransactionNo}}</td>
+                            <td>{{j.Date}}</td>
+                        </form>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="hidden" id="CreateExams" data-section="CreateExams">
+            <h2>Create Exams</h2>
+            <div>
+                <form action="{% url 'ExamType' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="ExamType" id="" placeholder="Exam Name" required> <br>
+                    <input type="number" name="Marks" id="" placeholder="Max Marks in Each Subject" required><br>
+                    <button type="submit">Create Exam</button>
+                </form>
+            </div>
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Exam Type</th>
+                            <th>Student Access</th>
+                            <th>Teacher Access</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in ExamType %}
+                        <form action="{% url 'ExamMarksAccess' %}" method="POST">
+                            {% csrf_token %}
+                            <tr>
+                                <td> <input type="hidden" name="ExamType1" id="" value="{{i.ExamType}}">{{i.ExamType}}</td>
+                                <td>
+                                    <select name="StudentAccess" id="">
+                                        {% if i.StudentAccess == 'Accept' %}
+                                        <option value="Accept">Accept</option>
+                                        {%else%}
+                                        <option value="Declined">Declined</option>
+                                        {%endif%}
+                                        <option value="Accept">Accept</option>
+                                        <option value="Declined">Declined</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="TeacherAccess" id="">
+                                        {% if i.TeacherAccess == 'Accept' %}
+                                        <option value="Accept">Accept</option>
+                                        {%else%}
+                                        <option value="Declined">Declined</option>
+                                        {%endif%}
+                                        <option value="Accept">Accept</option>
+                                        <option value="Declined">Declined</option>
+                                    </select>
+                                </td>
+                                <td><button type="submit">Update</button></td>
+                            </tr>
+                        </form>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content > div');
+            sections.forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+            // Save the current section to localStorage
+            localStorage.setItem('currentSection', sectionId);
+        }
+
+        function loadSection() {
+            const savedSection = localStorage.getItem('currentSection');
+            if (savedSection) {
+                showSection(savedSection);
+            } else {
+                // Default section to show if no section is saved
+                showSection('notifications'); // or whichever section you prefer
+            }
+        }
+
+        window.onload = loadSection;
+
+        function showImage(imageId) {
+            const images = document.querySelectorAll('#imageContainer img');
+            images.forEach(img => img.style.display = 'none');
+            const selectedImage = document.getElementById(imageId);
+            selectedImage.style.display = 'block';
+        }
+
+        function showChangeOption(classId) {
+            const form = document.getElementById(`form_${classId}`);
+            form.style.display = 'block';
+        }
+
+        function showSubjects(classId) {
+            const rows = document.querySelectorAll('#subjectContainer table tr');
+            rows.forEach(row => row.style.display = 'none');
+            if (rows.length > 0) rows[0].style.display = 'table-row';
+            const selectedRows = document.querySelectorAll(`#class_${classId}`);
+            selectedRows.forEach(row => row.style.display = 'table-row');
+            document.getElementById('classInput').value = classId;
+            document.getElementById('addSubjectForm').style.display = 'block';
+        }
+        function filterFeeDetails() {
+            // Get the search input value
+            var input = document.getElementById("searchRollNo");
+            var filter = input.value.toUpperCase();
+            var table = document.querySelector("#FeeDetailsContainer table");
+            var tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (var i = 1; i < tr.length; i++) { // start from 1 to skip header row
+                var td = tr[i].getElementsByTagName("td")[0]; // search in the first column (Roll No)
+                if (td) {
+                    var txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        function filterFeeDetails1() {
+            // Get the search input value
+            var input = document.getElementById("searchRollNo1");
+            var filter = input.value.toUpperCase();
+            var table = document.querySelector("#TransactionHistory table");
+            var tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (var i = 1; i < tr.length; i++) { // start from 1 to skip header row
+                var td = tr[i].getElementsByTagName("td")[0]; // search in the first column (Roll No)
+                if (td) {
+                    var txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

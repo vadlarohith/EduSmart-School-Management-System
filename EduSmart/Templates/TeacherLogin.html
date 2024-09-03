@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Page</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+}
+
+.sidebar h1, .sidebar h2 {
+    margin-top: 0;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin: 15px 0;
+}
+
+.sidebar nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+.button-group {
+    margin-top: 20px;
+}
+
+.button-group button {
+    margin: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+#imageContainer {
+    width: 1200px;
+    height: 550px;
+
+    border: 1px solid #000;
+    margin-top: 20px;
+}
+
+#imageContainer img {
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+    </style>
+</head>
+<body>
+    {% csrf_token %}
+    <div class="container">
+        <aside class="sidebar">
+            <h1>Teacher Page</h1>
+            <h2>Welcome {{Teacher}}</h2>
+            <nav>
+                <ul>
+                    <li><a href="#notifications" onclick="showSection('notifications')">Notifications</a></li>
+                    <li><a href="#edit-details" onclick="showSection('edit-details')">Edit Details</a></li>
+                    <li><a href="#timetables" onclick="showSection('timetables')">TimeTables</a></li>
+                    <li><a href="#attendance" onclick="showSection('attendance')">Update Attendance</a></li>
+                    <li><a href="#ExamMarks" onclick="showSection('ExamMarks')">Exam Marks</a></li>
+                    <li><a href="{% url 'test' %}">Log Out</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="content">
+            <section id="notifications" class="section">
+                <h2>Notifications</h2>
+                <ul>
+                    {% for i in images %}
+                        <li><a href="media/{{i.Image}}">{{ i.Title }}: {{i.Description}}</a></li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <section id="edit-details" class="section">
+                <h2>Edit Details</h2>
+                <form action="{% url 'UpdateTeacherDetails' %}" method="POST"> 
+                    {% csrf_token %}
+                    <h4>{{success}}</h4>
+                    <h4>{{error}}</h4>
+                    <label for="TeacherMobileNo">Mobile No:</label>
+                    <input type="number" id="TeacherMobileNo" name="UpdateMobileNo" value="{{data.MobileNo}}">
+                    <label for="TeacherPassword">Password:</label>
+                    <input type="password" id="TeacherPassword" name="UpdatePassword" value="{{data.Password}}">
+                    <button type="submit">Update</button>
+                </form>
+            </section>
+
+            <section id="timetables" class="section">
+                <h2>TimeTables</h2>
+                <div id="imageContainer">
+                    {% for i in TimeTable %}
+                        <img id="{{i.Class}}" src="{{i.Image.url}}" alt="{{i.Class}}" style="display: none;">
+                    {% endfor %}
+                </div>
+                <div class="button-group">
+                    <select name="" id="" onchange="showImage(this.value)">
+                    {% for i in TimeTable %}
+                        <option value="{{i.Class}}">{{i.Class}}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </section>
+
+            <section id="attendance" class="section">
+                <h2>Update Attendance</h2>
+                <h3>{{ success }}</h3>
+                <form action="{% url 'Attendence1' %}" method="POST" id="attendanceForm">
+                    {% csrf_token %}
+                    <input type="date" name="AttendenceDate" id="date" >
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student Registration No</th>
+                                <th>Student Full Name</th>
+                                <th>Attendance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in Student %}
+                            <tr>
+                                <td>{{ student.RollNo }}</td>
+                                <td>{{ student.FullName }}</td>
+                                <td>
+                                    <input type="checkbox" name="Attendence_{{ forloop.counter }}">
+                                    <input type="hidden" name="SRegNo_{{ forloop.counter }}" value="{{ student.RollNo }}">
+                                    <input type="hidden" name="TeacherName" value="{{ data.FullName }}">
+                                    <input type="hidden" name="TeacherMobileNo" value="{{ data.MobileNo }}">
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <button type="submit">Update Attendance</button>
+                </form>
+            </section>
+            <section id="ExamMarks" class="section">
+                <h2>Student Marks</h2>
+                <h3>{{error}}</h3>
+                <form action="{% url 'ExamMarks' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="TeacherName" value="{{ data.FullName }}">
+                    <input type="hidden" name="TeacherMobileNo" value="{{ data.MobileNo }}">
+                    {% for Access in Access %}
+                    {% if Access.TeacherAccess == 'Accept' %}
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student RollNo</th>
+                                <th>Student Name</th>
+                                <th>Class</th>
+                                <th>ExamType</th>
+                                <th>Subject</th>
+                                <th>Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in ExamMarks %}
+                            {% if i.ExamType == Access.ExamType %}
+                            <tr>
+                                <td> <input type="hidden" name="StudentRollNo_{{ forloop.counter }}" value="{{i.StudentRollNo}}">{{i.StudentRollNo}}</td>
+                                <td> <input type="hidden" name="StudentName_{{ forloop.counter }}" value="{{i.StudentName}}" id="">{{i.StudentName}}</td>
+                                <td> <input type="hidden" name="Class" value="{{i.Class}}" id="">{{i.Class}}</td>
+                                <td> <input type="hidden" name="ExamType" value="{{i.ExamType}}" id="">{{i.ExamType}}</td>
+                                <td> <input type="hidden" name="Subject" value="{{i.Subject}}" id="">{{i.Subject}}</td>
+                                <td><input type="number" name="Marks_{{forloop.counter}}" id="Marks" value="{{i.Marks}}"></td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table> 
+                    <button type="submit">Update Marks</button>
+                    {% endif %}
+                    {% endfor %}
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Get today's date in YYYY-MM-DD format
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Set the value of the date input to today's date
+        document.getElementById('date').value = today;
+
+        // Function to show the specified section
+        function showSection(sectionId) {
+            var sections = document.querySelectorAll('.section');
+            sections.forEach(function(section) {
+                section.classList.remove('active');
+            });
+
+            var activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+                activeSection.classList.add('active');
+                // Save the active section ID to localStorage
+                localStorage.setItem('activeSection', sectionId);
+            }
+        }
+
+        // Function to show the specified image in the TimeTables section
+        function showImage(imageId) {
+            var images = document.querySelectorAll('#imageContainer img');
+            images.forEach(img => img.style.display = 'none');
+
+            var selectedImage = document.getElementById(imageId);
+            selectedImage.style.display = 'block';
+        }
+
+        // On page load
+        document.addEventListener("DOMContentLoaded", function() {
+            // Load the last active section from localStorage
+            var lastActiveSection = localStorage.getItem('activeSection');
+            if (lastActiveSection) {
+                showSection(lastActiveSection);
+            } else {
+                showSection('notifications'); // Default section
+            }
+
+            // Show the first image in the TimeTables section by default
+            if (document.querySelector('#imageContainer img')) {
+                document.querySelector('#imageContainer img').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

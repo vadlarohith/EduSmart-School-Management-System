@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <style type="text/css">
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.login-box {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    text-align: center;
+    position: relative;
+}
+
+.login-box h2 {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    color: #fff;
+    padding: 10px 0;
+    border-radius: 10px 10px 0 0;
+}
+
+.login-box.employee h2 {
+    background-color: #8c289e;
+}
+
+.login-box.student h2 {
+    background-color: #ff5722;
+}
+
+.login-box.parent h2 {
+    background-color: #2196f3;
+}
+
+.input-box {
+    margin: 10px 0;
+    text-align: left;
+}
+
+.input-box label {
+    color: #ff5722;
+    font-weight: bold;
+}
+
+.input-box input {
+    width: calc(100% - 10px);
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.login-button {
+    background-color: #555555;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.login-box.employee::before {
+    content: "";
+    background: url('employee.png') no-repeat;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: -30px;
+    bottom: 10px;
+}
+
+.login-box.student::before {
+    content: "";
+    background: url('student.png') no-repeat;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: -30px;
+    bottom: 10px;
+}
+
+.login-box.parent::before {
+    content: "";
+    background: url('parent.png') no-repeat;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: -30px;
+    bottom: 10px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box employee">
+            <h2>Student Login</h2>
+            <form action="{% url 'student-login' %}" method="POST">
+                {%csrf_token%}
+                <div class="input-box">
+                    <label for="emp-username">User Name:</label>
+                    <input type="text" id="emp-username" name="StudentUserName" required>
+                </div>
+                <div class="input-box">
+                    <label for="emp-password">Password:</label>
+                    <input type="password" id="emp-password" name="StudentPassword" required>
+                </div>
+                <button type="submit" class="login-button">LOGIN</button>
+            </form>
+        </div>
+
+        <div class="login-box student">
+            <h2>Employee Login</h2>
+            <form action="{% url 'TeacherLogin'%}" method="POST">
+                {%csrf_token%}
+                <div class="input-box">
+                    <label for="stu-username">User Name:</label>
+                    <input type="text" id="stu-username" name="TeacherUserName" required>
+                </div>
+                <div class="input-box">
+                    <label for="stu-password">Password:</label>
+                    <input type="password" id="stu-password" name="TeacherPassword" required>
+                </div>
+                <button type="submit" class="login-button">LOGIN</button>
+            </form>
+        </div>
+
+        <div class="login-box parent">
+            <h2>Admin Login</h2>
+            <form action="{% url 'admin_login' %}" method="POST">
+                {%csrf_token%}
+                <div class="input-box">
+                    <label for="par-rollno">Roll.No:</label>
+                    <input type="text" id="par-rollno" name="AdminUserName" required>
+                </div>
+                <div class="input-box">
+                    <label for="par-mobileno">Mobile No:</label>
+                    <input type="text" id="par-mobileno" name="AdminPassword" required>
+                </div>
+                <button type="submit" class="login-button">LOGIN</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        window.onload = function() {
+            var message = "{{ error }}";
+            if (message) {
+                alert(message);
+            }
+        };
+    </script>
+</body>
+</html>
