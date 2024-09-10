@@ -509,6 +509,50 @@
             padding: 10px;
             
         }
+        .profile-table{
+            width: 70%;
+        }
+        .profile-table th{
+            background-color: rgb(180, 180, 180) !important;
+        }
+        .profile-table td{
+            background-color: #ffffff !important;
+        }
+        /* Remove input borders and background */
+        .profile-table input[type="text"],
+        .profile-table input[type="number"],
+        .profile-table input[type="email"],
+        .profile-table input[type="date"],
+        .profile-table select {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font: inherit;
+            padding: 0;
+            margin: 0;
+            outline: none;
+        }
+
+        /* Make the input fill the entire td */
+        .profile-table td.edit-mode {
+            padding: 0;
+            position: relative;
+        }
+
+        .profile-table td.edit-mode input,
+        .profile-table td.edit-mode select {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            margin-left: 5px;
+        }
+
+        /* Optionally, add a subtle underline to indicate editability */
+        .profile-table td.edit-mode input:focus,
+        .profile-table td.edit-mode select:focus {
+            border-bottom: 1px solid #000; /* Change color as needed */
+        }
+
         .chart {
             display: block;
             padding: 10px;
@@ -642,7 +686,9 @@
             align-items: center;
             justify-content: center;
         }
-
+        .edit-mode{
+            display: none;
+        }
 
 
     </style>
@@ -755,7 +801,7 @@
                             <strong><small>#</small>{{Marks.Rank}}</strong>
                             {% endif %}
                         </label>
-                        <form action="{% url 'ExamType' %}" id="myForm1" method="POST">
+                        <form action="{% url 'StudentExamType' %}" id="myForm1" method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="FullName" id="" value="{{data.FullName}}">
                             <input type="hidden" name="RollNo" id="" value="{{data.RollNo}}">
@@ -796,20 +842,82 @@
             <section id="edit-details" class="section" data-section="edit-details">
                 <h2 class="form-title">Student Profile</h2>
                 <div>
-                    <table class="profile-table">
-                        <tr>
-                            <th>Roll No</th>
-                            <td>{{data.RollNo}}</td>
-                            <th>Class</th>
-                            <td>{{data.Class}}</td>
-                        </tr>
-                        <tr>
-                            <th>FullName</th>
-                            <td>{{data.FullName}}</td>
-                            <th>Mobile No</th>
-                            <td>{{data.MobileNo}}</td>
-                        </tr>
-                    </table>
+                    <button onclick="enableEditMode()">Edit Details</button>
+                    <form action="{% url 'profile-details-update' %}" method="POST">
+                        {% csrf_token %}
+                        <table class="profile-table">
+                            <tr>
+                                <th>Roll No</th>
+                                <td>{{data.RollNo}} <input type="hidden" name="RollNo" id="" value="{{data.RollNo}}"></td>
+                                <th>Class</th>
+                                <td>{{data.Class}}</td>
+                            </tr>
+                            <tr>
+                                <th>FullName</th>
+                                <td>{{data.FullName}}</td>
+                                <th>Mobile No</th>
+                                <td class="view-mode">{{data.MobileNo}}</td>
+                                <td class="edit-mode"><input type="number" name="StudentMobileNo" value="{{dara.MobileNo}}"></td>
+                            </tr>
+                            <tr>
+                                <th>Gender</th>
+                                <td class="view-mode">{{details.Gender}}</td>
+                                <td class="edit-mode"><select name="Gender"> <option value="Male">Male</option> <option value="Female">Female</option></select></td>
+                                <th>Date Of Birth</th>
+                                <td class="view-mode">{{details.DOB}}</td>
+                                <td class="edit-mode"><input type="date" name="DOB" value="{{details.DOB}}"></td>
+                            </tr>
+                            <tr>
+                                <th>Mail Id</th>
+                                <td class="view-mode">{{details.MailId}}</td>
+                                <td class="edit-mode"><input type="email" name="StudentMailId" value="{{details.MailId}}"></td>
+                                <th>Nationality</th>
+                                <td class="view-mode">{{details.Nationality}}</td>
+                                <td class="edit-mode"><input type="text" name="Nationality" value="{{details.Nationality}}"></td>
+                            </tr>
+                            <tr>
+                                <th>Father Name</th>
+                                <td class="view-mode">{{details.FatherName}}</td>
+                                <td class="edit-mode"><input type="text" name="FatherName" value="{{details.FatherName}}"></td>
+                                <th>Mother Name</th>
+                                <td class="view-mode">{{details.MotherName}}</td>
+                                <td class="edit-mode"><input type="text" name="MotherName" value="{{details.MotherName}}"></td>
+                            </tr>
+                            <tr>
+                                <th>Father Mobile No</th>
+                                <td class="view-mode">{{details.FatherMobileNo}}</td>
+                                <td class="edit-mode"><input type="number" name="FatherMobileNo" value="{{details.FatherMobileNo}}"></td>
+                                <th>Mother Mobile No</th>
+                                <td class="view-mode">{{details.MotherMobileNo}}</td>
+                                <td class="edit-mode"><input type="number" name="MotherMobileNo" value="{{details.MotherMobileNo}}"></td>
+                            </tr>
+                            <tr>
+                                <th>Father Occupation</th>
+                                <td class="view-mode">{{details.FatherOccupation}}</td>
+                                <td class="edit-mode"><input type="text" name="FatherOccupation" value="{{details.FatherOccupation}}"></td>
+                                <th>Mother Occupation</th>
+                                <td class="view-mode">{{details.MotherOccupation}}</td>
+                                <td class="edit-mode"><input type="text" name="MotherOccupation" value="{{details.MotherOccupation}}"></td>
+                            </tr>
+                            <tr>
+                                <th>Father Mail Id</th>
+                                <td class="view-mode">{{details.FatherMailId}}</td>
+                                <td class="edit-mode"><input type="email" name="FatherMailId" value="{{details.FatherMailId}}"></td>
+                                <th>Mother Mail Id</th>
+                                <td class="view-mode">{{details.MotherMailId}}</td>
+                                <td class="edit-mode"><input type="email" name="MotherMailId" value="{{details.MotherMailId}}"></td>
+                            </tr>
+                            <tr>
+                                <th>Permanent Address</th>
+                                <td class="view-mode">{{details.PermanentAddress}}</td>
+                                <td class="edit-mode"><input type="text" name="PermanentAddress" value="{{details.PermanentAddress}}"></td>
+                                <th>Current Address</th>
+                                <td class="view-mode">{{details.CurrentAddress}}</td>
+                                <td class="edit-mode"><input type="text" name="CurrentAddress" value="{{details.CurrentAddress}}"></td>
+                            </tr>
+                        </table>
+                        <button id="profile-update-button" class="ProfileEditButton" type="submit" style="display: none;">Update</button>
+                    </form>
                 </div>
                 <form action="{%url 'UpdateStudentDetails'%}" method="POST"> 
                     {% csrf_token %}
@@ -1049,7 +1157,7 @@
                 <h2 class="form-title">Exam Results</h2>
                 <div class="table-container">
                     
-                    <form action="{% url 'ExamType' %}" id="myForm" method="POST">
+                    <form action="{% url 'StudentExamType' %}" id="myForm" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="FullName" id="" value="{{data.FullName}}">
                         <input type="hidden" name="RollNo" id="" value="{{data.RollNo}}">
@@ -1287,7 +1395,22 @@ function showSection(sectionId) {
         var button = document.getElementById(buttonId);
         button.style.display = 'block'; // or 'block' depending on your layout
     }
+    function enableEditMode() {
 
+        var view_mode_elements = document.querySelectorAll('.view-mode');
+        var edit_mode_elements = document.querySelectorAll('.edit-mode');
+        var ProfileUpdateButton = document.getElementById('profile-update-button')
+
+        // Hide all view-mode elements and show all edit-mode elements
+        view_mode_elements.forEach(function(element) {
+            element.style.display = 'none';
+        });
+
+        edit_mode_elements.forEach(function(element) {
+            element.style.display = 'table-cell'; // use 'table-cell' for table cells
+        });
+        ProfileUpdateButton.style.display = 'block';    
+    }
 
     </script>
 
@@ -1365,6 +1488,7 @@ function showSection(sectionId) {
         }
     });
 
+    
 </script>
 </body>
 </html>

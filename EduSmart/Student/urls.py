@@ -6,6 +6,7 @@ urlpatterns = [
     path('UpdateStudentDetails', views.UpdateDetails, name="UpdateStudentDetails"),
     path('Attendence', views.Attendence, name='Attendence'),
     path('ProfileUpdate', views.ProfileUpdate, name='ProfileUpdate'),
-    path('ExamType1', views.ExamType, name='ExamType'),
+    path('StudentExamType', views.ExamType, name='StudentExamType'),
+    path('profile-details-update', views.ProfileDetailsUpdate, name='profile-details-update'),
     
 ]

@@ -36,7 +36,11 @@ def AdminLogin(request):
                     'Students' : Students,
                     'UpdateFeeses' : UpdateFeeses,
                     'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-                    'ExamType' : models.ExamType.objects.all()
+                    'ExamType' : models.ExamType.objects.all(),
+                    'teachers' : models.Teacher.objects.all(),
+                    'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+                    'StudentsCount' : len(models.Student.objects.all()),
+                    'EmployeesCount' : len(models.Teacher.objects.all())
                 }
                 AdminPage = loader.get_template("AdminPage1.html")
                 return HttpResponse(AdminPage.render(context, request))
@@ -66,13 +70,17 @@ def StudentRegistration(request):
     UpdateFeeses = models.UpdateFee.objects.all()
     context = {
         'TimeTable' : TimeTable,
-        'Class' : Class,
+        'Class' : models.Class.objects.all(),
         'Subject' : Subject,
         'FeeDetails': FeeDetails,
         'Students' : Students,
         'UpdateFeeses' : UpdateFeeses,
         'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-        'ExamType' : models.ExamType.objects.all()
+        'ExamType' : models.ExamType.objects.all(),
+        'teachers' : models.Teacher.objects.all(),
+        'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+        'StudentsCount' : len(models.Student.objects.all()),
+        'EmployeesCount' : len(models.Teacher.objects.all())
     }
 
     if request.method == 'POST':
@@ -84,34 +92,42 @@ def StudentRegistration(request):
             context = {
                 'error' : "Enter Valid Details",
                 'TimeTable' : TimeTable,
-                'Class' : Class,
+                'Class' : models.Class.objects.all(),
                 'Subject' : Subject,
                 'FeeDetails': FeeDetails,
                 'Students' : Students,
                 'UpdateFeeses' : UpdateFeeses,
                 'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-                'ExamType' : models.ExamType.objects.all()
+                'ExamType' : models.ExamType.objects.all(),
+                'teachers' : models.Teacher.objects.all(),
+                'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+                'StudentsCount' : len(models.Student.objects.all()),
+                'EmployeesCount' : len(models.Teacher.objects.all())
             }
             return HttpResponse(AdminPage.render(context,request))
-        if models.Student.objects.filter(RollNo = RollNo):
+        if models.Student.objects.filter(RollNo = RollNo.upper()):
             context = {
                 'error' : "RollNo Already Exist",
                 'TimeTable' : TimeTable,
-                'Class' : Class,
+                'Class' : models.Class.objects.all(),
                 'Subject' : Subject,
                 'FeeDetails': FeeDetails,
                 'Students' : Students,
                 'UpdateFeeses' : UpdateFeeses,
                 'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-                'ExamType' : models.ExamType.objects.all()
+                'ExamType' : models.ExamType.objects.all(),
+                'teachers' : models.Teacher.objects.all(),
+                'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+                'StudentsCount' : len(models.Student.objects.all()),
+                'EmployeesCount' : len(models.Teacher.objects.all())
             }
             return HttpResponse(AdminPage.render(context, request))
         Fee = models.UpdateFee.objects.filter(Class = Class).first()
 
         try:
             with transaction.atomic():
-                data = models.Student(FullName = FullName, RollNo = RollNo, Password = RollNo, Class = Class)
-                FeeDetails = Smodels.FeeDetails(StudentRollNo = RollNo, StudentName = FullName, Class = Class, TotalFee = Fee.Fee,Discount1 = 0, TotalPaidFee = 0, Due = 0, LatestPaidFee  = 0)
+                data = models.Student(FullName = FullName.upper(), RollNo = RollNo.upper(), Password = RollNo.upper(), Class = Class)
+                FeeDetails = Smodels.FeeDetails(StudentRollNo = RollNo.upper(), StudentName = FullName.upper(), Class = Class, TotalFee = Fee.Fee,Discount1 = 0, TotalPaidFee = 0, Due = 0, LatestPaidFee  = 0)
                 data.save()
                 FeeDetails.save()
                 context['success'] = "Student Registered Successfully"
@@ -139,7 +155,11 @@ def TeacherRegistration(request):
         'UpdateFeeses' : UpdateFeeses,
         'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
         'Subjects' : Subjects,
-        'ExamType' : models.ExamType.objects.all()
+        'ExamType' : models.ExamType.objects.all(),
+        'teachers' : models.Teacher.objects.all(),
+        'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+        'StudentsCount' : len(models.Student.objects.all()),
+        'EmployeesCount' : len(models.Teacher.objects.all())
     }
 
     if request.method == 'POST':
@@ -149,12 +169,15 @@ def TeacherRegistration(request):
         ClassTeacher = request.POST.get('ClassTeacher')
         Subject = request.POST.get('Subject')
 
-        if models.Teacher.objects.filter(TeacherID = TeacherID):
+        if models.Teacher.objects.filter(TeacherID = TeacherID.upper()):
             context['error'] = "TeacherID already exists"
             return HttpResponse(AdminPage.render(context, request))
+        if len(MobileNo) != 10:
+            context['error'] = 'Enter valid mobile number '
+            return HttpResponse(AdminPage.render(context, request)) 
 
         try:
-            data = models.Teacher(FullName = FullName, MobileNo = MobileNo, Password = TeacherID, TeacherID = TeacherID, ClassTeacher = ClassTeacher, Subject = Subject)
+            data = models.Teacher(FullName = FullName.upper(), MobileNo = MobileNo, Password = TeacherID.upper(), TeacherID = TeacherID.upper(), ClassTeacher = ClassTeacher, Subject = Subject)
             data.save()
             context['success'] = "Teacher Registered Successfully"
         except Exception as e:
@@ -192,7 +215,11 @@ def UploadImage(request):
             'Students' : Students,
             'UpdateFeeses' : UpdateFeeses,
             'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-            'ExamType' : models.ExamType.objects.all()
+            'ExamType' : models.ExamType.objects.all(),
+            'teachers' : models.Teacher.objects.all(),
+            'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+            'StudentsCount' : len(models.Student.objects.all()),
+            'EmployeesCount' : len(models.Teacher.objects.all())
         }
         return HttpResponse(AdminPage.render(context, request))
     return render(request, 'AdminPage.html')
@@ -216,7 +243,6 @@ def TimeTable(request):
     if request.method == 'POST':
         Class1 = request.POST.get('Class')
         TimeTable1 = request.FILES.get('TimeTable')
-        print(Class1)
         ClassExist = models.TimeTable.objects.filter(Class=Class1).first()
         if ClassExist:
             ClassExist.Class = Class1
@@ -236,7 +262,11 @@ def TimeTable(request):
             'Students' : Students,
             'UpdateFeeses' : UpdateFeeses,
             'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-            'ExamType' : models.ExamType.objects.all()
+            'ExamType' : models.ExamType.objects.all(),
+            'teachers' : models.Teacher.objects.all(),
+            'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+            'StudentsCount' : len(models.Student.objects.all()),
+            'EmployeesCount' : len(models.Teacher.objects.all())
         }
         
         return HttpResponse(AdminPage.render(context, request))
@@ -250,7 +280,11 @@ def TimeTable(request):
         'Students' : Students,
         'UpdateFeeses' : UpdateFeeses,
         'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-        'ExamType' : models.ExamType.objects.all()
+        'ExamType' : models.ExamType.objects.all(),
+        'teachers' : models.Teacher.objects.all(),
+        'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+        'StudentsCount' : len(models.Student.objects.all()),
+        'EmployeesCount' : len(models.Teacher.objects.all())
     }
     
     return HttpResponse(AdminPage.render(context, request))
@@ -265,11 +299,16 @@ def DeleteTimetable(request):
         'Students' : models.Student.objects.all(),
         'UpdateFeeses' : models.UpdateFee.objects.all(),
         'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-        'ExamType' : models.ExamType.objects.all()
+        'ExamType' : models.ExamType.objects.all(),
+        'teachers' : models.Teacher.objects.all(),
+        'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+        'StudentsCount' : len(models.Student.objects.all()),
+        'EmployeesCount' : len(models.Teacher.objects.all())
     }
     if request.method == 'POST':
         Class = request.POST.get('Class')
         models.TimeTable.objects.filter(Class = Class).delete()
+        context['success'] = 'Successfully Deleted'
         return HttpResponse(AdminPage.render(context, request))
     return HttpResponse(AdminPage.render(context, request))
 
@@ -299,7 +338,11 @@ def add_subject(request):
                 'Students' : Students,
                 'UpdateFeeses' : UpdateFeeses,
                 'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-                'ExamType' : models.ExamType.objects.all()
+                'ExamType' : models.ExamType.objects.all(),
+                'teachers' : models.Teacher.objects.all(),
+                'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+                'StudentsCount' : len(models.Student.objects.all()),
+                'EmployeesCount' : len(models.Teacher.objects.all())
             }
             return HttpResponse(AdminPage.render(context, request))
 
@@ -320,7 +363,11 @@ def add_subject(request):
             'Students' : Students,
             'UpdateFeeses' : UpdateFeeses,
             'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-            'ExamType' : models.ExamType.objects.all()
+            'ExamType' : models.ExamType.objects.all(),
+            'teachers' : models.Teacher.objects.all(),
+            'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+            'StudentsCount' : len(models.Student.objects.all()),
+            'EmployeesCount' : len(models.Teacher.objects.all())
 
         }
         return HttpResponse(AdminPage.render(context,request))
@@ -349,7 +396,11 @@ def delete_subject(request):
             'Students' : Students,
             'UpdateFeeses' : UpdateFeeses,
             'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-            'ExamType' : models.ExamType.objects.all()
+            'ExamType' : models.ExamType.objects.all(),
+            'teachers' : models.Teacher.objects.all(),
+            'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+            'StudentsCount' : len(models.Student.objects.all()),
+            'EmployeesCount' : len(models.Teacher.objects.all())
         }
         return HttpResponse(AdminPage.render(context,request))
     
@@ -369,7 +420,11 @@ def UpdateFeeDetails(request):
         'Students' : Students,
         'UpdateFeeses' : UpdateFeeses,
         'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-        'ExamType' : models.ExamType.objects.all()
+        'ExamType' : models.ExamType.objects.all(),
+        'teachers' : models.Teacher.objects.all(),
+        'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+        'StudentsCount' : len(models.Student.objects.all()),
+        'EmployeesCount' : len(models.Teacher.objects.all())
     }
 
 
@@ -388,11 +443,10 @@ def UpdateFeeDetails(request):
         StudentExist = Smodels.FeeDetails.objects.filter(StudentRollNo = StudentRollNo, StudentName = StudentName, Class = Class).first()
         TransactionHistoryExist = Smodels.TransactionHistory.objects.filter(TransactionNo=TransactionNo).first()
         TransactionHistory = Smodels.TransactionHistory(StudentRollNo = StudentRollNo, StudentName=StudentName,Class=Class,TotalFee=TotalFee,Discount1=Discount,TotalPaidFee=(float(TotalPaidFee)+float(LatestPaidFee)),Due=(float(Due)-float(LatestPaidFee)),LatestPaidFee=LatestPaidFee,TransactionNo=TransactionNo,Date = Date)
-        print(Due, TotalPaidFee, Class)
+        
         if TransactionHistoryExist:
             context['error'] = 'Transaction No already entered' 
             return HttpResponse(AdminPage.render(context,request))
-        print(StudentExist)
 
         try:
             with transaction.atomic():
@@ -416,7 +470,11 @@ def UpdateFeeDetails(request):
                         'Students' : Students,
                         'UpdateFeeses' : UpdateFeeses,
                         'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-                        'ExamType' : models.ExamType.objects.all()
+                        'ExamType' : models.ExamType.objects.all(),
+                        'teachers' : models.Teacher.objects.all(),
+                        'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+                        'StudentsCount' : len(models.Student.objects.all()),
+                        'EmployeesCount' : len(models.Teacher.objects.all())
 
                     }
                     return HttpResponse(AdminPage.render(context, request))
@@ -431,7 +489,11 @@ def UpdateFeeDetails(request):
                         'Students' : Students,
                         'UpdateFeeses' : UpdateFeeses,
                         'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-                        'ExamType' : models.ExamType.objects.all()
+                        'ExamType' : models.ExamType.objects.all(),
+                        'teachers' : models.Teacher.objects.all(),
+                        'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+                        'StudentsCount' : len(models.Student.objects.all()),
+                        'EmployeesCount' : len(models.Teacher.objects.all())
                     } 
                     return HttpResponse(AdminPage.render(context, request))
         except Exception as e:
@@ -458,7 +520,11 @@ def UpdateFees(request):
         'Students' : Students,
         'UpdateFeeses' : UpdateFeeses,
         'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-        'ExamType' : models.ExamType.objects.all()
+        'ExamType' : models.ExamType.objects.all(),
+        'teachers' : models.Teacher.objects.all(),
+        'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+        'StudentsCount' : len(models.Student.objects.all()),
+        'EmployeesCount' : len(models.Teacher.objects.all())
     }
     if request.method == 'POST':
         Class = request.POST.get('Class')
@@ -479,7 +545,11 @@ def UpdateFees(request):
                 'Students' : Students,
                 'UpdateFeeses' : UpdateFeeses,
                 'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-                'ExamType' : models.ExamType.objects.all()
+                'ExamType' : models.ExamType.objects.all(),
+                'teachers' : models.Teacher.objects.all(),
+                'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+                'StudentsCount' : len(models.Student.objects.all()),
+                'EmployeesCount' : len(models.Teacher.objects.all())
             }
             return HttpResponse(AdminPage.render(context,request))
         except Exception as e:
@@ -504,7 +574,11 @@ def ExamType(request):
         'Students' : models.Student.objects.all(),
         'UpdateFeeses' : models.UpdateFee.objects.all(),
         'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-        'ExamType' : models.ExamType.objects.all()
+        'ExamType' : models.ExamType.objects.all(),
+        'teachers' : models.Teacher.objects.all(),
+        'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+        'StudentsCount' : len(models.Student.objects.all()),
+        'EmployeesCount' : len(models.Teacher.objects.all())
     }
     Students = models.Student.objects.all()
     if request.method == 'POST':
@@ -515,20 +589,23 @@ def ExamType(request):
             return HttpResponse(AdminPage.render(context, request))
 
         try:
-            with transaction.atomic():
-                ExamTypeData = models.ExamType(ExamType = ExamType, StudentAccess = 'Declined', TeacherAccess = 'Declined')    
-                for student in Students:
-                    Subjects = models.Subject.objects.filter(Class = student.Class).all()
-                    for Subject in Subjects:
-                        ExamMarksData = models.ExamMarks.objects.filter(StudentRollNo = student.RollNo, StudentName = student.FullName, Subject = Subject, ExamType = ExamType, Marks = '0')
-                        if not ExamMarksData:
-                            ExamMarksData = models.ExamMarks(StudentRollNo = student.RollNo, StudentName = student.FullName, Subject = Subject, Class = student.Class,ExamType = ExamType, Marks = '0')
-                            ExamTypeData.save()
-                            ExamMarksData.save()
-                            
-                            context['success'] = 'Successfully Created'
-                        else:
-                            continue
+            if Students:
+                with transaction.atomic():
+                    ExamTypeData = models.ExamType(ExamType = ExamType, StudentAccess = 'Declined', TeacherAccess = 'Declined') 
+                    for student in Students:
+                        Subjects = models.Subject.objects.filter(Class = student.Class).all()
+                        for Subject in Subjects:
+                            ExamMarksData = models.ExamMarks.objects.filter(StudentRollNo = student.RollNo, StudentName = student.FullName, Subject = Subject, ExamType = ExamType, Marks = '0')
+                            if not ExamMarksData:
+                                ExamMarksData = models.ExamMarks(StudentRollNo = student.RollNo, StudentName = student.FullName, Subject = Subject, Class = student.Class,ExamType = ExamType, Marks = '0')
+                                ExamTypeData.save()
+                                ExamMarksData.save()
+                                
+                                context['success'] = 'Successfully Created'
+                            else:
+                                continue
+            else:
+                context['error'] = "No Students Found"
         except Exception as e:
             context['error'] = f"Error: {str(e)}"
             return HttpResponse(AdminPage.render(context, request))
@@ -544,13 +621,16 @@ def ExamMarksAccess(request):
         'Students' : models.Student.objects.all(),
         'UpdateFeeses' : models.UpdateFee.objects.all(),
         'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
-        'ExamType' : models.ExamType.objects.all()
+        'ExamType' : models.ExamType.objects.all(),
+        'teachers' : models.Teacher.objects.all(),
+        'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+        'StudentsCount' : len(models.Student.objects.all()),
+        'EmployeesCount' : len(models.Teacher.objects.all())
     }
-    if request.method == 'POST':
+    if 'Update' in request.POST:
         ExamType1 = request.POST.get('ExamType1')
         StudentAccess = request.POST.get('StudentAccess')
         TeacherAccess = request.POST.get('TeacherAccess')
-        print(ExamType1, StudentAccess, TeacherAccess)
 
         try:
             ExamTypeAccessExists = models.ExamType.objects.filter(ExamType = ExamType1).first()
@@ -564,5 +644,82 @@ def ExamMarksAccess(request):
             context['error'] : f"Error: {str(e)}"
         
         return HttpResponse(AdminPage.render(context, request))
+    if 'Delete' in request.POST:
+        ExamType = request.POST.get('ExamType1')
+        num = models.ExamMarks.objects.filter(ExamType = ExamType).first()
+        try:
+            with transaction.atomic():
+                models.ExamType.objects.filter(ExamType=ExamType).delete()
+                models.ExamMarks.objects.filter(ExamType = ExamType).delete()
+        except Exception as e:
+            context['error'] : f"Error: {str(e)}"
+
+        return HttpResponse(AdminPage.render(context, request))
     return HttpResponse(AdminPage.render(context, request))
             
+
+def TeacherTimetable(request):
+    AdminPage = loader.get_template('AdminPage1.html')
+    context = {
+        'TimeTable' : models.TimeTable.objects.all(),
+        'Class' : models.Class.objects.all(),
+        'Subject' : models.Subject.objects.all(),
+        'FeeDetails': Smodels.FeeDetails.objects.all(),
+        'Students' : models.Student.objects.all(),
+        'UpdateFeeses' : models.UpdateFee.objects.all(),
+        'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
+        'ExamType' : models.ExamType.objects.all(),
+        'teachers' : models.Teacher.objects.all(),
+        'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+        'StudentsCount' : len(models.Student.objects.all()),
+        'EmployeesCount' : len(models.Teacher.objects.all())
+    }
+    if request.method == 'POST':
+        TeacherID = request.POST.get('Teacher')
+        TimeTable = request.FILES.get('TimeTable')
+
+        TimetableExists = models.TeacherTimetable.objects.filter(TeacherID = TeacherID).first()
+        try:
+            if TimetableExists:
+                TimetableExists.TeacherID = TeacherID
+                TimetableExists.Timetable = TimeTable
+                TimetableExists.save()
+                context['success'] = 'Successfully Uploaded Timetable'
+            else:
+                details = models.TeacherTimetable(Timetable = TimeTable, TeacherID = TeacherID)
+                details.save()
+                context['sucess'] = 'Successfully Uploaded Timetable'
+            
+        except Exception as e:
+            context['error'] : f"Error: {str(e)}"
+        return HttpResponse(AdminPage.render(context, request))
+    return HttpResponse(AdminPage.render(context, request)) 
+
+def DeleteTeacherTimetable(request):
+    AdminPage = loader.get_template('AdminPage1.html')
+    context = {
+        'TimeTable' : models.TimeTable.objects.all(),
+        'Class' : models.Class.objects.all(),
+        'Subject' : models.Subject.objects.all(),
+        'FeeDetails': Smodels.FeeDetails.objects.all(),
+        'Students' : models.Student.objects.all(),
+        'UpdateFeeses' : models.UpdateFee.objects.all(),
+        'TransactionHistory' : Smodels.TransactionHistory.objects.all(),
+        'ExamType' : models.ExamType.objects.all(),
+        'teachers' : models.Teacher.objects.all(),
+        'TeacherTimetables' : models.TeacherTimetable.objects.all(),
+        'StudentsCount' : len(models.Student.objects.all()),
+        'EmployeesCount' : len(models.Teacher.objects.all())
+    }
+    if request.method == 'POST':
+        TeacherID = request.POST.get('Teacher')
+        TeacherExist = models.TeacherTimetable.objects.filter(TeacherID = TeacherID).first()
+
+        if TeacherExist:
+            TeacherExist.delete()
+            context['success'] = 'Sucessfully Deleted Timetable'
+        else:
+            context['error'] = "Timetable Doesn't Exist"
+        
+        return HttpResponse(AdminPage.render(context, request))
+    return HttpResponse(AdminPage.render(context, request)) 

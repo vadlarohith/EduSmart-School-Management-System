@@ -73,7 +73,7 @@
                 margin: 0;
             }
             .sidebar {
-                width: 250px;
+                width: 15%;
                 height: 100vh;
                 background-color: #dcdcdc;
                 color: #000000;
@@ -157,7 +157,7 @@
             padding: 20px;
             background-color: #ffffff;
             border-radius: 30px;
-            width: 82%;
+            width: 80%;
         }
         .section {
             display: none;
@@ -189,6 +189,20 @@
             font-weight: bold;
             margin-bottom: 10px;
             color: #333333;
+            text-align: center;
+        }
+        .sucess {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #30b63b;
+            text-align: center;
+        }
+        .error {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #d63b3b;
             text-align: center;
         }
         .form-container form {
@@ -291,6 +305,22 @@
         .timetable-container p{
             font-weight: bold;
         }
+        .teacher-timetable-container{
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
+            width: 60%;
+        }
+        .teacher-timetable-container img{
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+        .teacher-timetable-container p{
+            font-weight: bold;
+        }
         .buttons-container{
             display: flex;
             width: 100%;
@@ -306,6 +336,9 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+        }
+        .change-form form{
+            display: none;
         }
         .UploadTimetable{
             display: none;
@@ -370,7 +403,7 @@
         }
         .table-style2 {
             margin: 10;
-            width: 100%;,
+            width: 100%;
             margin: 0 auto;
             border-radius: 5px;
             border-collapse: separate;
@@ -386,6 +419,7 @@
         }
         .fee-details-container{
             overflow: scroll;
+            width: 100%;
         }
         .create-exam-container{
             display: flex;
@@ -431,73 +465,101 @@
         /* aaaa */
 
         .search-container {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    position: relative;
-}
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+        }
 
-.search-input {
-    width: 100%;
-    padding: 10px 20px;
-    border-radius: 25px;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-    outline: none;
-    transition: border 0.3s ease;
-}
+        .search-input {
+            width: 100%;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s ease;
+        }
 
-.search-input::placeholder {
-    color: #aaa;
-    font-style: italic;
-}
+        .search-input::placeholder {
+            color: #aaa;
+            font-style: italic;
+        }
 
-.search-input:focus {
-    border-color: #007bff;
-}
+        .search-input:focus {
+            border-color: #007bff;
+        }
 
 
 
-.search-container {
-    justify-content: right;
-    margin-right: 0%;
-}
+        .search-container {
+            justify-content: right;
+            margin-right: 0%;
+        }
 
-.search-input-container {
-    display: none;
-    position: relative;
-    right: 0;
-}
+        .search-input-container {
+            display: none;
+            position: relative;
+            right: 0;
+        }
 
-#searchRollNo, #searchRollNo1 {
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 150px;
-    margin-left: 50%;
-    height: 50%;
-}
+        #searchRollNo, #searchRollNo1 {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 150px;
+            margin-left: 50%;
+            height: 50%;
+        }
 
-.search-icon,
-.close-icon {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    margin-right: 0%;
-}
+        .search-icon,
+        .close-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            margin-right: 0%;
+        }
 
-.search-icon {
-    font-size: 24px;
-    margin-left: 80%;
-}
+        .search-icon {
+            font-size: 24px;
+            margin-left: 80%;
+        }
 
-.close-icon {
-    margin-left: 5px;
-    margin-top: 2px;
-}
+        .close-icon {
+            margin-left: 5px;
+            margin-top: 2px;
+        }
+        .dashboard_content{
+            display: flex;
+            margin: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+        .card{
+            border: 2px solid black;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            padding: 15px;
+            margin: 20px;
+            justify-content: center;
+            width: 180px;
+            height: 120px;
 
+        }
+        .card_title{
+            margin: 0;
+            text-align: center;
+        }
+        .Count{
+            text-align: center;
+            font-size: 100px;
+            margin: 0;
+        }
+        .hiden{
+            display: none;
+        }
 
         </style>
         <script></script>
@@ -531,15 +593,29 @@
                         <li onclick="showSection('teacher_registration')"><i class="fa-solid fa-user-tie icon" style="color: #000000;"></i></i><a href="#" class="sidebar-text"> Teacher Registration</a></li>
                         <li onclick="showSection('update-notification')"><i class="fa-solid fa-bell icon" style="color: #000000;"></i><a href="#" class="sidebar-text">Notification Desk</a></li>
                         <li onclick="showSection('update-timetable')"><i class="fa-solid fa-calendar-days icon" style="color: #000000;"></i><a href="#" class="sidebar-text">Timetable</a></li> 
+                        <li onclick="showSection('update-teacher-timetable')"><i class="fa-solid fa-calendar-days icon" style="color: #000000;"></i><a href="#" class="sidebar-text">Teacher Timetable</a></li>
                         <li onclick="showSection('subjects')"><i class="fa-solid fa-book icon" style="color: #000000;"></i><a href="#" class="sidebar-text">Subjects</a></li> 
-                        <li onclick="showSection('update-fees')"><i class="fa-solid fa-money-bills icon" style="color: #000000;"></i><a href="#" class="sidebar-text">Feeses</a></li>
-                        <li onclick="showSection('fee-details')"><i class="fa-solid fa-receipt icon" style="color: #000000;"></i></i><a href="#" class="sidebar-text">Fee Details</a></li>
+                        <li onclick="showSection('update-fees')"><i class="fa-solid fa-money-bills icon" style="color: #000000;"></i><a href="#" class="sidebar-text">Class Fee Details</a></li>
+                        <li onclick="showSection('fee-details')"><i class="fa-solid fa-receipt icon" style="color: #000000;"></i></i><a href="#" class="sidebar-text">Students Fee Details</a></li>
                         <li onclick="showSection('Transaction-history')"><i class="fa-solid fa-arrow-right-arrow-left icon" style="color: #000000;"></i><a href="#" class="sidebar-text">Transaction History</a></li> 
                         <li onclick="showSection('exams')"><i class="fa-solid fa-book-open-reader icon" style="color: #000000;"></i><a href="#" class="sidebar-text">Exams</a></li>                    
                     </ul>
                 </nav>
             </aside>
             <main class="content">
+                <section id="dashboard" class="section" data-section="dashboard">
+                    <h2 class="form-title">Admin Dashboard</h2>
+                    <div class="dashboard_content">
+                        <div class="card">
+                            <h4 class="card_title">Total No of Students</h4>
+                            <h2 class="Count">{{StudentsCount}}</h2>
+                        </div>
+                        <div class="card">
+                            <h4 class="card_title">Total No of Employees</h4>
+                            <h2 class="Count">{{EmployeesCount}}</h2>
+                        </div>
+                    </div>
+                </section>
                 <section id="student_registration" class="section" data-section="student_registration">
                     <h2 class="form-title">Student Registration</h2>
                     <div class="form-container">
@@ -649,7 +725,7 @@
                     <div class="change-button-container">
                         {%for i in Class%}
                         <div id="container1-{{i.Class}}" style="display: none;" class="UploadTimetable">
-                            <button id="button-{{i.Class}}" style="display: ;" onclick="showChangeOption1('{{ i.Class }}')">Upload Timetable</button>
+                            <button id="button-{{i.Class}}" onclick="showChangeOption1('{{ i.Class }}')">Upload Timetable</button>
                             <form id="form1_{{ i.Class }}" action="{% url 'TimeTable' %}" method="POST" enctype="multipart/form-data" style="display: none;">
                                 {% csrf_token %}
                                 <input type="hidden" name="Class" value="{{ i.Class }}">
@@ -667,7 +743,7 @@
                                 
                                 <div class="buttons-container">
                                     <div style="display: flex;">
-                                        <button id="button-{{i.class}}" style="display: none;" onclick="showChangeOption('{{ i.Class }}')">Change Timetable</button>
+                                        <button id="button-{{i.class}}" style="display: none;" onclick="showChangeOption('{{ i.Class }}')">Change</button>
                                         <form id="form_{{ i.Class }}" action="{% url 'TimeTable' %}" method="POST" enctype="multipart/form-data" style="display: none;">
                                             {% csrf_token %}
                                             <input type="hidden" name="Class" value="{{ i.Class }}">
@@ -679,17 +755,75 @@
                                     <form action="{% url 'DeleteTimetable' %}" method="POST">
                                         {% csrf_token %}
                                         <input type="hidden" name="Class" value="{{ i.Class }}">
-                                        <button type="submit">Delete Timetable</button>
+                                        <button type="submit">Delete</button>
                                     </form>
                                 </div>
                                 
                             </div>
                             {% else %}
-                                <p id="no-image">Timetable not available.</p>
+                                <p id="teacher-no-image">Timetable not available.</p>
                             {% endif %}
                         {% endfor %}
                     </div>
                 </section>
+
+                <section id="update-teacher-timetable" class="section" data-section="update-teacher-timetable">
+                    <h2 class="form-title">Teacher Timetable</h2>
+                    <div class="Select-Container">
+                        <select class="styled-select" id="teacher-timetable" onchange="showTeacherImage(this.value)">
+                            <option value="aa">--Select--</option>
+                            {% for teacher in teachers %}
+                                <option value="{{teacher.TeacherID}}">{{teacher.TeacherID}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <p id="teacher-no-image" class="form-label">Nothing to show.</p>
+                    <div class="teacher-change-button-container">
+                        {% for teacher in teachers %}
+                        <div id="teacher-container1-{{teacher.TeacherID}}" style="display: none;" class="UploadTimetable">
+                            <button id="teacher-button-{{teacher.TeacherID}}" onclick="showChangeOptionTeacher1('{{ teacher.TeacherID }}')">Upload Timetable</button>
+                            <form id="teacher-form1_{{ teacher.TeacherID }}" action="{%url 'UpdateTeacherTimetable'%}" method="POST" enctype="multipart/form-data" style="display: none;">
+                                {% csrf_token %}
+                                <input type="hidden" name="Teacher" value="{{ teacher.TeacherID }}">
+                                <input type="file" name="TimeTable" accept="image/*">
+                                <button type="submit">Submit</button>
+                            </form>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="teacher-timetable-container">
+                        {% for timetable in TeacherTimetables %}
+                            {% if timetable %}
+                            <div id="teacher-container-{{ timetable.TeacherID }}" style="display: none;">
+                                <img id="{{timetable.TeacherID}}" src="{{timetable.Timetable.url}}" alt="{{timetable.TeacherID}}" style="display: none;">
+                                
+                                <div class="buttons-container">
+                                    <div style="display: flex;">
+                                        <button id="teacher-button-{{timetable.TeacherID}}" style="display: none;" onclick="showChangeOptionTeacher('{{ timetable.TeacherID }}')">Change</button>
+                                        <form id="teacher-form_{{ timetable.TeacherID }}" action="{%url 'UpdateTeacherTimetable'%}" method="POST" enctype="multipart/form-data" style="display: none;" class="change-form">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="Teacher" value="{{ timetable.TeacherID }}">
+                                            <input type="file" name="TimeTable" accept="image/*">
+                                            <button type="submit">Submit</button>
+                                        </form>
+                                    </div>
+                                    
+                                    <form action="{% url 'DeleteTeacherTimetable' %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="Teacher" value="{{ timetable.TeacherID }}">
+                                        <button type="submit">Delete</button>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                            {% else %}
+                                <p id="teacher-no-image">Timetable not available.</p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+                
                 
                 <section id="subjects" class="section" data-section="subject">
                     <h2 class="form-title">Subjects</h2>
@@ -727,7 +861,7 @@
                     </div>
                 </section>
                 <section id="update-fees" class="section" data-section="update-fees">
-                    <h2 class="form-title">Update Feeses</h2>
+                    <h2 class="form-title">Classes Fee Details</h2>
                     <div>
                         <table class="table-style1">
                             <tr>
@@ -752,7 +886,8 @@
                     </div>
                 </section>
                 <section id="fee-details" class="section" data-section="fee-details">
-                    <h2 class="form-title">Fee Details</h2>
+                    <h2 class="form-title">Students Fee Details</h2>
+                    {% if FeeDetails %}
                     <div class="search-container">
                         <i id="searchButton" class="fa-solid fa-magnifying-glass search-icon" style="color: #000000;"></i>
                         
@@ -761,7 +896,6 @@
                             <i  id="closeButton" class="fa-solid fa-circle-xmark close-icon" style="color: #000000;"></i>
                         </div>
                     </div>
-                    
                     
                     <div class="fee-details-container" id="fee-details-container">
                         <table class="table-style2">
@@ -798,9 +932,13 @@
                             {% endfor %}
                         </table>
                     </div>
+                    {%else%}
+                    <h3 class="form-label">No Data Found</h3>
+                    {%endif%}
                 </section>
                 <section id="Transaction-history" class="section" data-section="Transaction-history">
                     <h2 class="form-title">Transaction History</h2>
+                    {% if TransactionHistory %}
                     <div class="search-container">
                         <i id="searchButton1" class="fa-solid fa-magnifying-glass search-icon" style="color: #000000;"></i>
                         
@@ -842,12 +980,15 @@
                             {% endfor %}
                         </table>
                     </div>
+                    {%else%}
+                    <h3 class="form-label">No Data Found</h3>
+                    {%endif%}
                 </section>
                 <section id="exams" class="section" data-section="exams">
                     <h2 class="form-title">Exams</h2>
                     <div class="create-exam-container">
                         <div class="create-exam-container1">
-                            <form action="{% url 'ExamType' %}" method="POST">
+                            <form action="{% url 'UpdateExamType' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="input-box">
                                     <label for="exam-type">Exam Type:</label>
@@ -860,6 +1001,7 @@
                                 <button type="submit">Create Exam</button>
                             </form>
                         </div>
+                        {%if ExamType%}
                         <div>
                             <table class="table-style2">
                                 <thead>
@@ -898,18 +1040,32 @@
                                                     <option value="Declined">Declined</option>
                                                 </select>
                                             </td>
-                                            <td><button type="submit">Update</button></td>
+                                            <td><button type="submit" name="Update">Update</button>
+                                            <button type="submit" name="Delete">Delete</button></td>
                                         </tr>
                                     </form>
                                     {% endfor %}
                                 </tbody>
                             </table>
                         </div>
+                        {%else%}
+                        <h3>No Exams Found</h3>
+                        {%endif%}
                     </div>
                 </section>
             </main>
         </div>
         <script>
+            window.onload = function() {
+                var message = "{{ error }}";
+                var success= "{{ success }}"
+                if (success) {
+                    alert(success);
+                }
+                if(message){
+                    alert(message);
+                }
+            };
             document.getElementById('toggleBtn').addEventListener('click', function() {
                 var sidebar = document.getElementById('sidebar');
                 sidebar.classList.toggle('collapsed');
@@ -1055,6 +1211,78 @@
             const form = document.getElementById(`form1_${classId}`);
             if (form) form.style.display = 'block';
         }
+        
+        function showTeacherImage(teacherId) {
+    // Select all timetable containers for teachers
+    var teacherContainers = document.querySelectorAll('.teacher-timetable-container div[id^="teacher-container-"]');
+    var teacherMessage = document.getElementById('teacher-no-image');
+    var teacherChangeButtonContainers = document.querySelectorAll('.teacher-change-button-container div[id^="teacher-container1-"]');
+    var changeForm = document.querySelector(".change-form")
+
+    // Hide all timetable containers and buttons initially
+    teacherContainers.forEach(container => {
+        container.style.display = 'none';
+        var img = container.querySelector('img');
+        var buttons = container.querySelectorAll('button');
+        var forms = container.querySelectorAll('form');
+        
+        if (img) img.style.display = 'none';
+        if (buttons) buttons.forEach(button => button.style.display = 'none');
+        if (forms) forms.forEach(form => form.style.display = 'none');
+    });
+    changeForm.style.display = 'none';
+    // Hide all change button containers initially
+    teacherChangeButtonContainers.forEach(container => {
+        container.style.display = 'none';
+        var button = container.querySelector('button');
+        if (button) button.style.display = 'none';
+    });
+
+    // Hide the "not available" message initially
+    if (teacherMessage) {
+        teacherMessage.style.display = 'none';
+    }
+
+    // Get the specific timetable container for the selected teacher
+    var selectedTeacherContainer = document.getElementById('teacher-container-' + teacherId);
+    var selectedTeacherChangeButtonContainer = document.getElementById('teacher-container1-' + teacherId);
+
+    if (selectedTeacherContainer) {
+        selectedTeacherContainer.style.display = 'block';
+
+        // Show the image, buttons, and forms if they exist
+        var selectedTeacherImage = selectedTeacherContainer.querySelector('img');
+        var selectedTeacherButtons = selectedTeacherContainer.querySelectorAll('button');
+        var selectedTeacherForms = selectedTeacherContainer.querySelectorAll('form');
+
+        if (selectedTeacherImage) selectedTeacherImage.style.display = 'block';
+        if (selectedTeacherButtons) selectedTeacherButtons.forEach(button => button.style.display = 'block');
+        if (selectedTeacherForms) selectedTeacherForms.forEach(form => form.style.display = 'block');
+    } else {
+        // If no container is found, show the "not available" message
+        if (teacherMessage) {
+            teacherMessage.style.display = 'block';
+        }
+        if (selectedTeacherChangeButtonContainer) {
+            selectedTeacherChangeButtonContainer.style.display = 'block';
+            var changeButton = selectedTeacherChangeButtonContainer.querySelector('button');
+            if (changeButton) changeButton.style.display = 'block';
+        }
+    }
+}
+
+function showChangeOptionTeacher(teacherId) {
+    const form = document.getElementById(`teacher-form_${teacherId}`);
+    if (form) form.style.display = 'block';
+}
+
+function showChangeOptionTeacher1(teacherId) {
+    const form = document.getElementById(`teacher-form1_${teacherId}`);
+    if (form) form.style.display = 'block';
+}
+
+
+        
 
         function showSubjects(classId) {
             const rows = document.querySelectorAll('#subjectContainer table tr');
@@ -1116,7 +1344,7 @@
                 }
             }
         }
-
+        
 
         const searchButton = document.getElementById('searchButton');
         const searchInputContainer = document.getElementById('searchInputContainer');
@@ -1145,7 +1373,7 @@
             searchInputContainer1.style.display = 'none';
             searchButton1.style.display = 'inline-block';
         });
-
+        
         </script>
     </body>
 </html>

@@ -13,7 +13,7 @@ def TeacherLogin(request):
         FullName = request.POST.get('TeacherUserName')
         Password = request.POST.get('TeacherPassword')
         
-
+        print(FullName, Password)
         try:
             user = models.Teacher.objects.filter(FullName = FullName, Password = Password).first()
             if user:
@@ -21,9 +21,19 @@ def TeacherLogin(request):
                 TimeTable = models.TimeTable.objects.all()
                 Student = models.Student.objects.filter(Class = user.ClassTeacher)
                 ExamMarks1 = models.ExamMarks.objects.filter(Subject = user.Subject).all()
+                if user.Subject == 'PHYSICS':
+                    Subject = 'SCIENCE'
+                else:
+                    Subject = None
+                TeacherAccess = models.ExamType.objects.filter(TeacherAccess = 'Accept').first()
+                if TeacherAccess:
+                    ExamAccess = True
+                else:
+                    ExamAccess = False
+
                 context = {
                     'Teacher' : FullName,
-                    'image': Image,
+                    'images': Image,
                     'data' : {
                         'MobileNo': user.MobileNo,
                         'FullName': user.FullName,
@@ -32,9 +42,12 @@ def TeacherLogin(request):
                     },
                     'TimeTable' : TimeTable,
                     'Student' : Student,
-                    'ExamMarks' : models.ExamMarks.objects.filter(Subject__iexact = user.Subject).all(), #__iexact is for CASE-INCENSITIVE
+                    'ExamMarks' : models.ExamMarks.objects.filter(Subject__iexact = user.Subject) | models.ExamMarks.objects.filter(Subject__iexact = Subject), #__iexact is for CASE-INCENSITIVE
+                    'ExamAccess' : ExamAccess,
                     'Access' : models.ExamType.objects.all(),
-                    'TeacherTimetable' : models.TeacherTimetable.objects.filter(TeacherID = user.TeacherID).first()
+                    'TeacherTimetable' : models.TeacherTimetable.objects.filter(TeacherID = user.TeacherID).first(),
+                    'Class' : models.Class.objects.all(),
+                    
                 }
                 return HttpResponse(TeacherPage.render(context, request))
             else:
@@ -63,6 +76,15 @@ def UpdateDetails(request):
             user.MobileNo = UpdateMobileNo
             user.Password = UpdatePassword
             user.save()
+            if user.Subject == 'PHYSICS':
+                Subject = 'SCIENCE'
+            else:
+                Subject = None
+            TeacherAccess = models.ExamType.objects.filter(TeacherAccess = 'Accept').first()
+            if TeacherAccess:
+                ExamAccess = True
+            else:
+                ExamAccess = False
             context = {
                 'success' : 'Successfully Updated',
                 'Teacher' : FullName,
@@ -76,7 +98,9 @@ def UpdateDetails(request):
                 },
                 'Class' : Class,
                 'TimeTable' : TimeTable,
-                'Student' : Student
+                'Student' : Student,
+                'ExamMarks' : models.ExamMarks.objects.filter(Subject__iexact = user.Subject) | models.ExamMarks.objects.filter(Subject__iexact = Subject), #__iexact is for CASE-INCENSITIVE
+                'ExamAccess' : ExamAccess,
             }
             return HttpResponse(TeacherPage.render(context, request))
         
@@ -94,59 +118,62 @@ def Attendence1(request):
         Class = models.TimeTable.objects.all()
         TimeTable = models.TimeTable.objects.all()
         Student = models.Student.objects.filter(Class = user.ClassTeacher)
-    context = {
-        'Teacher' : FullName,
-        'images' : Image[::-1],
-        'data' : {
-                'MobileNo': user.MobileNo,
-                'FullName': user.FullName,
-                'Password': user.Password,
-                'TeacherID' : user.TeacherID,
-                'Profile' : user.Profile
-            },
-        'Class' : Class,
-        'TimeTable' : TimeTable,
-        'Student' : Student,
-        'Attendence' : models.AttendenceDetails.objects.all(),
-        'ExamMarks' : models.ExamMarks.objects.filter(Subject__iexact = user.Subject).all(), #__iexact is for CASE-INCENSITIVE
-        'Access' : models.ExamType.objects.all()
-    }
+        if user.Subject == 'PHYSICS':
+            Subject = 'SCIENCE'
+        else:
+            Subject = None
+        TeacherAccess = models.ExamType.objects.filter(TeacherAccess = 'Accept').first()
+        if TeacherAccess:
+            ExamAccess = True
+        else:
+            ExamAccess = False
+        context = {
+            'Teacher' : FullName,
+            'images' : Image[::-1],
+            'data' : {
+                    'MobileNo': user.MobileNo,
+                    'FullName': user.FullName,
+                    'Password': user.Password,
+                    'TeacherID' : user.TeacherID,
+                    'Profile' : user.Profile
+                },
+            'Class' : models.Class.objects.all(),
+            'TimeTable' : TimeTable,
+            'Student' : Student,
+            'Attendence' : models.AttendenceDetails.objects.all(),
+            'ExamMarks' : models.ExamMarks.objects.filter(Subject__iexact = user.Subject) | models.ExamMarks.objects.filter(Subject__iexact = Subject), #__iexact is for CASE-INCENSITIVE
+            'ExamAccess' : ExamAccess,
+            'Access' : models.ExamType.objects.all()
+        }
     if request.method == 'POST':
+        print("NKJN")
         num_student = len(request.POST) // 3
+        print(num_student)
         for i in range(1,num_student+2):
+            print(i)
             SRegNo = request.POST.get(f'SRegNo_{i}')
             Month = request.POST.get(f'Month_{i}')
             Attendence = 'P' if request.POST.get(f'Attendence_{i}') == 'on' else 'A'
             AttendenceDate = request.POST.get('AttendenceDate')
 
             context['Attendence'] = Attendence
-            if Attendence == "":
-                continue
-
+            
+            print(SRegNo)
             try:
-                """user = models.Attendence.objects.filter(RegNo = SRegNo, Month = Month).first()
-                if user:
-                    user.RegNo = SRegNo
-                    user.Month = Month
-                    user.Attendence = Attendence
-                    user.save()
-                else:
-                    data = models.Attendence(RegNo = SRegNo, Month = Month, Attendence = Attendence)
-                    data.save()"""
                 AttendenceDetailsExists = models.AttendenceDetails.objects.filter(RegNo = SRegNo, AttendenceDate = AttendenceDate).first()
                 if AttendenceDetailsExists:
+                    print('m')
                     AttendenceDetailsExists.RegNo = SRegNo
                     AttendenceDetailsExists.Attendence = Attendence
                     AttendenceDetailsExists.AttendenceDate = AttendenceDate
                     AttendenceDetailsExists.save()
                 else:
+                    print("ASFAS")
                     data1 = models.AttendenceDetails(RegNo = SRegNo, Attendence = Attendence, AttendenceDate = AttendenceDate)
                     data1.save()
 
             except Exception as e:
                 context['error'] = f"Error saving data for student {SRegNo}: {str(e)}"
-                return HttpResponse(TeacherPage.render(context, request))
-            return HttpResponse(TeacherPage.render(context, request))
         context['success'] = "Attendance Successfully Updated"
         return HttpResponse(TeacherPage.render(context, request))
     return HttpResponse(TeacherPage.render(context, request))
@@ -158,8 +185,18 @@ def ExamMarks(request):
         FullName = request.POST.get('TeacherName')
         MobileNo = request.POST.get('TeacherMobileNo')
         user = models.Teacher.objects.filter(FullName = FullName, MobileNo = MobileNo).first()
+        if user.Subject == 'PHYSICS':
+            Subject = 'SCIENCE'
+        else:
+            Subject = None
+        TeacherAccess = models.ExamType.objects.filter(TeacherAccess = 'Accept').first()
+        if TeacherAccess:
+            ExamAccess = True
+        else:
+            ExamAccess = False
         context = {
         'Teacher' : FullName,
+        'Class' : models.Class.objects.all(),
         'images': models.Posters.objects.all(),
         'data' : {
             'MobileNo': user.MobileNo,
@@ -169,7 +206,8 @@ def ExamMarks(request):
         },
         'TimeTable' : models.TimeTable.objects.all(),
         'Student' : models.Student.objects.filter(Class = user.ClassTeacher),
-        'ExamMarks' : models.ExamMarks.objects.filter(Subject__iexact = user.Subject).all(),
+        'ExamMarks' : models.ExamMarks.objects.filter(Subject__iexact = user.Subject) | models.ExamMarks.objects.filter(Subject__iexact = Subject), #__iexact is for CASE-INCENSITIVE
+        'ExamAccess' : ExamAccess,
     }
     
     if request.method == 'POST':
@@ -214,6 +252,15 @@ def ProfileUpdate1(request):
         TimeTable = models.TimeTable.objects.all()
         Student = models.Student.objects.filter(Class = user.ClassTeacher)
         ExamMarks1 = models.ExamMarks.objects.filter(Subject = user.Subject).all()
+        if user.Subject == 'PHYSICS':
+            Subject = 'SCIENCE'
+        else:
+            Subject = None
+        TeacherAccess = models.ExamType.objects.filter(TeacherAccess = 'Accept').first()
+        if TeacherAccess:
+            ExamAccess = True
+        else:
+            ExamAccess = False
         context = {
             'Teacher' : FullName,
             'image': Image,
@@ -225,7 +272,8 @@ def ProfileUpdate1(request):
             },
             'TimeTable' : TimeTable,
             'Student' : Student,
-            'ExamMarks' : models.ExamMarks.objects.filter(Subject__iexact = user.Subject).all(), #__iexact is for CASE-INCENSITIVE
+            'ExamMarks' : models.ExamMarks.objects.filter(Subject__iexact = user.Subject) | models.ExamMarks.objects.filter(Subject__iexact = Subject), #__iexact is for CASE-INCENSITIVE
+            'ExamAccess' : ExamAccess,
             'Access' : models.ExamType.objects.all()
         }
 

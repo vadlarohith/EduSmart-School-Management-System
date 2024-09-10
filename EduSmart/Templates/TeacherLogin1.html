@@ -763,7 +763,9 @@
                     <li onclick="showSection('dashboard')"><i class="fa-solid fa-chart-line icon" style="color: #000000;"></i><a href="#" class="sidebar-text">Dashboard</a></li>
                     <li onclick="showSection('timetable')"><i class="fa-solid fa-calendar-days icon" style="color: #000000;"></i><a href="#" class="sidebar-text"> Time Table</a></li>
                     <li onclick="showSection('attendance')"><i class="fa-solid fa-user-check icon" style="color: #000000;"></i></i><a href="#" class="sidebar-text"> Attendance</a></li>
+                    {% if ExamAccess %}
                     <li onclick="showSection('ExamMarks')"><i class="fa-solid fa-book-bookmark icon" style="color: #000000;"></i><a href="#" class="sidebar-text">Exam Marks</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </aside>
@@ -830,11 +832,12 @@
                 <h2 class="form-title">TimeTable</h2>
                 <div class="Select-Container"> 
                     <select class="styled-select" id="timetable" onchange="showImage(this.value)">
-                    {% for i in TimeTable %}
+                    {% for i in Class %}
                         <option value="{{i.Class}}">{{i.Class}}</option>
                     {% endfor %}
                     </select>
-                    </div>
+                </div>
+                <p id="no-image" class="form-label">Timetable Not Available</p>
                 <div class="timetable-container">
                     {% for i in TimeTable %}
                     {% if i %}
@@ -848,8 +851,8 @@
 
             <section id="attendance" class="section" data-section="attendance">
                 <h2 class="form-title">Student Attendance</h2>
-                <h3 class="form-label">{{ success }}</h3>
                 <div class="form-container">
+                    {% if Student %}
                     <form action="{% url 'Attendence1' %}" method="POST" id="attendanceForm">
                         {% csrf_token %}
                         <div class="field-group">
@@ -881,6 +884,9 @@
                         </table>
                         <button type="submit" class="submit-button">Update Attendance</button>
                     </form>
+                    {% else %}
+                    <h3 class="form-label">No Data Found</h3>
+                    {% endif %}
                 </div>
             </section>
 
@@ -949,15 +955,14 @@
             </section> -->
             <section id="ExamMarks" class="section" data-section="ExamMarks">
                 <h2 class="form-title">Exam Marks</h2>
-                <h3 class="form-label">{{error}}{{success}}</h3>
                 <div class="table-container">
-                        <div class="Select-Container">
-                            <select name="ExamType" id="searchClass" onchange="filterClasses()" class="styled-select">
-                                {% for i in TimeTable %}
-                                <option value="{{i.Class}}">{{i.Class}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                    <div class="Select-Container">
+                        <select name="ExamType" id="searchClass" onchange="filterClasses()" class="styled-select">
+                            {% for i in Class %}
+                            <option value="{{i.Class}}">{{i.Class}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     <form action="{% url 'ExamMarks' %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="TeacherName" value="{{ data.FullName }}">
@@ -1152,13 +1157,22 @@ function showSection(sectionId) {
     // Function to show the specified image in the TimeTables section
     function showImage(imageId) {
             var images = document.querySelectorAll('.timetable-container img');
+            var message = document.getElementById('no-image');
             images.forEach(img => img.style.display = 'none');
+            if(message){
+                message.style.display = 'none';
+            }
 
             var selectedImage = document.getElementById(imageId);
-            selectedImage.style.display = 'block';
+            if(selectedImage){
+                selectedImage.style.display = 'block';
+            }else{
+                message.style.display = 'block';
+            }
         }
     // Get today's date in YYYY-MM-DD format
     const today = new Date().toISOString().split('T')[0];
+
         
     // Set the value of the date input to today's date
     document.getElementById('date').value = today;
@@ -1169,6 +1183,7 @@ function showSection(sectionId) {
 
         // Get all the rows in the table
         const rows = document.querySelectorAll(".MarksTable tbody tr");
+        
 
         // Loop through all rows
         rows.forEach(row => {

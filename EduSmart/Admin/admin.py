@@ -9,7 +9,7 @@ class StudentPreview(admin.ModelAdmin):
 admin.site.register(models.Student, StudentPreview)
 
 class TeacherPreview(admin.ModelAdmin):
-    list_display = ('FullName','TeacherID','ClassTeacher')
+    list_display = ('FullName','TeacherID','ClassTeacher','Subject')
 
 admin.site.register(models.Teacher, TeacherPreview)
 

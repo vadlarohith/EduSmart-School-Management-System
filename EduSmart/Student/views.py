@@ -6,6 +6,7 @@ from Admin import models
 from . import models as Smodels
 from django.db.models import Q, Count
 from django.db.models.functions import TruncMonth
+from django.db import transaction
 
 def StudentLogin(request):
     StudentPage = loader.get_template("StudentLogin.html")
@@ -23,6 +24,7 @@ def StudentLogin(request):
                 data = models.Student.objects.all()
                 Class = user.Class
                 TimeTable1 = models.TimeTable.objects.filter(Class = Class).first()
+                Details = Smodels.StudentDetails.objects.filter(RollNo = user.RollNo, FullName = user.FullName).first()
                 if(TimeTable1):
                     TimeTable = TimeTable1
                 else:
@@ -72,6 +74,21 @@ def StudentLogin(request):
                     'ExamType' : models.ExamType.objects.filter(StudentAccess = 'Accept').all(),
 
                 }
+                if Details:
+                    context['details'] = {'Gender' : Details.Gender,
+                    'DOB' : Details.DOB,
+                    'MailId' : Details.MailId,
+                    'Nationality' : Details.Nationality,
+                    'FatherName' : Details.FatherName,
+                    'MotherName' : Details.MotherName,
+                    'FatherMobileNo' : Details.FatherMobileNo,
+                    'MotherMobileNo' : Details.MotherMobileNo,
+                    'FatherOccupation' : Details.FatherOccupation,
+                    'MotherOccupation' : Details.MotherOccupation,
+                    'FatherMailId' : Details.FatherMailId,
+                    'MotherMailId' : Details.MotherMailId,
+                    'PermanentAddress' : Details.PermanentAddress,
+                    'CurrentAddress' : Details.CurrentAddress}
                 return HttpResponse(StudentPage.render(context, request))
             else:
                 context = {
@@ -99,6 +116,7 @@ def UpdateDetails(request):
             user = models.Student.objects.filter(FullName = FullName, RollNo = RollNo).first()
             Class = user.Class
             TimeTable1 = models.TimeTable.objects.filter(Class = Class).first()
+            Details = Smodels.StudentDetails.objects.filter(RollNo = RollNo, FullName = user.FullName).first()
             if(TimeTable1):
                 TimeTable = TimeTable1
             else:
@@ -126,6 +144,21 @@ def UpdateDetails(request):
                     
                     #'Attendence' : Attendence
             }
+            if Details:
+                context['details'] = {'Gender' : Details.Gender,
+                    'DOB' : Details.DOB,
+                    'MailId' : Details.MailId,
+                    'Nationality' : Details.Nationality,
+                    'FatherName' : Details.FatherName,
+                    'MotherName' : Details.MotherName,
+                    'FatherMobileNo' : Details.FatherMobileNo,
+                    'MotherMobileNo' : Details.MotherMobileNo,
+                    'FatherOccupation' : Details.FatherOccupation,
+                    'MotherOccupation' : Details.MotherOccupation,
+                    'FatherMailId' : Details.FatherMailId,
+                    'MotherMailId' : Details.MotherMailId,
+                    'PermanentAddress' : Details.PermanentAddress,
+                    'CurrentAddress' : Details.CurrentAddress}
             return HttpResponse(StudentPage.render(context, request))
         
         except Exception as e:
@@ -145,6 +178,7 @@ def Attendence(request):
         TYear, TMonth, TDate = ToDate.split('-')
         user = models.Student.objects.filter(FullName = StudentName, RollNo = StudentRollNo).first()
         TimeTable1 = models.TimeTable.objects.filter(Class = user.Class).first()
+        Details = Smodels.StudentDetails.objects.filter(RollNo = user.RollNo, FullName = user.FullName).first()
         if(TimeTable1):
             TimeTable = TimeTable1
         else:
@@ -203,6 +237,21 @@ def Attendence(request):
             
 
         }
+        if Details:
+            context['details'] = {'Gender' : Details.Gender,
+                'DOB' : Details.DOB,
+                'MailId' : Details.MailId,
+                'Nationality' : Details.Nationality,
+                'FatherName' : Details.FatherName,
+                'MotherName' : Details.MotherName,
+                'FatherMobileNo' : Details.FatherMobileNo,
+                'MotherMobileNo' : Details.MotherMobileNo,
+                'FatherOccupation' : Details.FatherOccupation,
+                'MotherOccupation' : Details.MotherOccupation,
+                'FatherMailId' : Details.FatherMailId,
+                'MotherMailId' : Details.MotherMailId,
+                'PermanentAddress' : Details.PermanentAddress,
+                'CurrentAddress' : Details.CurrentAddress}
         return HttpResponse(StudentPage.render(context, request))
     
 def ProfileUpdate(request):
@@ -214,6 +263,7 @@ def ProfileUpdate(request):
 
         user = models.Student.objects.filter(FullName = FullName, RollNo = RollNo).first()
         image = models.Posters.objects.all().values()
+        Details = Smodels.StudentDetails.objects.filter(RollNo = RollNo, FullName = user.FullName).first()
         TimeTable1 = models.TimeTable.objects.filter(Class = user.Class).first()
         if(TimeTable1):
             TimeTable = TimeTable1
@@ -261,6 +311,21 @@ def ProfileUpdate(request):
             'ExamType' : models.ExamType.objects.filter(StudentAccess = 'Accept').all(),
             
         }
+        if Details:
+            context['details'] = {'Gender' : Details.Gender,
+                'DOB' : Details.DOB,
+                'MailId' : Details.MailId,
+                'Nationality' : Details.Nationality,
+                'FatherName' : Details.FatherName,
+                'MotherName' : Details.MotherName,
+                'FatherMobileNo' : Details.FatherMobileNo,
+                'MotherMobileNo' : Details.MotherMobileNo,
+                'FatherOccupation' : Details.FatherOccupation,
+                'MotherOccupation' : Details.MotherOccupation,
+                'FatherMailId' : Details.FatherMailId,
+                'MotherMailId' : Details.MotherMailId,
+                'PermanentAddress' : Details.PermanentAddress,
+                'CurrentAddress' : Details.CurrentAddress}
 
         try:
             user.Profile = Profile
@@ -280,6 +345,7 @@ def ExamType(request):
 
         user = models.Student.objects.filter(FullName = FullName, RollNo = RollNo).first()
         image = models.Posters.objects.all().values()
+        Details = Smodels.StudentDetails.objects.filter(RollNo = RollNo, FullName = user.FullName).first()
         TimeTable1 = models.TimeTable.objects.filter(Class = user.Class).first()
         if(TimeTable1):
             TimeTable = TimeTable1
@@ -348,6 +414,7 @@ def ExamType(request):
         MarksForResults = []
         for i in models.ExamMarks.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName, ExamType = ExamType).all():
             MarksForResults.append(i.Marks)
+        
         context = {
             'Student': FullName,
             'image' : image[::-1],
@@ -383,6 +450,145 @@ def ExamType(request):
 
 
         }
+        if Details:
+            context['details'] = {'Gender' : Details.Gender,
+                'DOB' : Details.DOB,
+                'MailId' : Details.MailId,
+                'Nationality' : Details.Nationality,
+                'FatherName' : Details.FatherName,
+                'MotherName' : Details.MotherName,
+                'FatherMobileNo' : Details.FatherMobileNo,
+                'MotherMobileNo' : Details.MotherMobileNo,
+                'FatherOccupation' : Details.FatherOccupation,
+                'MotherOccupation' : Details.MotherOccupation,
+                'FatherMailId' : Details.FatherMailId,
+                'MotherMailId' : Details.MotherMailId,
+                'PermanentAddress' : Details.PermanentAddress,
+                'CurrentAddress' : Details.CurrentAddress}
         return HttpResponse(StudentPage.render(context,request))
     return HttpResponse(StudentPage.render(context,request))
 
+def ProfileDetailsUpdate(request):
+    StudentPage = loader.get_template('StudentLogin.html')
+    if request.method == 'POST':
+        RollNo = request.POST.get('RollNo')
+        StudentMobileNo = request.POST.get('StudentMobileNo')
+        Gender = request.POST.get('Gender')
+        Date = request.POST.get('DOB')
+        StudentMailId = request.POST.get('StudentMailId')
+        Nationality1 = request.POST.get('Nationality')
+        FatherName = request.POST.get('FatherName')
+        MotherName = request.POST.get('MotherName')
+        FatherMobileNo = request.POST.get('FatherMobileNo')
+        MotherMobileNo = request.POST.get('MotherMobileNo')
+        FatherOccupation = request.POST.get('FatherOccupation')
+        MotherOccupation = request.POST.get('MotherOccupation')
+        FatherMailId = request.POST.get('FatherMailId')
+        MotherMailId = request.POST.get('MotherMailId')
+        PermanentAddress = request.POST.get('PermanentAddress')
+        CurrentAddress = request.POST.get('CurrentAddress')
+
+        user = models.Student.objects.filter(RollNo = RollNo).first()
+        image = models.Posters.objects.all().values()
+        TimeTable1 = models.TimeTable.objects.filter(Class = user.Class).first()
+        if(TimeTable1):
+            TimeTable = TimeTable1
+        else:
+            TimeTable = None
+        Subjects = models.Subject.objects.filter(Class = user.Class)
+        FeeDetails = Smodels.FeeDetails.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName).first()
+        Details = Smodels.StudentDetails.objects.filter(RollNo = RollNo, FullName = user.FullName).first()
+
+        attendance_data = models.AttendenceDetails.objects.filter(RegNo=user.RollNo)\
+            .annotate(month=TruncMonth('AttendenceDate'))\
+            .values('month')\
+            .annotate(present_count=Count('Attendence', filter=Q(Attendence='P')))\
+            .annotate(absent_count=Count('Attendence', filter=Q(Attendence='A')))\
+            .annotate(total_count=Count('Attendence', filter=Q(Attendence__in=['P', 'A'])))\
+            .order_by('month')
+
+        months = [entry['month'].strftime('%B') for entry in attendance_data]
+        present_counts = [entry['present_count'] for entry in attendance_data]
+        absent_counts = [entry['absent_count'] for entry in attendance_data]
+        total_counts = [entry['total_count'] for entry in attendance_data]
+        
+        
+        context = {
+            'Student': user.FullName,
+            'image' : image[::-1],
+            'data' : {
+                'FullName': user.FullName,
+                'RollNo' : user.RollNo,
+                'MobileNo': user.MobileNo,
+                'Password': user.Password,
+                'Class': user.Class,
+                'Profile' : user.Profile
+            },
+            'TimeTable' : TimeTable,
+            
+            'Subjects' : Subjects,
+            'FeeDetails' : FeeDetails,
+            'TotalFee' : FeeDetails.TotalFee - FeeDetails.Discount1,
+            'TransactionHistory' : Smodels.TransactionHistory.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName)[::-1],
+            'attendance_months': months,
+            'present_counts': present_counts,
+            'absent_counts': absent_counts,
+            'total_counts' : total_counts,
+            'ExamMarks' : models.ExamMarks.objects.filter(StudentRollNo = user.RollNo, StudentName = user.FullName).all(),
+            'ExamType' : models.ExamType.objects.filter(StudentAccess = 'Accept').all(),
+            
+            
+        }
+        if Details:
+            context['details'] = {'Gender' : Details.Gender,
+                'DOB' : Details.DOB,
+                'MailId' : Details.MailId,
+                'Nationality' : Details.Nationality,
+                'FatherName' : Details.FatherName,
+                'MotherName' : Details.MotherName,
+                'FatherMobileNo' : Details.FatherMobileNo,
+                'MotherMobileNo' : Details.MotherMobileNo,
+                'FatherOccupation' : Details.FatherOccupation,
+                'MotherOccupation' : Details.MotherOccupation,
+                'FatherMailId' : Details.FatherMailId,
+                'MotherMailId' : Details.MotherMailId,
+                'PermanentAddress' : Details.PermanentAddress,
+                'CurrentAddress' : Details.CurrentAddress}
+        
+        try:
+            with transaction.atomic():
+                StudentExists = Smodels.StudentDetails.objects.filter(RollNo = RollNo).first()
+                
+                if StudentExists:
+                    StudentExists.RollNo = RollNo
+                    StudentExists.FullName = user.FullName
+                    StudentExists.Gender = Gender
+                    StudentExists.MailId = StudentMailId
+                    StudentExists.DOB = Date
+                    StudentExists.Nationality = Nationality1
+                    StudentExists.FatherName = FatherName
+                    StudentExists.FatherOccupation = FatherOccupation
+                    StudentExists.FatherMobileNo = FatherMobileNo
+                    StudentExists.FatherMailId = FatherMailId
+                    StudentExists.MotherName = MotherName
+                    StudentExists.MotherOccupation = MotherOccupation
+                    StudentExists.MotherMobileNo = MotherMobileNo
+                    StudentExists.MotherMailId = MotherMailId
+                    StudentExists.PermanentAddress = PermanentAddress
+                    StudentExists.CurrentAddress = CurrentAddress
+                    StudentExists.save()
+                    context['success'] = "Successfully Updated"
+                else:
+                    print("ha")
+                    StudentProfile = Smodels.StudentDetails(RollNo = RollNo, FullName = user.FullName, Gender = Gender, MailId = StudentMailId, DOB = Date, Nationality = Nationality1, FatherName = FatherName, FatherOccupation = FatherOccupation, FatherMobileNo = FatherMobileNo, FatherMailId = FatherMailId, MotherName = MotherName, MotherOccupation = MotherOccupation, MotherMobileNo = MotherMobileNo, MotherMailId = MotherMailId, PermanentAddress = PermanentAddress, CurrentAddress = CurrentAddress)
+                    print("hai")
+                    StudentProfile.save()
+                    print('ass')
+                    context['success'] = "Successfully Updated"
+                return HttpResponse(StudentPage.render(context,request))
+        except Exception as e:
+            context['Success'] = f"Error: {str(e)}"
+        return HttpResponse(StudentPage.render(context,request))
+    else:
+        context['error'] = "Error"
+    return HttpResponse(StudentPage.render(context,request))
