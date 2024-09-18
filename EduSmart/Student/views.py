@@ -18,7 +18,7 @@ def StudentLogin(request):
         SRegNo = request.POST.get('StudentRollNo')
  
         try:
-            user = models.Student.objects.filter(FullName = FullName, Password = Password).first()
+            user = models.Student.objects.filter(FullName = FullName.upper(), Password = Password).first()
             if user:
                 image = models.Posters.objects.all().values() 
                 data = models.Student.objects.all()

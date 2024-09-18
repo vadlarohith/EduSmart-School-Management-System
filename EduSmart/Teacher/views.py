@@ -15,7 +15,7 @@ def TeacherLogin(request):
         
         print(FullName, Password)
         try:
-            user = models.Teacher.objects.filter(FullName = FullName, Password = Password).first()
+            user = models.Teacher.objects.filter(FullName = FullName.upper(), Password = Password).first()
             if user:
                 Image = models.Posters.objects.all().values()[::-1]
                 TimeTable = models.TimeTable.objects.all()

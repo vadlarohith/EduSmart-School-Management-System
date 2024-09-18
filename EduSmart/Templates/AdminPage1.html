@@ -577,7 +577,7 @@
                 </div>
                 <div class="profile-and-name">
                     <div class="bell-container">
-                        <i class="fa-solid fa-bell fa-xl" style="color: #000000;" onclick="showSection('notifications')"></i>
+                        <i class="fa-solid fa-right-from-bracket fa-xl" style="color: #000000;" onclick="clearLocalStorage(); window.location.href='{%url 'test'%}';"></i>
                         <span class="notification-badge" id="notificationBadge"></span>
                     </div>
                 </div>
@@ -916,7 +916,7 @@
                             <tr id="class1_{{ j.Class }}">
                                 <form action="{% url 'UpdateFeeDetails' %}" method="POST">
                                     {% csrf_token %}
-                                    <td><a href="#">{{ j.StudentRollNo }}</a><input type="hidden" name="StudentRollNo" value="{{ j.StudentRollNo }}"></td>
+                                    <td>{{ j.StudentRollNo }}<input type="hidden" name="StudentRollNo" value="{{ j.StudentRollNo }}"></td>
                                     <td>{{ j.StudentName }}<input type="hidden" name="StudentName" value="{{ j.StudentName }}"></td>
                                     <td>{{ j.Class }}<input type="hidden" name="Class" value="{{ j.Class }}"></td>
                                     <td>{{j.TotalFee }}<input type="hidden" name="TotalFee" value="{{ j.TotalFee }}"></td>
@@ -1021,23 +1021,23 @@
                                             <td>
                                                 <select name="StudentAccess" id="">
                                                     {% if i.StudentAccess == 'Accept' %}
-                                                    <option value="Accept">Accept</option>
+                                                    <option value="Accept">Grant</option>
                                                     {%else%}
-                                                    <option value="Declined">Declined</option>
+                                                    <option value="Declined">Deny</option>
                                                     {%endif%}
-                                                    <option value="Accept">Accept</option>
-                                                    <option value="Declined">Declined</option>
+                                                    <option value="Accept">Grant</option>
+                                                    <option value="Declined">Deny</option>
                                                 </select>
                                             </td>
                                             <td>
                                                 <select name="TeacherAccess" id="">
                                                     {% if i.TeacherAccess == 'Accept' %}
-                                                    <option value="Accept">Accept</option>
+                                                    <option value="Accept">Grant</option>
                                                     {%else%}
-                                                    <option value="Declined">Declined</option>
+                                                    <option value="Declined">Deny</option>
                                                     {%endif%}
-                                                    <option value="Accept">Accept</option>
-                                                    <option value="Declined">Declined</option>
+                                                    <option value="Accept">Grant</option>
+                                                    <option value="Declined">Deny</option>
                                                 </select>
                                             </td>
                                             <td><button type="submit" name="Update">Update</button>
@@ -1070,6 +1070,10 @@
                 var sidebar = document.getElementById('sidebar');
                 sidebar.classList.toggle('collapsed');
             });
+
+            function clearLocalStorage() {
+                localStorage.removeItem('currentSection');
+            }
 
 
             function showSection(sectionId) {

@@ -28,7 +28,6 @@ def AdminLogin(request):
             UpdateFeeses = models.UpdateFee.objects.all()
             if user:
                 context = {
-                    'error': "ADMIN",
                     'TimeTable' : TimeTable,
                     'Class' : Class,
                     'Subject' : Subject,
